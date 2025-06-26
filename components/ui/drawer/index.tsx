@@ -2,16 +2,9 @@
 import React from 'react';
 import { createModal as createDrawer } from '@gluestack-ui/modal';
 import { Pressable, View, ScrollView, Dimensions } from 'react-native';
-import {
-  Motion,
-  AnimatePresence,
-  createMotionAnimatedComponent,
-} from '@legendapp/motion';
+import { Motion, AnimatePresence, createMotionAnimatedComponent } from '@legendapp/motion';
 import { tva } from '@gluestack-ui/nativewind-utils/tva';
-import {
-  withStyleContext,
-  useStyleContext,
-} from '@gluestack-ui/nativewind-utils/withStyleContext';
+import { withStyleContext, useStyleContext } from '@gluestack-ui/nativewind-utils/withStyleContext';
 import { cssInterop } from 'nativewind';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 
@@ -156,25 +149,22 @@ type IDrawerBodyProps = React.ComponentProps<typeof UIDrawer.Body> &
 type IDrawerFooterProps = React.ComponentProps<typeof UIDrawer.Footer> &
   VariantProps<typeof drawerFooterStyle> & { className?: string };
 
-type IDrawerCloseButtonProps = React.ComponentProps<
-  typeof UIDrawer.CloseButton
-> &
+type IDrawerCloseButtonProps = React.ComponentProps<typeof UIDrawer.CloseButton> &
   VariantProps<typeof drawerCloseButtonStyle> & { className?: string };
 
-const Drawer = React.forwardRef<
-  React.ElementRef<typeof UIDrawer>,
-  IDrawerProps
->(({ className, size = 'sm', anchor = 'left', ...props }, ref) => {
-  return (
-    <UIDrawer
-      ref={ref}
-      {...props}
-      pointerEvents="box-none"
-      className={drawerStyle({ size, anchor, class: className })}
-      context={{ size, anchor }}
-    />
-  );
-});
+const Drawer = React.forwardRef<React.ElementRef<typeof UIDrawer>, IDrawerProps>(
+  ({ className, size = 'sm', anchor = 'left', ...props }, ref) => {
+    return (
+      <UIDrawer
+        ref={ref}
+        {...props}
+        pointerEvents="box-none"
+        className={drawerStyle({ size, anchor, class: className })}
+        context={{ size, anchor }}
+      />
+    );
+  },
+);
 
 const DrawerBackdrop = React.forwardRef<
   React.ElementRef<typeof UIDrawer.Backdrop>,
@@ -257,50 +247,47 @@ const DrawerContent = React.forwardRef<
   );
 });
 
-const DrawerHeader = React.forwardRef<
-  React.ElementRef<typeof UIDrawer.Header>,
-  IDrawerHeaderProps
->(({ className, ...props }, ref) => {
-  return (
-    <UIDrawer.Header
-      ref={ref}
-      {...props}
-      className={drawerHeaderStyle({
-        class: className,
-      })}
-    />
-  );
-});
+const DrawerHeader = React.forwardRef<React.ElementRef<typeof UIDrawer.Header>, IDrawerHeaderProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <UIDrawer.Header
+        ref={ref}
+        {...props}
+        className={drawerHeaderStyle({
+          class: className,
+        })}
+      />
+    );
+  },
+);
 
-const DrawerBody = React.forwardRef<
-  React.ElementRef<typeof UIDrawer.Body>,
-  IDrawerBodyProps
->(({ className, ...props }, ref) => {
-  return (
-    <UIDrawer.Body
-      ref={ref}
-      {...props}
-      className={drawerBodyStyle({
-        class: className,
-      })}
-    />
-  );
-});
+const DrawerBody = React.forwardRef<React.ElementRef<typeof UIDrawer.Body>, IDrawerBodyProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <UIDrawer.Body
+        ref={ref}
+        {...props}
+        className={drawerBodyStyle({
+          class: className,
+        })}
+      />
+    );
+  },
+);
 
-const DrawerFooter = React.forwardRef<
-  React.ElementRef<typeof UIDrawer.Footer>,
-  IDrawerFooterProps
->(({ className, ...props }, ref) => {
-  return (
-    <UIDrawer.Footer
-      ref={ref}
-      {...props}
-      className={drawerFooterStyle({
-        class: className,
-      })}
-    />
-  );
-});
+const DrawerFooter = React.forwardRef<React.ElementRef<typeof UIDrawer.Footer>, IDrawerFooterProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <UIDrawer.Footer
+        ref={ref}
+        {...props}
+        className={drawerFooterStyle({
+          class: className,
+        })}
+      />
+    );
+  },
+);
 
 const DrawerCloseButton = React.forwardRef<
   React.ElementRef<typeof UIDrawer.CloseButton>,

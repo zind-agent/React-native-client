@@ -1,18 +1,18 @@
-import React from "react";
-import Profile from "./profile";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { CustomTabBar } from "@/components/navigation/ButtonNavigation";
-import HomeIcon from "@/assets/Icons/Home";
-import TodoIcon from "@/assets/Icons/Todo";
-import Todos from "./todos";
-import ProfileIcon from "@/assets/Icons/Profile";
-import ActiveIcon from "@/assets/Icons/ActiveIcon";
-import { Colors } from "@/constants/Colors";
-import Plus from "@/assets/Icons/Plus";
-import { View } from "@/components/Themed";
-import AddTodo from "./addTodo";
-import Activity from "./activity";
-import Home from ".";
+import React from 'react';
+import Profile from './profile';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { CustomTabBar } from '@/components/navigation/ButtonNavigation';
+import HomeIcon from '@/assets/Icons/Home';
+import TodoIcon from '@/assets/Icons/Todo';
+import Todos from './todos';
+import ProfileIcon from '@/assets/Icons/Profile';
+import ActiveIcon from '@/assets/Icons/ActiveIcon';
+import { Colors } from '@/constants/Colors';
+import Plus from '@/assets/Icons/Plus';
+import { View } from '@/components/Themed';
+import AddTodo from './addTodo';
+import Activity from './activity';
+import Home from '.';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,8 +49,8 @@ export default function TabLayout() {
                 width: focused ? 70 : 65,
                 height: focused ? 70 : 65,
                 borderRadius: 35,
-                justifyContent: "center",
-                alignItems: "center",
+                justifyContent: 'center',
+                alignItems: 'center',
                 marginTop: -35,
               }}
             >

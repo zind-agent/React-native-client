@@ -37,8 +37,7 @@ export const Heading: React.FC<HeadingProps> = ({
 }) => {
   const { i18n } = useTranslation();
 
-  const fontFamily =
-    i18n.language === 'fa' ? 'DanaBold' : 'RobotoMono';
+  const fontFamily = i18n.language === 'fa' ? 'DanaBold' : 'NunitoBold';
 
   return (
     <RNText
@@ -48,11 +47,7 @@ export const Heading: React.FC<HeadingProps> = ({
           fontFamily,
           fontSize: headingSizes[size],
           fontWeight: bold ? 'bold' : 'normal',
-          textDecorationLine: underline
-            ? 'underline'
-            : strikeThrough
-              ? 'line-through'
-              : 'none',
+          textDecorationLine: underline ? 'underline' : strikeThrough ? 'line-through' : 'none',
           fontStyle: italic ? 'italic' : 'normal',
           backgroundColor: highlight ? '#facc15' : 'transparent',
         },

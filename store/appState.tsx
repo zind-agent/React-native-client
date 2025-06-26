@@ -30,6 +30,6 @@ export const useAppStore = create<AppState>()(
     {
       name: 'app-store',
       storage: createJSONStorage(() => AsyncStorage),
-    }
-  )
+    },
+  ),
 );

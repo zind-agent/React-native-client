@@ -1,11 +1,19 @@
-import { Center } from '@/components/ui/center'
-import { Heading } from '@/components/ui/heading'
-import React from 'react'
+import { Center } from '@/components/ui/center';
+import { Heading } from '@/components/ui/heading';
+import { useAppStore } from '@/store/appState';
+import { Redirect } from 'expo-router';
+import React from 'react';
 
 const AddTodo = () => {
-  return <Center className="flex-1">
-    <Heading>AddTodo</Heading>
-  </Center>
-}
+  const { isLoggedIn } = useAppStore();
 
-export default AddTodo
+  if (!isLoggedIn) return <Redirect href="/tabs/(auth)" />;
+
+  return (
+    <Center className="flex-1">
+      <Heading>AddTodo</Heading>
+    </Center>
+  );
+};
+
+export default AddTodo;

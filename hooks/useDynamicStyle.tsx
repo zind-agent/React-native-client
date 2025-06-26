@@ -1,16 +1,18 @@
-import { PressableStateCallbackType, StyleProp, ViewStyle } from "react-native";
-import { useMemo } from "react";
-import { useAppStore } from "@/store/appState";
+import { PressableStateCallbackType, StyleProp, ViewStyle } from 'react-native';
+import { useMemo } from 'react';
+import { useAppStore } from '@/store/appState';
 
-type DynamicStyle = StyleProp<ViewStyle> | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>);
+type DynamicStyle =
+  | StyleProp<ViewStyle>
+  | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>);
 
 export function useDynamicStyle(style?: DynamicStyle): DynamicStyle {
   const { language } = useAppStore();
-  const dir: "rtl" | "ltr" = language === "fa" ? "rtl" : "ltr";
+  const dir: 'rtl' | 'ltr' = language === 'fa' ? 'rtl' : 'ltr';
   const baseDirStyle: ViewStyle = { direction: dir };
 
   const computedStyle = useMemo(() => {
-    if (typeof style === "function") {
+    if (typeof style === 'function') {
       const combined = (state: PressableStateCallbackType) =>
         [baseDirStyle, style(state)] as StyleProp<ViewStyle>;
       return combined as StyleProp<ViewStyle>;

@@ -11,12 +11,12 @@ export const LanguageGate = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    AsyncStorage.getItem('lang').then(lang => {
+    AsyncStorage.getItem('lang').then((lang) => {
       if (lang) {
         setLangSelected(true);
         setLanguage(lang as 'fa' | 'en');
       } else {
-        setLangSelected(false)
+        setLangSelected(false);
         router.replace('/language');
       }
       setLoading(false);

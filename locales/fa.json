@@ -1,5 +1,16 @@
 {
   "welcome to home": "به خانه خوش آمدید",
   "home": "زیند",
-  "clear storage": "پاک کردن ذخیره سازی"
+  "clear storage": "پاک کردن ذخیره سازی",
+  "login mobile number": "ورود با شماره همراه",
+  "login email": "ورود با ایمیل",
+  "Your privacy and security are our top priorities": "با ورود به زیند، شما با قوانین و مقررات ما موافقت می‌کنید. اطلاعات شما فقط برای ارائه‌ی تجربه‌ای بهتر و تعامل مؤثرتر استفاده می‌شود. ",
+  "email": "ایمیل",
+  "email placeholder": "ایمیل خود را وارد کنید",
+  "email invalid": "ایمیل نامعتبر است",
+  "send code": "ارسال کد",
+  "or": "یا",
+  "continue with google": "ادامه با گوگل",
+  "continue with email": "ادامه با ایمیل",
+  "continue with mobile": "ادامه با شماره همراه"
 }

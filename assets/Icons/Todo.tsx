@@ -1,7 +1,7 @@
-import { Colors } from "@/constants/Colors";
-import { Svg, Path } from "react-native-svg";
-import { Animated, Easing } from "react-native";
-import { useEffect, useRef } from "react";
+import { Colors } from '@/constants/Colors';
+import { Svg, Path } from 'react-native-svg';
+import { Animated, Easing } from 'react-native';
+import { useEffect, useRef } from 'react';
 
 interface TodoIconProps {
   focused: boolean;
@@ -23,12 +23,12 @@ const TodoIcon = ({ focused }: TodoIconProps) => {
 
   const fillColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [Colors.light.primary, Colors.light.background],
+    outputRange: [Colors.light.primary, Colors.light.surface],
   });
 
   const strokeColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: ["transparent", Colors.light.light],
+    outputRange: ['transparent', Colors.light.light],
   });
 
   return (

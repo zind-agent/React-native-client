@@ -1,5 +1,16 @@
 {
   "welcome to home": "welcome to home",
   "home": "zind",
-  "clear storage": "clear storage"
+  "clear storage": "clear storage",
+  "login mobile number": "Login with Mobile Number",
+  "login email": "Login with Email",
+  "Your privacy and security are our top priorities": " By entering Zind, you agree to our terms and conditions. Your information is only used to provide a better experience and more effective interaction. ",
+  "email": "email",
+  "email placeholder": "Enter your email",
+  "email invalid": "Invalid email",
+  "send code": "send code",
+  "or": "or",
+  "continue with google": "Continue with Google",
+  "continue with email": "Continue with email",
+  "continue with mobile": "Continue with Mobile Number"
 }

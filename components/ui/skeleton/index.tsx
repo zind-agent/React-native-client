@@ -16,10 +16,7 @@ type ISkeletonTextProps = React.ComponentProps<typeof View> &
     startColor?: string;
   };
 
-const Skeleton = forwardRef<
-  React.ElementRef<typeof Animated.View>,
-  ISkeletonProps
->(
+const Skeleton = forwardRef<React.ElementRef<typeof Animated.View>, ISkeletonProps>(
   (
     {
       className,
@@ -30,7 +27,7 @@ const Skeleton = forwardRef<
       speed = 2,
       ...props
     },
-    ref
+    ref,
   ) => {
     const pulseAnim = new Animated.Value(1);
     const customTimingFunction = Easing.bezier(0.4, 0, 0.6, 1);
@@ -76,13 +73,10 @@ const Skeleton = forwardRef<
 
       return children;
     }
-  }
+  },
 );
 
-const SkeletonText = forwardRef<
-  React.ElementRef<typeof View>,
-  ISkeletonTextProps
->(
+const SkeletonText = forwardRef<React.ElementRef<typeof View>, ISkeletonTextProps>(
   (
     {
       className,
@@ -93,7 +87,7 @@ const SkeletonText = forwardRef<
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     if (!isLoaded) {
       if (_lines) {
@@ -129,7 +123,7 @@ const SkeletonText = forwardRef<
     } else {
       return children;
     }
-  }
+  },
 );
 
 Skeleton.displayName = 'Skeleton';
