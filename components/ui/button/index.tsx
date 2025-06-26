@@ -2,14 +2,13 @@
 import React from 'react';
 import { createButton } from '@gluestack-ui/button';
 import { tva } from '@gluestack-ui/nativewind-utils/tva';
-import {
-  withStyleContext,
-  useStyleContext,
-} from '@gluestack-ui/nativewind-utils/withStyleContext';
+import { withStyleContext, useStyleContext } from '@gluestack-ui/nativewind-utils/withStyleContext';
 import { cssInterop } from 'nativewind';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { PrimitiveIcon, UIIcon } from '@gluestack-ui/icon';
+import { useDynamicFont } from '@/hooks/useDynamicFont';
+import { useDynamicStyle } from '@/hooks/useDynamicStyle';
 
 const SCOPE = 'BUTTON';
 
@@ -277,37 +276,31 @@ type IButtonProps = Omit<
 > &
   VariantProps<typeof buttonStyle> & { className?: string };
 
-const Button = React.forwardRef<
-  React.ElementRef<typeof UIButton>,
-  IButtonProps
->(
-  (
-    { className, variant = 'solid', size = 'md', action = 'primary', ...props },
-    ref
-  ) => {
+const Button = React.forwardRef<React.ElementRef<typeof UIButton>, IButtonProps>
+  (({ className, style, variant = 'solid', size = 'md', action = 'primary', ...props }, ref) => {
+    const dynamicStyle = useDynamicStyle(style);
     return (
       <UIButton
         ref={ref}
         {...props}
         className={buttonStyle({ variant, size, action, class: className })}
         context={{ variant, size, action }}
+        style={dynamicStyle}
       />
     );
   }
-);
+  );
 
 type IButtonTextProps = React.ComponentPropsWithoutRef<typeof UIButton.Text> &
   VariantProps<typeof buttonTextStyle> & { className?: string };
 
-const ButtonText = React.forwardRef<
-  React.ElementRef<typeof UIButton.Text>,
-  IButtonTextProps
->(({ className, variant, size, action, ...props }, ref) => {
+const ButtonText = React.forwardRef<React.ElementRef<typeof UIButton.Text>, IButtonTextProps>(({ className, variant, style, size, action, ...props }, ref) => {
   const {
     variant: parentVariant,
     size: parentSize,
     action: parentAction,
   } = useStyleContext(SCOPE);
+  const dynamicFont = useDynamicFont(style)
 
   return (
     <UIButton.Text
@@ -324,6 +317,7 @@ const ButtonText = React.forwardRef<
         action,
         class: className,
       })}
+      style={dynamicFont}
     />
   );
 });

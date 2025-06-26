@@ -10,6 +10,7 @@ import {
 import { cssInterop } from 'nativewind';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { PrimitiveIcon, UIIcon } from '@gluestack-ui/icon';
+import { useAppStore } from '@/store/appState';
 
 const SCOPE = 'FORM_CONTROL';
 
@@ -387,6 +388,7 @@ const FormControlLabelText = React.forwardRef<
   IFormControlLabelTextProps
 >(({ className, size, ...props }, ref) => {
   const { size: parentSize } = useStyleContext(SCOPE);
+  const { language } = useAppStore()
 
   return (
     <UIFormControl.Label.Text
@@ -396,6 +398,7 @@ const FormControlLabelText = React.forwardRef<
         class: className,
       })}
       ref={ref}
+      style={{ fontFamily: language === 'fa' ? 'DanaBold' : 'RobotoMono' }}
       {...props}
     />
   );
