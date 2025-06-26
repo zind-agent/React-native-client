@@ -10,6 +10,7 @@ import '../i18n'
 
 import "../global.css";
 import Loading from "@/components/shared/Loading";
+import { LanguageGate } from "@/constants/LanguageGate";
 
 export {
   ErrorBoundary,
@@ -45,8 +46,10 @@ export default function RootLayout() {
 function RootLayoutNav() {
 
   return (
-    <GluestackUIProvider>
-      <Slot />
-    </GluestackUIProvider>
+    <LanguageGate>
+      <GluestackUIProvider>
+        <Slot />
+      </GluestackUIProvider>
+    </LanguageGate>
   );
 }

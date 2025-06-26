@@ -1,20 +1,29 @@
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from '@/components/shared/Loading';
-import Language from '@/app/language';
+import { useRouter } from 'expo-router';
+import { useAppStore } from '@/store/appState';
 
-const LanguageGate = ({ children }: { children: React.ReactNode }) => {
+export const LanguageGate = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [langSelected, setLangSelected] = useState<boolean | null>(null);
+  const { setLanguage } = useAppStore();
+  const router = useRouter();
 
   useEffect(() => {
     AsyncStorage.getItem('lang').then(lang => {
-      setLangSelected(!!lang);
+      if (lang) {
+        setLangSelected(true);
+        setLanguage(lang as 'fa' | 'en');
+      } else {
+        setLangSelected(false)
+        router.replace('/language');
+      }
       setLoading(false);
     });
   }, []);
 
   if (loading) return <Loading />;
 
-  return langSelected ? <>{children}</> : <Language />;
+  return langSelected ? <>{children}</> : null;
 };
