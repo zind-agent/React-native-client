@@ -7,7 +7,7 @@ import { withStyleContext, useStyleContext } from '@gluestack-ui/nativewind-util
 import { cssInterop } from 'nativewind';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { PrimitiveIcon, UIIcon } from '@gluestack-ui/icon';
-import { useAppStore } from '@/store/appState';
+import { useDynamicFont } from '@/hooks/useDynamicFont';
 
 const SCOPE = 'INPUT';
 
@@ -175,7 +175,7 @@ type IInputFieldProps = React.ComponentProps<typeof UIInput.Input> &
 const InputField = React.forwardRef<React.ElementRef<typeof UIInput.Input>, IInputFieldProps>(
   ({ className, style, ...props }, ref) => {
     const { variant: parentVariant, size: parentSize } = useStyleContext(SCOPE);
-    const { language } = useAppStore();
+    const fontStyle = useDynamicFont(style);
 
     return (
       <UIInput.Input
@@ -188,7 +188,7 @@ const InputField = React.forwardRef<React.ElementRef<typeof UIInput.Input>, IInp
           },
           class: className,
         })}
-        style={[{ fontFamily: language === 'fa' ? 'DanaBold' : 'Nunito' }, style]}
+        style={fontStyle}
       />
     );
   },

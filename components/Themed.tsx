@@ -2,6 +2,7 @@ import { Text as DefaultText, View as DefaultView } from 'react-native';
 
 import { Colors } from '@/constants/Colors';
 import { useAppStore } from '@/store/appState';
+import { useDynamicFont } from '@/hooks/useDynamicFont';
 
 type ColorName = {
   [K in keyof (typeof Colors)['light']]: (typeof Colors)['light'][K] extends string ? K : never;
@@ -27,15 +28,9 @@ export function useThemeColor(props: { light?: string }, colorName: ColorName) {
 
 export function Text(props: TextProps) {
   const { style, lightColor, ...otherProps } = props;
-  const color = useThemeColor({ light: lightColor }, 'text');
-  const { language } = useAppStore();
+  const fontStyle = useDynamicFont(style);
 
-  return (
-    <DefaultText
-      style={[{ color, fontFamily: language === 'fa' ? 'DanaBold' : 'Nunito' }, style]}
-      {...otherProps}
-    />
-  );
+  return <DefaultText style={fontStyle} {...otherProps} />;
 }
 
 export function View(props: ViewProps) {

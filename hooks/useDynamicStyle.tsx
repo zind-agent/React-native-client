@@ -23,3 +23,15 @@ export function useDynamicStyle(style?: DynamicStyle): DynamicStyle {
 
   return computedStyle;
 }
+
+export function useStaticDynamicStyle(style?: StyleProp<ViewStyle>): StyleProp<ViewStyle> {
+  const { language } = useAppStore();
+  const dir: 'rtl' | 'ltr' = language === 'fa' ? 'rtl' : 'ltr';
+  const baseDirStyle: ViewStyle = { direction: dir };
+
+  const computedStyle = useMemo(() => {
+    return [baseDirStyle, style] as StyleProp<ViewStyle>;
+  }, [language, style]);
+
+  return computedStyle;
+}

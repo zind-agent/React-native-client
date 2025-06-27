@@ -11,6 +11,8 @@ export const Colors = {
     border: '#E0E0E0',
     light: '#C6CEDD',
     darkBlue: '#2C406E',
+    warning: '#ff9800',
+    info: '#2196f3',
 
     tag: {
       office: '#B39DDB',

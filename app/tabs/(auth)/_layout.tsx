@@ -1,16 +1,11 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AuthWithEmail from './email';
-import AuthWithPhoneNumber from '.';
+import { Stack } from 'expo-router';
 
-const Tab = createNativeStackNavigator();
-
-export default function TabLayout() {
+export default function AuthLayout() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="AuthWithPhoneNumber" component={AuthWithPhoneNumber} />
-
-      <Tab.Screen name="AuthWithEmail" component={AuthWithEmail} />
-    </Tab.Navigator>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="emailAuth" />
+      <Stack.Screen name="mobileAuth" />
+      <Stack.Screen name="index" />
+    </Stack>
   );
 }

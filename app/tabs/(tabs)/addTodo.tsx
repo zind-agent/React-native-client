@@ -5,9 +5,9 @@ import { Redirect } from 'expo-router';
 import React from 'react';
 
 const AddTodo = () => {
-  const { isLoggedIn } = useAppStore();
+  const { isLogin } = useAppStore();
 
-  if (!isLoggedIn) return <Redirect href="/tabs/(auth)" />;
+  if (!isLogin) return <Redirect href="/tabs/(auth)/mobileAuth" />;
 
   return (
     <Center className="flex-1">

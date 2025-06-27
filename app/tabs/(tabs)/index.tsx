@@ -9,12 +9,14 @@ import { useTranslation } from 'react-i18next';
 export default function Home() {
   const { t } = useTranslation();
   const router = useRouter();
+
   const removeItem = async () => {
-    await AsyncStorage.removeItem('token');
-    await AsyncStorage.removeItem('lang');
-    const lang = await AsyncStorage.getItem('lang');
-    if (!lang) {
+    try {
+      await AsyncStorage.removeItem('app-store');
+      await AsyncStorage.removeItem('lang');
       router.replace('/language');
+    } catch (error) {
+      console.error('Error clearing storage:', error);
     }
   };
 

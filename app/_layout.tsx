@@ -11,6 +11,7 @@ import '../i18n';
 import '../global.css';
 import Loading from '@/components/shared/Loading';
 import { LanguageGate } from '@/constants/LanguageGate';
+import { ToastProvider } from '@gluestack-ui/toast';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -45,7 +46,9 @@ function RootLayoutNav() {
   return (
     <LanguageGate>
       <GluestackUIProvider>
-        <Slot />
+        <ToastProvider>
+          <Slot />
+        </ToastProvider>
       </GluestackUIProvider>
     </LanguageGate>
   );

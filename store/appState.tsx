@@ -1,35 +1,48 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { AuthStateType, AuthResult } from '@/types/auth-type';
+import { sendMassageAction, sendOtpAction } from '@/api/authApi';
 
-interface User {
-  name: string;
-  email: string;
-  phoneNumber: string;
-}
-
-interface AppState {
-  isLoggedIn: boolean;
-  language: 'fa' | 'en' | null;
-  user: User | null;
-  setLanguage: (lang: 'fa' | 'en') => void;
-  login: (user: User) => void;
-  logout: () => void;
-}
-
-export const useAppStore = create<AppState>()(
+export const useAppStore = create<AuthStateType>()(
   persist(
     (set) => ({
-      isLoggedIn: false,
+      isLogin: false,
+      isLoading: false,
       language: null,
       user: null,
+      token: null,
+      isSendCode: false,
+      setIsSendCode: (isSendCode) => set({ isSendCode }),
+
       setLanguage: (lang) => set({ language: lang }),
-      login: (user) => set({ user, isLoggedIn: true }),
-      logout: () => set({ user: null, isLoggedIn: false }),
+      logout: () => set({ user: null, isLogin: false }),
+
+      sendMassage: async (identifier: string): Promise<AuthResult> => {
+        set({ isLoading: true });
+        const result = await sendMassageAction(identifier);
+        if (result.success) {
+          set({ isSendCode: true });
+        }
+        set({ isLoading: false });
+        return result;
+      },
+
+      sendOtp: async (identifier: string, code: string): Promise<AuthResult> => {
+        set({ isLoading: true });
+        const result = await sendOtpAction(identifier, code);
+        if (result.success) {
+          set({ isLogin: true, user: result.user, token: result.token });
+        }
+        set({ isLoading: false });
+        return result;
+      },
     }),
+
     {
       name: 'app-store',
       storage: createJSONStorage(() => AsyncStorage),
+      partialize: (state) => ({ user: state.user, language: state.language, isLogin: state.isLogin }),
     },
   ),
 );
