@@ -29,7 +29,7 @@ const Language = () => {
         await Updates.reloadAsync();
       }
     } else {
-      router.replace('/tabs');
+      router.replace('/tabs/(tabs)');
     }
   };
 
@@ -56,9 +56,7 @@ const Language = () => {
                 className="w-full h-[50] rounded-xl flex items-center justify-center transition-all"
                 style={{ backgroundColor: 'transparent' }}
               >
-                <ButtonText className="text-center w-full">
-                  {lang === 'en' ? 'English' : 'فارسی'}
-                </ButtonText>
+                <ButtonText className="text-center w-full">{lang === 'en' ? 'English' : 'فارسی'}</ButtonText>
               </Button>
             </MotiView>
           );
