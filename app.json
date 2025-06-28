@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "test-expo",
-    "slug": "test-expo",
+    "name": "zind",
+    "slug": "zind-app",
+    "owner": "alirg1999",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +16,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.alirg1999.zindapp"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +39,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4c944ca2-1431-4c38-9baa-f90f2f93af92"
+      }
     }
   }
 }

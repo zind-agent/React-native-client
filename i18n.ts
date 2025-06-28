@@ -1,26 +1,26 @@
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Localization from "expo-localization";
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Localization from 'expo-localization';
 
-import en from "./locales/en.json";
-import fa from "./locales/fa.json";
+import en from './locales/en.json';
+import fa from './locales/fa.json';
 
 const languageDetector = {
-  type: "languageDetector",
+  type: 'languageDetector',
   async: true,
   detect: async (callback: (lang: string) => void) => {
-    const savedLanguage = await AsyncStorage.getItem("lang");
+    const savedLanguage = await AsyncStorage.getItem('lang');
     if (savedLanguage) {
       callback(savedLanguage);
     } else {
-      const deviceLang = Localization.locale.startsWith("fa") ? "fa" : "en";
+      const deviceLang = Localization.locale.startsWith('fa') ? 'fa' : 'en';
       callback(deviceLang);
     }
   },
-  init: () => { },
+  init: () => {},
   cacheUserLanguage: async (lang: string) => {
-    await AsyncStorage.setItem("lang", lang);
+    await AsyncStorage.setItem('lang', lang);
   },
 };
 

@@ -39,11 +39,11 @@ const linkTextStyle = tva({
     },
     size: {
       '2xs': 'text-2xs',
-      'xs': 'text-xs',
-      'sm': 'text-sm',
-      'md': 'text-base',
-      'lg': 'text-lg',
-      'xl': 'text-xl',
+      xs: 'text-xs',
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg',
+      xl: 'text-xl',
       '2xl': 'text-2xl',
       '3xl': 'text-3xl',
       '4xl': 'text-4xl',
@@ -67,34 +67,27 @@ type ILinkProps = React.ComponentProps<typeof UILink> &
 
 const Link = React.forwardRef<React.ElementRef<typeof UILink>, ILinkProps>(
   ({ className, ...props }, ref) => {
-    return (
-      <UILink
-        ref={ref}
-        {...props}
-        className={linkStyle({ class: className })}
-      />
-    );
-  }
+    return <UILink ref={ref} {...props} className={linkStyle({ class: className })} />;
+  },
 );
 
 type ILinkTextProps = React.ComponentProps<typeof UILink.Text> &
   VariantProps<typeof linkTextStyle> & { className?: string };
 
-const LinkText = React.forwardRef<
-  React.ElementRef<typeof UILink.Text>,
-  ILinkTextProps
->(({ className, size = 'md', ...props }, ref) => {
-  return (
-    <UILink.Text
-      ref={ref}
-      {...props}
-      className={linkTextStyle({
-        class: className,
-        size,
-      })}
-    />
-  );
-});
+const LinkText = React.forwardRef<React.ElementRef<typeof UILink.Text>, ILinkTextProps>(
+  ({ className, size = 'md', ...props }, ref) => {
+    return (
+      <UILink.Text
+        ref={ref}
+        {...props}
+        className={linkTextStyle({
+          class: className,
+          size,
+        })}
+      />
+    );
+  },
+);
 
 Link.displayName = 'Link';
 LinkText.displayName = 'LinkText';

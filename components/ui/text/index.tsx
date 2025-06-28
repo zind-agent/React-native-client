@@ -3,11 +3,9 @@ import React from 'react';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { Text as RNText } from 'react-native';
 import { textStyle } from './styles';
-import { useFonts } from 'expo-font';
 import i18n from '@/i18n';
 
-type ITextProps = React.ComponentProps<typeof RNText> &
-  VariantProps<typeof textStyle>;
+type ITextProps = React.ComponentProps<typeof RNText> & VariantProps<typeof textStyle>;
 
 const Text = React.forwardRef<React.ElementRef<typeof RNText>, ITextProps>(
   (
@@ -23,10 +21,10 @@ const Text = React.forwardRef<React.ElementRef<typeof RNText>, ITextProps>(
       highlight,
       ...props
     },
-    ref
+    ref,
   ) => {
     const isPersian = i18n.language === 'fa';
-    const fontFamily = isPersian ? 'DanaReguler' : 'RobotoMono';
+    const fontFamily = isPersian ? 'DanaReguler' : 'Nunito';
     return (
       <RNText
         style={{ fontFamily: fontFamily }}
@@ -45,7 +43,7 @@ const Text = React.forwardRef<React.ElementRef<typeof RNText>, ITextProps>(
         ref={ref}
       />
     );
-  }
+  },
 );
 
 Text.displayName = 'Text';

@@ -1,19 +1,9 @@
-import React, {
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-  useMemo,
-  forwardRef,
-} from 'react';
+import React, { useEffect, useState, createContext, useContext, useMemo, forwardRef } from 'react';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { View, Dimensions, Platform, ViewProps } from 'react-native';
 import { gridStyle, gridItemStyle } from './styles';
 import { cssInterop } from 'nativewind';
-import {
-  useBreakpointValue,
-  getBreakPointValue,
-} from '../utils/use-break-point-value';
+import { useBreakpointValue, getBreakPointValue } from '../utils/use-break-point-value';
 
 const { width: DEVICE_WIDTH } = Dimensions.get('window');
 
@@ -48,9 +38,7 @@ function arrangeChildrenIntoRows({
       currentRowTotalColSpan += colSpan;
     }
 
-    rowItemsCount[currentRow] = rowItemsCount[currentRow]
-      ? [...rowItemsCount[currentRow], i]
-      : [i];
+    rowItemsCount[currentRow] = rowItemsCount[currentRow] ? [...rowItemsCount[currentRow], i] : [i];
   }
 
   return rowItemsCount;
@@ -79,11 +67,7 @@ function generateResponsiveNumColumns({ gridClass }: { gridClass: string }) {
   return result;
 }
 
-function generateResponsiveColSpans({
-  gridItemClassName,
-}: {
-  gridItemClassName: string;
-}) {
+function generateResponsiveColSpans({ gridItemClassName }: { gridItemClassName: string }) {
   const gridClassNamePattern = /\b(?:\w+:)?col-span-?\d+\b/g;
 
   const colSpan: any = gridItemClassName?.match(gridClassNamePattern);
@@ -141,7 +125,7 @@ const Grid = forwardRef<React.ElementRef<typeof View>, IGridProps>(
 
         const colSpan2 = getBreakPointValue(
           generateResponsiveColSpans({ gridItemClassName }),
-          DEVICE_WIDTH
+          DEVICE_WIDTH,
         );
         const colSpan = colSpan2 ? colSpan2 : 1;
 
@@ -218,7 +202,7 @@ const Grid = forwardRef<React.ElementRef<typeof View>, IGridProps>(
         </View>
       </GridContext.Provider>
     );
-  }
+  },
 );
 
 cssInterop(Grid, {
@@ -251,24 +235,14 @@ type IGridItemProps = ViewProps &
 
 const GridItem = forwardRef<React.ElementRef<typeof View>, IGridItemProps>(
   ({ className, _extra, ...props }, ref) => {
-    const [flexBasisValue, setFlexBasisValue] = useState<
-      number | string | null
-    >('auto');
+    const [flexBasisValue, setFlexBasisValue] = useState<number | string | null>('auto');
 
-    const {
-      calculatedWidth,
-      numColumns,
-      itemsPerRow,
-      flexDirection,
-      gap,
-      columnGap,
-    } = useContext(GridContext);
+    const { calculatedWidth, numColumns, itemsPerRow, flexDirection, gap, columnGap } =
+      useContext(GridContext);
 
     const gridItemClass = _extra?.className;
     const responsiveColSpan: number =
-      useBreakpointValue(
-        generateResponsiveColSpans({ gridItemClassName: gridItemClass })
-      ) ?? 1;
+      useBreakpointValue(generateResponsiveColSpans({ gridItemClassName: gridItemClass })) ?? 1;
 
     useEffect(() => {
       if (
@@ -287,10 +261,7 @@ const GridItem = forwardRef<React.ElementRef<typeof View>, IGridItemProps>(
         const space = columnGap || gap || 0;
 
         const gutterOffset =
-          space *
-          (rowColsCount === 1 && responsiveColSpan < numColumns
-            ? 2
-            : rowColsCount - 1);
+          space * (rowColsCount === 1 && responsiveColSpan < numColumns ? 2 : rowColsCount - 1);
 
         const flexBasisVal =
           Math.min(
@@ -298,20 +269,13 @@ const GridItem = forwardRef<React.ElementRef<typeof View>, IGridItemProps>(
               numColumns /
               calculatedWidth) *
               100,
-            100
+            100,
           ) + '%';
 
         setFlexBasisValue(flexBasisVal);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-      calculatedWidth,
-      responsiveColSpan,
-      numColumns,
-      columnGap,
-      gap,
-      flexDirection,
-    ]);
+    }, [calculatedWidth, responsiveColSpan, numColumns, columnGap, gap, flexDirection]);
 
     return (
       <View
@@ -330,7 +294,7 @@ const GridItem = forwardRef<React.ElementRef<typeof View>, IGridItemProps>(
         ]}
       />
     );
-  }
+  },
 );
 
 Grid.displayName = 'Grid';

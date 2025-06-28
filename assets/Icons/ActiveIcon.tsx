@@ -1,7 +1,7 @@
-import { Colors } from "@/constants/Colors";
-import { Svg, Path } from "react-native-svg";
-import { Animated, Easing } from "react-native";
-import { useEffect, useRef } from "react";
+import { Colors } from '@/constants/Colors';
+import { Svg, Path } from 'react-native-svg';
+import { Animated, Easing } from 'react-native';
+import { useEffect, useRef } from 'react';
 
 interface ActiveIconProps {
   focused: boolean;
@@ -23,12 +23,12 @@ const ActiveIcon = ({ focused }: ActiveIconProps) => {
 
   const fillColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [Colors.light.primary, Colors.light.background],
+    outputRange: [Colors.light.primary, Colors.light.surface],
   });
 
   const strokeColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: ["transparent", Colors.light.light],
+    outputRange: ['transparent', Colors.light.light],
   });
 
   return (
@@ -36,7 +36,6 @@ const ActiveIcon = ({ focused }: ActiveIconProps) => {
       <AnimatedPath
         fillRule="evenodd"
         clipRule="evenodd"
-
         d="M20.7414 8.13212C20.8817 9.07603 20.946 10.1391 20.946 11.3319C20.946 18.6491 18.5077 21.0874 11.1905 21.0874C3.87443 21.0874 1.43503 18.6491 1.43503 11.3319C1.43503 4.01583 3.87443 1.57643 11.1905 1.57643C12.3612 1.57643 13.4063 1.63865 14.3365 1.77364"
         fill={fillColor}
         stroke={strokeColor}

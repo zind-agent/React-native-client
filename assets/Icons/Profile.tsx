@@ -1,7 +1,7 @@
-import { Colors } from "@/constants/Colors";
-import { Svg, Path } from "react-native-svg";
-import { Animated, Easing } from "react-native";
-import { useEffect, useRef } from "react";
+import { Colors } from '@/constants/Colors';
+import { Svg, Path } from 'react-native-svg';
+import { Animated, Easing } from 'react-native';
+import { useEffect, useRef } from 'react';
 
 interface ProfileIconProps {
   focused: boolean;
@@ -23,12 +23,12 @@ const ProfileIcon = ({ focused }: ProfileIconProps) => {
 
   const fillColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [Colors.light.primary, Colors.light.background],
+    outputRange: [Colors.light.primary, Colors.light.surface],
   });
 
   const strokeColor = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: ["transparent", Colors.light.light],
+    outputRange: ['transparent', Colors.light.light],
   });
 
   return (
@@ -51,9 +51,8 @@ const ProfileIcon = ({ focused }: ProfileIconProps) => {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-
     </Svg>
   );
 };
 
-export default ProfileIcon
+export default ProfileIcon;
