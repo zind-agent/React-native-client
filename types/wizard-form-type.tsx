@@ -5,7 +5,7 @@ export interface WizardStateType {
   age: number;
   weight: number;
   height: number;
-  gender: string;
+  gender: 'male' | 'female' | 'other' | '';
   descreption: string;
 
   goal: string;

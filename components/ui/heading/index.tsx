@@ -24,20 +24,10 @@ const headingSizes = {
   xs: 14,
 };
 
-export const Heading: React.FC<HeadingProps> = ({
-  children,
-  size = 'xl',
-  bold,
-  underline,
-  strikeThrough,
-  italic,
-  highlight,
-  style,
-  ...rest
-}) => {
+export const Heading: React.FC<HeadingProps> = ({ children, size = 'xl', bold, underline, strikeThrough, italic, highlight, style, ...rest }) => {
   const { i18n } = useTranslation();
 
-  const fontFamily = i18n.language === 'fa' ? 'DanaBold' : 'NunitoBold';
+  const fontFamily = i18n.language === 'fa' ? 'DanaBold' : 'IBMPBold';
 
   return (
     <RNText

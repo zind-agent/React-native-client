@@ -43,35 +43,31 @@ const schemas = {
   phone: phoneSchema,
 } as const;
 
-const authConfigs = {
-  email: {
-    type: 'email',
-    title: 'login email',
-    placeholder: 'email placeholder',
-    alternativeText: 'continue with mobile',
-  },
-  phone: {
-    type: 'phone',
-    title: 'login phoneNumber',
-    placeholder: 'phoneNumber placeholder',
-    alternativeText: 'continue with email',
-  },
-} as const;
-
 interface GenericAuthProps {
   authType: 'email' | 'phone';
 }
 
 const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
-  const { t } = useTranslation();
   const { language, sendMassage, sendOtp, isLoading, isSendCode, setIsSendCode } = useAppStore();
   const showToast = useShowToast();
+  const { t } = useTranslation();
 
-  console.log('GenericAuth rendered with authType:', authType);
-  console.log('Available authTypes:', Object.keys(schemas));
+  const authConfigs = {
+    email: {
+      type: 'email',
+      title: t('login_email'),
+      placeholder: t('email_placeholder'),
+      alternativeText: 'continue with mobile',
+    },
+    phone: {
+      type: 'phone',
+      title: t('login_mobile_number'),
+      placeholder: t('mobile_placeholder'),
+      alternativeText: 'continue with email',
+    },
+  } as const;
 
   if (!authType) {
-    console.error('authType is undefined or null');
     return (
       <VStack className="flex-1 justify-center items-center">
         <Text>Error: authType not provided</Text>
@@ -171,14 +167,8 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
   const canSubmit = isIdentifierValid && isCodeValid && !isLoading;
 
   const handleNavigateToAlternative = useCallback(() => {
-    try {
-      const targetRoute = authType === 'email' ? '/tabs/(auth)/mobileAuth' : '/tabs/(auth)/emailAuth';
-      console.log('Current authType:', authType);
-      console.log('Navigating to:', targetRoute);
-      router.push(targetRoute);
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
+    const targetRoute = authType === 'email' ? '/tabs/(auth)/mobileAuth' : '/tabs/(auth)/emailAuth';
+    router.push(targetRoute);
   }, [authType]);
 
   return (

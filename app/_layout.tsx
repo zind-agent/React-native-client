@@ -19,9 +19,9 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    NunitoItalic: require('../assets/fonts/Nunito-Italic-VariableFont_wght.ttf'),
-    Nunito: require('../assets/fonts/Nunito-Regular.ttf'),
-    NunitoBold: require('../assets/fonts/Nunito-ExtraBold.ttf'),
+    IBMPLight: require('../assets/fonts/IBMPlexSansThaiLooped-Light.ttf'),
+    IBMPRegular: require('../assets/fonts/IBMPlexSansThaiLooped-Regular.ttf'),
+    IBMPBold: require('../assets/fonts/IBMPlexSansThaiLooped-Bold.ttf'),
     DanaMedium: require('../assets/fonts/medium.ttf'),
     DanaBold: require('../assets/fonts/bold.ttf'),
     DanaReguler: require('../assets/fonts/regular.ttf'),
