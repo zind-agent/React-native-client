@@ -316,9 +316,10 @@ const FormControlLabel = React.forwardRef<React.ElementRef<typeof UIFormControl.
 
 type IFormControlLabelTextProps = React.ComponentProps<typeof UIFormControl.Label.Text> & VariantProps<typeof formControlLabelTextStyle>;
 
-const FormControlLabelText = React.forwardRef<React.ElementRef<typeof UIFormControl.Label.Text>, IFormControlLabelTextProps>(({ className, size, ...props }, ref) => {
+const FormControlLabelText = React.forwardRef<React.ElementRef<typeof UIFormControl.Label.Text>, IFormControlLabelTextProps>(({ className, size, style, ...props }, ref) => {
   const { size: parentSize } = useStyleContext(SCOPE);
-  const { language } = useAppStore();
+
+  const fontStyle = useDynamicFont(style);
 
   return (
     <UIFormControl.Label.Text
@@ -328,7 +329,7 @@ const FormControlLabelText = React.forwardRef<React.ElementRef<typeof UIFormCont
         class: className,
       })}
       ref={ref}
-      style={{ fontFamily: language === 'fa' ? 'DanaBold' : 'IBMPBold' }}
+      style={fontStyle}
       {...props}
     />
   );

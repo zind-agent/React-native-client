@@ -10,7 +10,7 @@ export const Colors = {
     card: '#FFFFFF',
     border: '#E0E0E0',
     light: '#C6CEDD',
-    darkBlue: '#2C406E',
+    darkBlue: '#10275A',
     warning: '#ff9800',
     info: '#2196f3',
 

@@ -1,3 +1,4 @@
+import WizardStepper from '@/components/shared/wizardSteper';
 import { Button } from '@/components/ui/button';
 import { Center } from '@/components/ui/center';
 import { Heading } from '@/components/ui/heading';
@@ -12,7 +13,6 @@ export default function Home() {
 
   const removeItem = async () => {
     try {
-      await AsyncStorage.removeItem('app-store');
       await AsyncStorage.removeItem('lang');
       router.replace('/language');
     } catch (error) {
@@ -22,8 +22,9 @@ export default function Home() {
 
   return (
     <Center className="flex-1">
+      <WizardStepper />
+
       <Heading>{t('home')}</Heading>
-      <Text className="text-xl">{t('welcome to home')}</Text>
       <Button onPress={removeItem}>
         <Text>{t('clear storage')}</Text>
       </Button>

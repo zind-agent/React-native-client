@@ -11,7 +11,7 @@ import { Platform } from 'react-native';
 const WizardForm = () => {
   const { t } = useTranslation();
   return (
-    <Box className="flex-1 flex justify-between">
+    <Box className="flex-1 flex justify-between" style={{ direction: 'ltr' }}>
       <Box
         className="h-1/2 rounded-b-[40] pb-5 flex justify-center px-10"
         style={{

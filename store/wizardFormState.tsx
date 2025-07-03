@@ -1,12 +1,14 @@
 import { WizardStateType } from '@/types/wizard-form-type';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export const useWizardStore = create<WizardStateType>()(
   persist(
     (set) => ({
       step: 1,
       firstname: '',
+      lastname: '',
       gender: '',
       age: 0,
       weight: 0,
@@ -20,6 +22,9 @@ export const useWizardStore = create<WizardStateType>()(
       setField: (field: keyof Omit<WizardStateType, 'setField'>, value: string) => set({ [field]: value }),
       clear: () => set({ step: 1, firstname: '', gender: '', age: 0, weight: 0, goal: '', height: 0, descreption: '', sleepTime: '', extersize: '', stressedFeeling: '', TopPriority: '' }),
     }),
-    { name: 'wizard-store' },
+    {
+      name: 'wizard-store',
+      storage: createJSONStorage(() => AsyncStorage),
+    },
   ),
 );

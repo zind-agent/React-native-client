@@ -2,6 +2,7 @@ export interface WizardStateType {
   step: number;
 
   firstname: string;
+  lastname: string;
   age: number;
   weight: number;
   height: number;

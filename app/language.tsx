@@ -5,14 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { Heading } from '@/components/ui/heading';
 import { Colors } from '@/constants/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { MotiView } from 'moti';
 import { I18nManager } from 'react-native';
 import * as Updates from 'expo-updates';
 
 const Language = () => {
-  const router = useRouter();
   const [selectedLang, setSelectedLang] = useState<'en' | 'fa'>('en');
   const { i18n } = useTranslation();
 
@@ -25,11 +23,9 @@ const Language = () => {
     if (I18nManager.isRTL !== isRTL) {
       I18nManager.allowRTL(isRTL);
       I18nManager.forceRTL(isRTL);
-      if (Updates.reloadAsync) {
-        await Updates.reloadAsync();
-      }
-    } else {
-      router.replace('/tabs/(tabs)');
+    }
+    if (Updates.reloadAsync) {
+      await Updates.reloadAsync();
     }
   };
 
