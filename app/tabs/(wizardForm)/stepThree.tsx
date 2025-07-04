@@ -70,7 +70,7 @@ const StepThree = () => {
       setField('sleepTime', selectedOptions.questionOne || '');
       setField('extersize', selectedOptions.questionTwo || '');
       setField('stressedFeeling', selectedOptions.questionThree || '');
-      router.push('/tabs/(wizardForm)/stepTwo');
+      router.push('/tabs/(wizardForm)/stepFour');
     } else {
       showToast(t('ass_questions'), 'error');
     }

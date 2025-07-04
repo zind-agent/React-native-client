@@ -5,79 +5,86 @@ import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/Themed';
 import HeaderTitle from '@/components/shared/headerTitle';
 import WizardStepper from '@/components/shared/wizardSteper';
+import { VStack } from '@/components/ui/vstack';
 import { Colors } from '@/constants/Colors';
 import { useWizardStore } from '@/store/wizardFormState';
 import { t } from 'i18next';
-import { OneQuestion, ThreeQuestion, TwoQuestion } from '@/constants/LifeStyleEnumItems';
 import { Pressable, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { VStack } from '@/components/ui/vstack';
 import { ZindCheckbox } from '@/components/shared/checkBox';
 import { router } from 'expo-router';
-import { useShowToast } from '@/components/shared/customToast';
+import { PriorityEnumItems } from '@/constants/PriorityEnumItems';
 
-const StepFour = () => {
-  const { setStep, setField } = useWizardStore();
-  const showToast = useShowToast();
+const StepTwo = () => {
+  const { setStep } = useWizardStore();
+  const { topPriority, setTopPriority } = useWizardStore();
+  const [selected, setSelected] = useState<string[]>(topPriority ?? []);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [selectedOptions, setSelectedOptions] = useState<{
-    questionOne?: string;
-    questionTwo?: string;
-    questionThree?: string;
-  }>({});
+
+  const togglePriority = (key: string) => {
+    setSelected((prevGoals) => {
+      if (prevGoals.includes(key)) {
+        return prevGoals.filter((item) => item !== key);
+      } else {
+        return [...prevGoals, key];
+      }
+    });
+  };
 
   useEffect(() => {
-    if (selectedOptions.questionOne && selectedOptions.questionTwo && selectedOptions.questionThree) {
+    if (selected.length > 0) {
       setIsButtonDisabled(false);
     } else {
       setIsButtonDisabled(true);
     }
-  }, [selectedOptions]);
+  }, [selected]);
 
   useEffect(() => {
     setStep(4);
   }, []);
 
-  const handleSelect = (question: 'questionOne' | 'questionTwo' | 'questionThree', key: string) => {
-    setSelectedOptions((prev) => ({
-      ...prev,
-      [question]: prev[question] === key ? undefined : key,
-    }));
+  const onSubmit = () => {
+    setTopPriority(selected);
+    router.push('/tabs/(tabs)');
   };
 
-  const onSubmit = () => {
-    let hasError = false;
-    const newErrorBox = { one: false, two: false, three: false };
-
-    if (!selectedOptions.questionOne) {
-      newErrorBox.one = true;
-      hasError = true;
-    }
-    if (!selectedOptions.questionTwo) {
-      newErrorBox.two = true;
-      hasError = true;
-    }
-    if (!selectedOptions.questionThree) {
-      newErrorBox.three = true;
-      hasError = true;
-    }
-
-    if (!hasError) {
-      setField('sleepTime', selectedOptions.questionOne || '');
-      setField('extersize', selectedOptions.questionTwo || '');
-      setField('stressedFeeling', selectedOptions.questionThree || '');
-      router.push('/tabs/(wizardForm)/stepTwo');
-    } else {
-      showToast(t('ass_questions'), 'error');
-    }
+  const isCheckHandler = (key: string) => {
+    togglePriority(key);
   };
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ padding: 10, paddingHorizontal: 16, paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
         <Box>
           <WizardStepper />
-          <HeaderTitle title={t('lifestyle.your_current_lifestyle')} path={'../(wizardForm)/stepTwo'} />
+          <HeaderTitle title={t('priorities.title')} path={'../(wizardForm)/stepOne'} />
+          <Heading size="lg" className="px-2 mt-4" style={{ color: Colors.light.darkBlue }}>
+            {t('priorities.subtitle')}
+          </Heading>
+          <Text className="px-3" style={{ color: Colors.light.subtext }}>
+            {t('priorities.description')}
+          </Text>
+
+          <VStack space="lg" className="mt-10">
+            {PriorityEnumItems.map((item) => (
+              <Pressable
+                key={item.key}
+                onPress={isCheckHandler.bind(null, item.key)}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 12,
+                  paddingVertical: 8,
+                  paddingHorizontal: 12,
+                  borderRadius: 12,
+                  backgroundColor: selected.includes(item.key) ? Colors.light.primary + '20' : Colors.light.surface,
+                }}
+              >
+                <ZindCheckbox checked={selected.includes(item.key)} onPress={isCheckHandler.bind(null, item.key)} />
+                <Text style={{ fontSize: 14, color: Colors.light.text }}>{t(item.label)}</Text>
+              </Pressable>
+            ))}
+          </VStack>
         </Box>
       </ScrollView>
 
@@ -92,11 +99,11 @@ const StepFour = () => {
           onPress={onSubmit}
           disabled={isButtonDisabled}
         >
-          <ButtonText>{t('continue_step')}</ButtonText>
+          <ButtonText>{t('button.zind_will_start_from_here')}</ButtonText>
         </Button>
       </Box>
     </KeyboardAvoidingView>
   );
 };
 
-export default StepFour;
+export default StepTwo;

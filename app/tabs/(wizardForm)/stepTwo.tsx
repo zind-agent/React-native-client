@@ -53,10 +53,10 @@ const StepTwo = () => {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 100 }} showsVerticalScrollIndicator={true}>
+      <ScrollView contentContainerStyle={{ padding: 10, paddingHorizontal: 16, paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
         <Box>
           <WizardStepper />
-          <HeaderTitle title={t('your_goal')} path={'../(wizardForm)/stepOne'} />
+          <HeaderTitle title={t('your_goal')} path={'../(wizardForm)/stepThree'} />
           <Heading size="xl" className="px-3 mt-4" style={{ color: Colors.light.darkBlue }}>
             {t('what_do_you_want_from_zind')}
           </Heading>

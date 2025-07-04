@@ -102,5 +102,26 @@
       "two": "Sometimes stressed",
       "three": "Calm / low stress"
     }
+  },
+  "priorities": {
+    "title": "Top Priority",
+    "subtitle": "What matters most to you right now?",
+    "description": "We've learned about your goals and lifestyle. Now pick the one thing you want to focus on first:",
+    "options": {
+      "better_sleep": "Better Sleep",
+      "lose_weight_and_get_fit": "Lose weight and get Fit",
+      "reduce_stress": "Reduce Stress",
+      "build_habits": "Build Healthy Habits",
+      "eating_healthy": "Eating Healthy",
+      "just_curios": "Just Curious",
+      "lose_weight": "Lose Weight",
+      "boost_energy": "Boost Energy",
+      "gain_muscle": "Gain Muscle & Strength",
+      "improve_nutrition": "Improve Nutrition",
+      "increase_focus": "Increase Focus & Productivity"
+    }
+  },
+  "button": {
+    "zind_will_start_from_here": "Zind will start from here"
   }
 }

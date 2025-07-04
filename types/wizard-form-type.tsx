@@ -14,10 +14,11 @@ export interface WizardStateType {
   sleepTime: string;
 
   stressedFeeling: string;
-  TopPriority: string;
+  topPriority: string[];
 
   setField: (field: keyof Omit<WizardStateType, 'setField'>, value: string) => void;
   setStep: (step: number) => void;
   setGoal: (goal: string[]) => void;
+  setTopPriority: (topPriority: string[]) => void;
   clear: () => void;
 }
