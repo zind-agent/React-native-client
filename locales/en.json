@@ -1,6 +1,6 @@
 {
   "welcome_to_home": "Welcome to Home",
-  "home": "Zind",
+  "hi": "Hi",
   "clear_storage": "Clear Storage",
   "login_mobile_number": "Login with Mobile Number",
   "login_email": "Login with Email",
@@ -123,5 +123,8 @@
   },
   "button": {
     "zind_will_start_from_here": "Zind will start from here"
+  },
+  "home": {
+    "lets_make_this_day_productive": "Let’s make this day productive"
   }
 }

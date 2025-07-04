@@ -1,6 +1,6 @@
 {
   "welcome_to_home": "به خانه خوش آمدید",
-  "home": "زیند",
+  "hi": "سلام",
   "mobile_placeholder": "شماره مبایل خود را وارد کنید",
   "clear_storage": "پاک کردن ذخیره‌سازی",
   "login_mobile_number": "ورود با شماره همراه",
@@ -124,5 +124,8 @@
   },
   "button": {
     "zind_will_start_from_here": "زیند از اینجا شروع خواهد شد"
+  },
+  "home": {
+    "lets_make_this_day_productive": "بیا امروز طوفانی بسازیم"
   }
 }

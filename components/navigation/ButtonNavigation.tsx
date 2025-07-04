@@ -9,9 +9,7 @@ import { Animated, Platform } from 'react-native';
 export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   const insets = useSafeAreaInsets();
 
-  const animatedValues = useRef(
-    state.routes.map((_, i) => new Animated.Value(state.index === i ? 1 : 0)),
-  ).current;
+  const animatedValues = useRef(state.routes.map((_, i) => new Animated.Value(state.index === i ? 1 : 0))).current;
 
   useEffect(() => {
     animatedValues.forEach((val, i) => {
@@ -25,7 +23,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
 
   return (
     <View
-      className="absolute flex-row justify-between mb-3 rounded-xl h-[70px] left-0 right-0 mx-4"
+      className="absolute flex-row justify-between mb-3 rounded-xl h-[73px] left-0 right-0 mx-4"
       style={{
         bottom: insets.bottom + 10,
         backgroundColor: Colors.light.card,
@@ -62,11 +60,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
         });
 
         return (
-          <Pressable
-            key={route.key}
-            onPress={onPress}
-            style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}
-          >
+          <Pressable key={route.key} onPress={onPress} style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
             {IconComponent?.({
               focused: isFocused,
               color: animatedColor as any,
