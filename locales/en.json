@@ -4,6 +4,7 @@
   "clear_storage": "Clear Storage",
   "login_mobile_number": "Login with Mobile Number",
   "login_email": "Login with Email",
+  "privity_security_message": "Your privacy and security are our top priorities",
   "privacy_security_message": "By entering Zind, you agree to our terms and conditions. Your information is only used to provide a better experience and more effective interaction.",
   "email": "Email",
   "email_placeholder": "Enter your Email",
@@ -46,7 +47,7 @@
   "first_name": "First Name",
   "first_name_placeholder": "Enter your first name",
   "last_name": "Last Name (optional)",
-  "Last_name_placeholder": "Enter your last name",
+  "last_name_placeholder": "Enter your last name",
   "height": "Height (CM)",
   "height_placeholder": "Enter your height",
   "weight": "Weight (KG)",
@@ -62,5 +63,44 @@
   "description": "Description (optional)",
   "continue_step": "Continue to next step",
   "write_description_placeholder": "Write a short description about yourself in 400 characters. Share your interests, skills, or goals here for better introduction.",
-  "base_information": "Base Information"
+  "base_information": "Base Information",
+  "your_goal": "Your Goal",
+  "what_do_you_want_from_zind": "What do you want from Zind?",
+  "main_goal_guidance_text": "We’d like to know your main goal so we can guide you the right way.",
+  "goals": {
+    "lose_weight": "Lose Weight",
+    "boost_energy": "Boost Energy",
+    "improve_sleep": "Improve Sleep",
+    "reduce_stress": "Reduce Stress",
+    "build_habits": "Build Healthy Habits",
+    "just_curios": "Just Curious",
+    "gain_muscle": "Gain Muscle & Strength",
+    "improve_nutrition": "Improve Nutrition",
+    "increase_focus": "Increase Focus & Productivity"
+  },
+  "lifestyle": {
+    "ass_questions": "Please answer all the questions",
+    "your_current_lifestyle": "Your Current Lifestyle",
+    "quick_snapshot_subtitle": "A quick snapshot of where you're at",
+    "tell_us_about_current_state": "To make sure Zind starts where you are, tell us a bit about your current state:",
+    "question_one": {
+      "main": "How often do you exercise per week?",
+      "one": "Not at all",
+      "two": "1-2 times",
+      "three": "3-4 times",
+      "four": "Almost every day"
+    },
+    "question_two": {
+      "main": "How's your sleep quality?",
+      "one": "Very poor",
+      "two": "Average",
+      "three": "Pretty good"
+    },
+    "question_three": {
+      "main": "How stressed do you feel?",
+      "one": "Very stressed",
+      "two": "Sometimes stressed",
+      "three": "Calm / low stress"
+    }
+  }
 }

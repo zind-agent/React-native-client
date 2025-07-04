@@ -14,15 +14,15 @@ import { WizardStateType } from '@/types/wizard-form-type';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { router } from 'expo-router';
 import { t } from 'i18next';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const stepOneSchema = z.object({
-  first_name: z.string().min(1),
-  last_name: z.string(),
-  height: z.string(),
-  weight: z.string(),
+  firstname: z.string().min(1),
+  lastname: z.string(),
+  height: z.string().min(1),
+  weight: z.string().min(1),
   age: z.string().min(1),
   gender: z.string(),
   description: z.string(),
@@ -30,20 +30,24 @@ const stepOneSchema = z.object({
 
 type stepOneSchemaType = z.infer<typeof stepOneSchema>;
 const StepOne = () => {
-  const { lastname, firstname, gender, age, weight, height, descreption, setField } = useWizardStore();
+  const { lastname, setStep, firstname, gender, age, weight, height, descreption, setField } = useWizardStore();
   const { control, handleSubmit } = useForm<stepOneSchemaType>({
     resolver: zodResolver(stepOneSchema),
     defaultValues: {
-      first_name: firstname ?? '',
-      last_name: lastname ?? '',
-      height: String(height) ?? '',
-      weight: String(weight) ?? '',
-      age: String(age) ?? '',
+      firstname: firstname ?? '',
+      lastname: lastname ?? '',
+      height: height > 0 ? String(height) : '',
+      weight: weight > 0 ? String(weight) : '',
+      age: age > 0 ? String(age) : '',
       gender: gender ?? '',
       description: descreption ?? '',
     },
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    setStep(1);
+  }, []);
 
   const onSubmit = (data: stepOneSchemaType) => {
     Object.entries(data).forEach(([key, value]) => {
@@ -51,7 +55,6 @@ const StepOne = () => {
     });
     setField('step', String(2));
     router.push('/tabs/(wizardForm)/stepTwo');
-    console.log(data);
   };
 
   return (
@@ -61,12 +64,12 @@ const StepOne = () => {
       <Box>
         <Controller
           render={({ field, fieldState }) => <StepForm title={t('first_name')} value={field.value} onChange={field.onChange} error={fieldState.error} placeholder={t('first_name_placeholder')} />}
-          name="first_name"
+          name="firstname"
           control={control}
         />
         <Controller
           render={({ field, fieldState }) => <StepForm title={t('last_name')} value={field.value} onChange={field.onChange} error={fieldState.error} placeholder={t('last_name_placeholder')} />}
-          name="last_name"
+          name="lastname"
           control={control}
         />
 

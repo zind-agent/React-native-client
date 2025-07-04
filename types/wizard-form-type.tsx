@@ -9,7 +9,7 @@ export interface WizardStateType {
   gender: 'male' | 'female' | 'other' | '';
   descreption: string;
 
-  goal: string;
+  goal: string[];
   extersize: string;
   sleepTime: string;
 
@@ -17,5 +17,7 @@ export interface WizardStateType {
   TopPriority: string;
 
   setField: (field: keyof Omit<WizardStateType, 'setField'>, value: string) => void;
+  setStep: (step: number) => void;
+  setGoal: (goal: string[]) => void;
   clear: () => void;
 }

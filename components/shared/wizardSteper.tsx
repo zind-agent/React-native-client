@@ -13,14 +13,14 @@ const WizardStepper = () => {
   const { language } = useAppStore();
   const stepLabels = [t('Information'), t('Goal'), t('Lifestyle'), t('Priority')];
 
-  const { step } = useWizardStore();
+  const { step: currentStep } = useWizardStore();
 
   return (
     <Box className="flex-row items-start justify-between w-full px-4 mt-4 mb-6">
-      {stepLabels.map((item, index) => {
+      {stepLabels.map((stepLabel, index) => {
         const stepNumber = index + 1;
-        const isActive = stepNumber === step;
-        const isCompleted = stepNumber < step;
+        const isActive = stepNumber === currentStep;
+        const isCompleted = stepNumber < currentStep;
         const isLast = index === stepLabels.length - 1;
 
         return (
@@ -37,20 +37,18 @@ const WizardStepper = () => {
                   stiffness: 500,
                   damping: 20,
                 }}
-                style={[
-                  {
-                    width: 30,
-                    height: 30,
-                    borderRadius: 18,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: 5,
-                    elevation: 2,
-                    backgroundColor: isCompleted ? Colors.light.primary : isActive ? Colors.light.primary : Colors.light.light,
-                    borderWidth: isActive ? 2 : 0,
-                    borderColor: Colors.light.primary,
-                  },
-                ]}
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 18,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 5,
+                  elevation: 2,
+                  backgroundColor: isCompleted ? Colors.light.primary : isActive ? Colors.light.primary : Colors.light.light,
+                  borderWidth: isActive ? 2 : 0,
+                  borderColor: Colors.light.primary,
+                }}
               >
                 {isCompleted ? (
                   <MotiView
@@ -83,7 +81,7 @@ const WizardStepper = () => {
                     color: isActive ? Colors.light.darkBlue : Colors.light.light,
                   }}
                 >
-                  {item}
+                  {stepLabel}
                 </Text>
               </MotiView>
             </Box>

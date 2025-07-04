@@ -8,20 +8,14 @@ import BackIcon from '@/assets/Icons/Back';
 import { Platform } from 'react-native';
 import { useAppStore } from '@/store/appState';
 import { Box } from '../ui/box';
-import { useWizardStore } from '@/store/wizardFormState';
 
 const HeaderTitle = ({ title, path }: { title: string; path: RelativePathString }) => {
   const { language } = useAppStore();
-  const { step, setField } = useWizardStore();
-  const backStep = () => {
-    if (step !== 1) setField('step', String(step - 1));
-    router.push(path);
-  };
   return (
     <HStack className="items-center gap-4 mt-5">
       <Button
         className="rounded-xl h-[44px] w-[44px]"
-        onPress={backStep}
+        onPress={() => router.push(path)}
         style={{
           ...Platform.select({
             ios: {

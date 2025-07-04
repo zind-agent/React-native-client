@@ -14,6 +14,7 @@ export default function Home() {
   const removeItem = async () => {
     try {
       await AsyncStorage.removeItem('lang');
+      await AsyncStorage.removeItem('wizard-store');
       router.replace('/language');
     } catch (error) {
       console.error('Error clearing storage:', error);
