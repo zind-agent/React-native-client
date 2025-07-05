@@ -88,7 +88,7 @@ const WeeklyDatePicker = ({ selectedDate, setSelectedDate }: Props) => {
           {...panResponder.panHandlers}
           style={{ flex: 1 }}
         >
-          <HStack className=" justify-center">
+          <HStack className="justify-center gap-[1px]">
             {generateWeekDays().map((day) => (
               <Pressable
                 key={day.date}
@@ -99,17 +99,16 @@ const WeeklyDatePicker = ({ selectedDate, setSelectedDate }: Props) => {
                   paddingHorizontal: 8,
                   paddingVertical: 4,
                   minWidth: 45,
-                  minHeight: 50,
+                  minHeight: 65,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
               >
-                <MotiView animate={{ scale: selectedDate === day.date ? 1.1 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 150 }}>
+                <MotiView animate={{ scale: selectedDate === day.date ? 1.1 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200 }}>
                   <Text
                     style={{
                       color: selectedDate === day.date ? Colors.light.surface : Colors.light.darkBlue,
-                      fontWeight: '600',
-                      fontSize: 12,
+                      fontSize: 17,
                     }}
                   >
                     {day.dayName.toUpperCase()}
@@ -117,7 +116,7 @@ const WeeklyDatePicker = ({ selectedDate, setSelectedDate }: Props) => {
                   <Text
                     style={{
                       color: selectedDate === day.date ? Colors.light.surface : Colors.light.darkBlue,
-                      fontSize: 16,
+                      fontSize: 17,
                       textAlign: 'center',
                     }}
                   >

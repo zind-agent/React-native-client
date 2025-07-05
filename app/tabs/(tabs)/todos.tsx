@@ -22,7 +22,7 @@ const Todos = () => {
     <ScrollView className="flex-1 bg-white px-5">
       <UserHeaderTitle />
       <VStack className="mt-5">
-        <HStack className="items-center justify-between">
+        <HStack className="items-center justify-between mb-2">
           <Heading
             style={{
               color: Colors.light.darkBlue,
