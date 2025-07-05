@@ -69,6 +69,7 @@
     "expo-updates": "^0.28.15",
     "expo-web-browser": "~14.0.2",
     "i18next": "^25.2.1",
+    "moment-jalaali": "^0.10.4",
     "moti": "^0.30.0",
     "nativewind": "^4.1.23",
     "react": "18.3.1",
@@ -92,6 +93,7 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/jest": "^29.5.12",
+    "@types/moment-jalaali": "^0.7.9",
     "@types/react": "~18.3.12",
     "@types/react-test-renderer": "^18.3.0",
     "jest": "^29.2.1",

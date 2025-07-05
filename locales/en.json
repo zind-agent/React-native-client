@@ -132,6 +132,12 @@
     "pending": "Pending",
     "cancel": "Canceled",
     "today_task": "Today Task",
-    "view_all": "View All"
+    "view_all": "View All",
+    "no_task": "No task is available to today task. Please create a task from the button below"
+  },
+  "todos": {
+    "task": "Task",
+    "confirm": "Confirm",
+    "today": "Today"
   }
 }

@@ -7,7 +7,7 @@ import { useAppStore } from '@/store/appState';
 export const LanguageGate = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [langSelected, setLangSelected] = useState<boolean | null>(null);
-  const { setLanguage } = useAppStore();
+  const { setLanguage, setCalender } = useAppStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -15,6 +15,7 @@ export const LanguageGate = ({ children }: { children: React.ReactNode }) => {
       if (lang) {
         setLangSelected(true);
         setLanguage(lang as 'fa' | 'en');
+        setCalender(lang === 'fa' ? 'jalali' : 'gregorian');
       } else {
         setLangSelected(false);
         router.replace('/language');

@@ -25,6 +25,7 @@ export interface AuthStateType {
   language: 'fa' | 'en' | null;
   token: string | null;
   user: User | null;
+  calender: 'jalali' | 'gregorian';
   setLanguage: (lang: 'fa' | 'en') => void;
   logout: () => void;
   hideTabBar: boolean;
@@ -32,4 +33,5 @@ export interface AuthStateType {
   sendMassage: (identifier: string) => Promise<AuthResult>;
   sendOtp: (identifier: string, code: string) => Promise<AuthResult>;
   setIsSendCode: (bool: boolean) => void;
+  setCalender: (calender: 'jalali' | 'gregorian') => void;
 }

@@ -17,10 +17,13 @@ import { FlatList } from 'react-native';
 import { Button, ButtonText } from '@/components/ui/button';
 import { router } from 'expo-router';
 import { useAppStore } from '@/store/appState';
+import { ArrowDownIcon, Icon } from '@/components/ui/icon';
 
 const Home: React.FC = () => {
   const { setHideTabBar } = useAppStore();
+  const [task, setTask] = React.useState<Number>(0);
   const lastOffset = useRef(0);
+
   return (
     <FlatList
       data={[{ key: 'content' }]}
@@ -28,6 +31,8 @@ const Home: React.FC = () => {
       renderItem={() => (
         <Box className="px-5 bg-white">
           <UserHeaderTitle />
+
+          {/*  section one for my Card  */}
           <VStack className="mt-5">
             <Heading style={{ color: Colors.light.darkBlue }} size="2xl" className="px-3">
               {t('home.my_task')}
@@ -39,7 +44,7 @@ const Home: React.FC = () => {
                   {t('home.completed')}
                 </Heading>
                 <Text className="text-center" style={{ color: Colors.light.darkBlue, fontSize: 17 }}>
-                  100 {t('home.task')}
+                  0 {t('home.task')}
                 </Text>
               </VStack>
             </GradientCard>
@@ -55,7 +60,7 @@ const Home: React.FC = () => {
                       {t('home.cancel')}
                     </Text>
                     <Text className="text-center" style={{ color: Colors.light.card, fontSize: 12 }}>
-                      30 {t('home.task')}
+                      0 {t('home.task')}
                     </Text>
                   </VStack>
                 </VStack>
@@ -71,26 +76,40 @@ const Home: React.FC = () => {
                       {t('home.pending')}
                     </Text>
                     <Text className="text-center" style={{ color: Colors.light.card, fontSize: 12 }}>
-                      30 {t('home.task')}
+                      0 {t('home.task')}
                     </Text>
                   </VStack>
                 </VStack>
               </GradientCard>
             </HStack>
           </VStack>
-          <VStack className="mt-5 mb-10">
-            <HStack className="justify-between items-center px-1">
+
+          {/*  section two for today task  */}
+          {task === 0 ? (
+            <VStack className="mt-5 mb-10 h-full">
               <Heading style={{ color: Colors.light.darkBlue }} size="2xl">
                 {t('home.today_task')}
               </Heading>
-              <Button className="bg-transparent" onPress={() => router.push('/tabs/(tabs)/todos')}>
-                <ButtonText style={{ color: Colors.light.darkBlue }} className="text-sm">
-                  {t('home.view_all')}
-                </ButtonText>
-              </Button>
-            </HStack>
-            <TaskList />
-          </VStack>
+              <Text className="text-center mt-10 px-10 text-2xl" style={{ color: Colors.light.subtext }}>
+                {t('home.no_task')}
+              </Text>
+              <Icon className="mt-10 mx-auto" size="xl" as={ArrowDownIcon} color={Colors.light.subtext} />
+            </VStack>
+          ) : (
+            <VStack className="mt-5 mb-10">
+              <HStack className="justify-between items-center px-1">
+                <Heading style={{ color: Colors.light.darkBlue }} size="2xl">
+                  {t('home.today_task')}
+                </Heading>
+                <Button className="bg-transparent" onPress={() => router.push('/tabs/(tabs)/todos')}>
+                  <ButtonText style={{ color: Colors.light.darkBlue }} className="text-sm">
+                    {t('home.view_all')}
+                  </ButtonText>
+                </Button>
+              </HStack>
+              <TaskList />
+            </VStack>
+          )}
         </Box>
       )}
       showsVerticalScrollIndicator={false}
