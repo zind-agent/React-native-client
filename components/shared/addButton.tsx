@@ -1,5 +1,4 @@
 import Plus from '@/assets/Icons/Plus';
-import { Colors } from '@/constants/Colors';
 import { MotiView } from 'moti';
 import { Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';

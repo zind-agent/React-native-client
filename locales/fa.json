@@ -126,6 +126,13 @@
     "zind_will_start_from_here": "زیند از اینجا شروع خواهد شد"
   },
   "home": {
-    "lets_make_this_day_productive": "بیا امروز طوفانی بسازیم"
+    "lets_make_this_day_productive": "بیا امروز طوفانی بسازیم",
+    "my_task": "برنامه من ",
+    "completed": "ماموریت تکمیل شده",
+    "task": "ماموریت",
+    "pending": "در جریان",
+    "cancel": "لغو شده",
+    "today_task": "امروز برنامه ها",
+    "view_all": "بیشتر"
   }
 }

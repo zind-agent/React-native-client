@@ -125,6 +125,13 @@
     "zind_will_start_from_here": "Zind will start from here"
   },
   "home": {
-    "lets_make_this_day_productive": "Let’s make this day productive"
+    "lets_make_this_day_productive": "Let’s make this day productive",
+    "my_task": "My Task",
+    "completed": "Completed Task",
+    "task": "Task",
+    "pending": "Pending",
+    "cancel": "Canceled",
+    "today_task": "Today Task",
+    "view_all": "View All"
   }
 }
