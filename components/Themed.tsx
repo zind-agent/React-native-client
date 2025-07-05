@@ -38,10 +38,5 @@ export function View(props: ViewProps) {
   const backgroundColor = useThemeColor({ light: lightColor }, 'surface');
   const { language } = useAppStore();
 
-  return (
-    <DefaultView
-      style={[{ backgroundColor, direction: language === 'fa' ? 'rtl' : 'ltr' }, style]}
-      {...otherProps}
-    />
-  );
+  return <DefaultView style={[{ backgroundColor, direction: language === 'fa' ? 'rtl' : 'ltr' }, style]} {...otherProps} />;
 }

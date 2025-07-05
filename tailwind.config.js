@@ -28,9 +28,9 @@ module.exports = {
         black: '#121212',
       },
       fontFamily: {
-        nunito: ['Nunito', 'sans-serif'],
-        nunitoItalic: ['NunitoItalic', 'sans-serif'],
-        nunitoBold: ['NunitoBold', 'sans-serif'],
+        ibmpLight: 'IBMPLight',
+        ibmpRegular: 'IBMPRegular',
+        ibmpBold: 'IBMPLexSansThaiLooped-Bold',
         heading: ['DanaBold'],
         danaMedium: ['DanaMedium'],
         danaRegular: ['DanaRegular'],
@@ -51,6 +51,7 @@ module.exports = {
         button: '0px 3px 10px rgba(38, 38, 38, 0.2)',
       },
       borderRadius: {
+        lg: '15px',
         xl: '1rem',
         '2xl': '1.5rem',
       },

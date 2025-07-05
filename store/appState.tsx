@@ -12,8 +12,10 @@ export const useAppStore = create<AuthStateType>()(
       language: null,
       user: null,
       token: null,
+      hideTabBar: false,
       isSendCode: false,
       setIsSendCode: (isSendCode) => set({ isSendCode }),
+      setHideTabBar: (bool) => set({ hideTabBar: bool }),
 
       setLanguage: (lang) => set({ language: lang }),
       logout: () => set({ user: null, isLogin: false }),

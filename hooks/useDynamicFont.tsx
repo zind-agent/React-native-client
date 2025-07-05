@@ -8,7 +8,7 @@ export function useDynamicFont(style?: DynamicTextStyle): DynamicTextStyle {
   const { language } = useAppStore();
 
   const fontStyle: TextStyle = {
-    fontFamily: language === 'fa' ? 'DanaMedium' : 'Nunito',
+    fontFamily: language === 'fa' ? 'DanaMedium' : 'IBMPRegular',
   };
 
   const computedStyle = useMemo(() => {

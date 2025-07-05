@@ -27,6 +27,8 @@ export interface AuthStateType {
   user: User | null;
   setLanguage: (lang: 'fa' | 'en') => void;
   logout: () => void;
+  hideTabBar: boolean;
+  setHideTabBar: (bool: boolean) => void;
   sendMassage: (identifier: string) => Promise<AuthResult>;
   sendOtp: (identifier: string, code: string) => Promise<AuthResult>;
   setIsSendCode: (bool: boolean) => void;

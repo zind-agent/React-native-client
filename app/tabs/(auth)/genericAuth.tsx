@@ -21,6 +21,7 @@ import MailIcon from '@/assets/Icons/Mail';
 import Loading from '@/components/shared/Loading';
 import { CodeForm } from '@/components/shared/form/codeForm';
 import { useShowToast } from '@/components/shared/customToast';
+import { t } from 'i18next';
 
 const emailSchema = z.object({
   identifier: z.string().min(1, { message: 'email required' }).email({ message: 'email invalid' }),
@@ -35,7 +36,7 @@ const codeSchema = z.object({
     .string()
     .min(4, { message: 'code must be 4 digits' })
     .max(4, { message: 'code must be 4 digits' })
-    .regex(/^\d{4}$/, { message: 'code must contain only numbers' }),
+    .regex(/^\d{4}$/, { message: t('code_must_contain_only_numbers') }),
 });
 
 const schemas = {
@@ -43,35 +44,30 @@ const schemas = {
   phone: phoneSchema,
 } as const;
 
-const authConfigs = {
-  email: {
-    type: 'email',
-    title: 'login email',
-    placeholder: 'email placeholder',
-    alternativeText: 'continue with mobile',
-  },
-  phone: {
-    type: 'phone',
-    title: 'login phoneNumber',
-    placeholder: 'phoneNumber placeholder',
-    alternativeText: 'continue with email',
-  },
-} as const;
-
 interface GenericAuthProps {
   authType: 'email' | 'phone';
 }
 
 const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
-  const { t } = useTranslation();
   const { language, sendMassage, sendOtp, isLoading, isSendCode, setIsSendCode } = useAppStore();
   const showToast = useShowToast();
 
-  console.log('GenericAuth rendered with authType:', authType);
-  console.log('Available authTypes:', Object.keys(schemas));
+  const authConfigs = {
+    email: {
+      type: 'email',
+      title: t('login_email'),
+      placeholder: t('email_placeholder'),
+      alternativeText: t('continue_with_email'),
+    },
+    phone: {
+      type: 'phone',
+      title: t('login_mobile_number'),
+      placeholder: t('mobile_placeholder'),
+      alternativeText: t('continue_with_mobile'),
+    },
+  } as const;
 
   if (!authType) {
-    console.error('authType is undefined or null');
     return (
       <VStack className="flex-1 justify-center items-center">
         <Text>Error: authType not provided</Text>
@@ -118,7 +114,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         return result;
       } catch (error) {
         console.error('Verify code error:', error);
-        return { success: false, message: t('something went wrong') };
+        return { success: false, message: t('something_went_wrong') };
       }
     },
     [sendOtp, t],
@@ -130,23 +126,23 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         const result = await sendMassage(data.identifier);
 
         if (result.success) {
-          showToast(t('code sent successfully'), 'success');
+          showToast(t('code_sent_successfully'), 'success');
         } else {
-          showToast(result.message || t('failed to send code'), 'error');
+          showToast(result.message || t('failed_to_send_code'), 'error');
         }
       } else {
         const result = await verifyCode(data.identifier, (data as CodeFormValues).code);
         if (result.success) {
-          showToast(t('login successful'), 'success');
+          showToast(t('login_successful'), 'success');
           setIsSendCode(false);
           router.push('/tabs/profile');
         } else {
-          showToast(result.message || t('invalid code'), 'error');
+          showToast(result.message || t('invalid_code'), 'error');
         }
       }
     } catch (error) {
       console.error('Submit error:', error);
-      showToast(t('something went wrong'), 'error');
+      showToast(t('something_went_wrong'), 'error');
     }
   };
 
@@ -155,14 +151,14 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
       if (identifierValue) {
         const result = await sendMassage(identifierValue);
         if (result.success) {
-          showToast(t('code resent successfully'), 'success');
+          showToast(t('code_sent_successfully'), 'success');
         } else {
-          showToast(result.message || t('failed to resend code'), 'error');
+          showToast(result.message || t('failed_to_resend_code'), 'error');
         }
       }
     } catch (error) {
       console.error('Resend code error:', error);
-      showToast(t('failed to resend code'), 'error');
+      showToast(t('failed_to_resend_code'), 'error');
     }
   }, [identifierValue, sendMassage, t, showToast]);
 
@@ -171,14 +167,8 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
   const canSubmit = isIdentifierValid && isCodeValid && !isLoading;
 
   const handleNavigateToAlternative = useCallback(() => {
-    try {
-      const targetRoute = authType === 'email' ? '/tabs/(auth)/mobileAuth' : '/tabs/(auth)/emailAuth';
-      console.log('Current authType:', authType);
-      console.log('Navigating to:', targetRoute);
-      router.push(targetRoute);
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
+    const targetRoute = authType === 'email' ? '/tabs/(auth)/mobileAuth' : '/tabs/(auth)/emailAuth';
+    router.push(targetRoute);
   }, [authType]);
 
   return (
@@ -270,7 +260,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
           ) : (
             <>
               {!isSendCode && <ButtonIcon as={SendIcon} />}
-              <ButtonText className="text-white text-xl">{!isSendCode ? t('send code') : t('approve code')}</ButtonText>
+              <ButtonText className="text-white text-xl">{!isSendCode ? t('send_code') : t('approve_code')}</ButtonText>
             </>
           )}
         </Button>

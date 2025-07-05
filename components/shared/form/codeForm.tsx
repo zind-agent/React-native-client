@@ -87,7 +87,6 @@ export const CodeForm = ({ value, onChange, error, onResendCode, length = 4 }: C
       <Box className="mt-4 items-center">
         <HStack className="w-full justify-between mb-3 px-2 items-center">
           <Text className="text-surface">{t('we send code')}</Text>
-
           {secondsLeft > 0 ? (
             <Text className="text-surface">{formatTime(secondsLeft)}</Text>
           ) : (
@@ -117,7 +116,7 @@ export const CodeForm = ({ value, onChange, error, onResendCode, length = 4 }: C
               value={otpValues[index]}
               onChangeText={(text) => handleInputChange(text, index)}
               onKeyPress={({ nativeEvent }) => handleKeyPress(nativeEvent.key, index)}
-              className="text-xl text-center"
+              className="text-xl !text-center"
               maxLength={1}
               keyboardType="numeric"
               selectTextOnFocus

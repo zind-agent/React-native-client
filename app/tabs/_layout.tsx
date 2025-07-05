@@ -11,6 +11,7 @@ export default function AppLayout() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      <Stack.Screen name="(wizardForm)" options={{ headerShown: false }} />
     </Stack>
   );
 }

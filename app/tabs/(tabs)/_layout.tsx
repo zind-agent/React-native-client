@@ -7,21 +7,16 @@ import TodoIcon from '@/assets/Icons/Todo';
 import Todos from './todos';
 import ProfileIcon from '@/assets/Icons/Profile';
 import ActiveIcon from '@/assets/Icons/ActiveIcon';
-import { Colors } from '@/constants/Colors';
-import Plus from '@/assets/Icons/Plus';
-import { View } from '@/components/Themed';
 import AddTodo from './addTodo';
 import Activity from './activity';
 import Home from '.';
+import AddButton from '@/components/shared/addButton';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabLayout() {
   return (
-    <Tab.Navigator
-      tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
-    >
+    <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />} screenOptions={{ headerShown: false }}>
       <Tab.Screen
         name="Home"
         component={Home}
@@ -42,21 +37,7 @@ export default function TabLayout() {
         name="AddItems"
         component={AddTodo}
         options={{
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                backgroundColor: Colors.light.primary,
-                width: focused ? 70 : 65,
-                height: focused ? 70 : 65,
-                borderRadius: 35,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: -35,
-              }}
-            >
-              <Plus />
-            </View>
-          ),
+          tabBarIcon: ({ focused }) => <AddButton focused={!focused} />,
         }}
       />
 
