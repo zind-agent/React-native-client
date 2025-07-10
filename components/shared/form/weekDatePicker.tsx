@@ -1,32 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { HStack } from '@/components/ui/hstack';
 import { Pressable } from '@/components/ui/pressable';
 import { PanResponder, Text } from 'react-native';
 import { ArrowLeftIcon, ArrowRightIcon, Icon } from '@/components/ui/icon';
-import moment from 'moment-jalaali';
 import { useAppStore } from '@/store/appState';
 import { Colors } from '@/constants/Colors';
 import { Box } from '@/components/ui/box';
 import { MotiView } from 'moti';
 import { t } from 'i18next';
+import jalaliMoment from 'jalali-moment';
 
 interface Props {
   selectedDate: string | null;
   setSelectedDate: (date: string) => void;
 }
 
-const WeeklyDatePicker = ({ selectedDate, setSelectedDate }: Props) => {
+const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate }: Props) => {
   const { calender } = useAppStore();
-  const [weekStartDate, setWeekStartDate] = useState(moment().startOf('week'));
+  const [weekStartDate, setWeekStartDate] = useState(jalaliMoment().startOf('week'));
   const [isAnimating, setIsAnimating] = useState(false);
   const [animationKey, setAnimationKey] = useState(0);
 
   const generateWeekDays = () => {
     const days = [];
     for (let i = 0; i < 7; i++) {
-      const date = calender === 'jalali' ? moment(weekStartDate).add(i, 'days').format('jYYYY-jMM-jDD') : moment(weekStartDate).add(i, 'days').format('YYYY-MM-DD');
-      const dayName = calender === 'jalali' ? moment(weekStartDate).add(i, 'days').format('jdd') : moment(weekStartDate).add(i, 'days').format('dd');
-      const dayNumber = calender === 'jalali' ? moment(weekStartDate).add(i, 'days').format('jD') : moment(weekStartDate).add(i, 'days').format('D');
+      const currentDay = jalaliMoment(weekStartDate).add(i, 'days');
+      let date, dayName, dayNumber;
+
+      const persianWeekDaysShort = ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'];
+      if (calender === 'jalali') {
+        date = currentDay.format('jYYYY-jMM-jDD');
+        dayNumber = currentDay.format('jD');
+        const dayIndex = currentDay.day();
+        dayName = persianWeekDaysShort[dayIndex];
+      } else {
+        date = currentDay.format('YYYY-MM-DD');
+        dayName = currentDay.format('dd');
+        dayNumber = currentDay.format('D');
+      }
+
       days.push({ date, dayName, dayNumber });
     }
     return days;
@@ -36,9 +48,8 @@ const WeeklyDatePicker = ({ selectedDate, setSelectedDate }: Props) => {
     if (isAnimating) return;
 
     setIsAnimating(true);
-    setWeekStartDate((prev) => (direction === 'next' ? moment(prev).add(7, 'days') : moment(prev).subtract(7, 'days')));
+    setWeekStartDate((prev) => (direction === 'next' ? jalaliMoment(prev).add(7, 'days') : jalaliMoment(prev).subtract(7, 'days')));
     setAnimationKey((prev) => prev + 1);
-
     setTimeout(() => setIsAnimating(false), 300);
   };
 
@@ -51,25 +62,25 @@ const WeeklyDatePicker = ({ selectedDate, setSelectedDate }: Props) => {
   });
 
   useEffect(() => {
-    const today = calender === 'jalali' ? moment().format('jYYYY-jMM-jDD') : moment().format('YYYY-MM-DD');
+    const today = calender === 'jalali' ? jalaliMoment().format('jYYYY-jMM-jDD') : jalaliMoment().format('YYYY-MM-DD');
     setSelectedDate(today);
-  }, [calender]);
+  }, [calender, setSelectedDate]);
 
   const goToToday = () => {
-    const today = moment().startOf('week');
+    const today = jalaliMoment().startOf('week');
     if (!today.isSame(weekStartDate, 'week')) {
       setIsAnimating(true);
       setWeekStartDate(today);
       setAnimationKey((prev) => prev + 1);
 
-      const todayDate = calender === 'jalali' ? moment().format('jYYYY-jMM-jDD') : moment().format('YYYY-MM-DD');
+      const todayDate = calender === 'jalali' ? jalaliMoment().format('YYYY-MM-DD') : jalaliMoment().format('YYYY-MM-DD');
       setSelectedDate(todayDate);
 
       setTimeout(() => setIsAnimating(false), 300);
     }
   };
 
-  const isCurrentWeek = moment().startOf('week').isSame(weekStartDate, 'week');
+  const isCurrentWeek = jalaliMoment().startOf('week').isSame(weekStartDate, 'week');
 
   return (
     <Box>
@@ -104,19 +115,20 @@ const WeeklyDatePicker = ({ selectedDate, setSelectedDate }: Props) => {
                   justifyContent: 'center',
                 }}
               >
-                <MotiView animate={{ scale: selectedDate === day.date ? 1.1 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200 }}>
+                <MotiView animate={{ scale: selectedDate === day.date ? 1.2 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200 }}>
                   <Text
                     style={{
                       color: selectedDate === day.date ? Colors.light.surface : Colors.light.darkBlue,
-                      fontSize: 17,
+                      fontSize: 16,
+                      textAlign: 'center',
                     }}
                   >
-                    {day.dayName.toUpperCase()}
+                    {day.dayName}
                   </Text>
                   <Text
                     style={{
                       color: selectedDate === day.date ? Colors.light.surface : Colors.light.darkBlue,
-                      fontSize: 17,
+                      fontSize: 16,
                       textAlign: 'center',
                     }}
                   >
@@ -164,6 +176,6 @@ const WeeklyDatePicker = ({ selectedDate, setSelectedDate }: Props) => {
       )}
     </Box>
   );
-};
+});
 
 export default WeeklyDatePicker;

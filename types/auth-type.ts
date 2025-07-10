@@ -26,6 +26,7 @@ export interface AuthStateType {
   token: string | null;
   user: User | null;
   calender: 'jalali' | 'gregorian';
+  addInTimeTodoDrawer: boolean;
   setLanguage: (lang: 'fa' | 'en') => void;
   logout: () => void;
   hideTabBar: boolean;
@@ -34,4 +35,5 @@ export interface AuthStateType {
   sendOtp: (identifier: string, code: string) => Promise<AuthResult>;
   setIsSendCode: (bool: boolean) => void;
   setCalender: (calender: 'jalali' | 'gregorian') => void;
+  setAddInTimeTodoDrawer: (bool: boolean) => void;
 }

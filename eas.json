@@ -8,11 +8,13 @@
       "developmentClient": true,
       "distribution": "internal"
     },
+    "production": {
+      "developmentClient": false,
+      "distribution": "store",
+      "autoIncrement": true
+    },
     "preview": {
       "distribution": "internal"
-    },
-    "production": {
-      "autoIncrement": true
     }
   },
   "submit": {

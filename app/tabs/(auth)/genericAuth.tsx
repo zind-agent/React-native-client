@@ -8,7 +8,6 @@ import { Colors } from '@/constants/Colors';
 import { useAppStore } from '@/store/appState';
 import { router } from 'expo-router';
 import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Platform } from 'react-native';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';

@@ -13,11 +13,13 @@ export const useAppStore = create<AuthStateType>()(
       user: null,
       token: null,
       hideTabBar: false,
+      addInTimeTodoDrawer: false,
       isSendCode: false,
       calender: 'jalali',
       setIsSendCode: (isSendCode) => set({ isSendCode }),
       setHideTabBar: (bool) => set({ hideTabBar: bool }),
       setCalender: (calender) => set({ calender }),
+      setAddInTimeTodoDrawer: (bool) => set({ addInTimeTodoDrawer: bool }),
 
       setLanguage: (lang) => set({ language: lang }),
       logout: () => set({ user: null, isLogin: false }),

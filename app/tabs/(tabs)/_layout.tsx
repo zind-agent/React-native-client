@@ -7,10 +7,8 @@ import TodoIcon from '@/assets/Icons/Todo';
 import Todos from './todos';
 import ProfileIcon from '@/assets/Icons/Profile';
 import ActiveIcon from '@/assets/Icons/ActiveIcon';
-import AddTodo from './addTodo';
 import Activity from './activity';
 import Home from '.';
-import AddButton from '@/components/shared/addButton';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,14 +28,6 @@ export default function TabLayout() {
         component={Todos}
         options={{
           tabBarIcon: ({ focused }) => <TodoIcon focused={!focused} />,
-        }}
-      />
-
-      <Tab.Screen
-        name="AddItems"
-        component={AddTodo}
-        options={{
-          tabBarIcon: ({ focused }) => <AddButton focused={!focused} />,
         }}
       />
 

@@ -138,6 +138,22 @@
   "todos": {
     "task": "Task",
     "confirm": "Confirm",
-    "today": "Today"
-  }
+    "today": "Today",
+    "any_schedule": "You don't have any schedule",
+    "add_todo_in_time": "Add Task in Time",
+    "append_title_required": "Title is required",
+    "append_time_required": "Time is required",
+    "min": "Min",
+    "hour": "Hour",
+    "untile": "Until",
+    "is_completed": "Is Completed?",
+    "start_time": "Start Time",
+    "end_time": "End Time",
+    "add_task": "Add Task",
+    "add_by_ai": "Add By AI"
+  },
+  "add": "Add",
+  "title": "Title",
+  "tags": "Tags",
+  "submit": "Submit"
 }

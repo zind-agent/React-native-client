@@ -28,7 +28,6 @@ module.exports = {
         black: '#121212',
       },
       fontFamily: {
-        ibmpLight: 'IBMPLight',
         ibmpRegular: 'IBMPRegular',
         ibmpBold: 'IBMPLexSansThaiLooped-Bold',
         heading: ['DanaBold'],

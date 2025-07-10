@@ -10,8 +10,8 @@ import { VStack } from '@/components/ui/vstack';
 import { Pressable } from '@/components/ui/pressable';
 import CalenderIcon from '@/assets/Icons/CalenderIcon';
 import { Text } from 'react-native';
-import moment from 'moment-jalaali';
 import { ArrowLeftIcon, ArrowRightIcon, Icon } from '@/components/ui/icon';
+import jalaliMoment from 'jalali-moment';
 
 interface MonthOption {
   value: string;
@@ -63,7 +63,7 @@ const SelectYearWithMonth = ({
   const { language, calender } = useAppStore();
   const [showDrawer, setShowDrawer] = React.useState(false);
 
-  const currentYear = calender === 'jalali' ? moment().format('jYYYY') : moment().year().toString();
+  const currentYear = calender === 'jalali' ? jalaliMoment().jYear().toString() : jalaliMoment().year().toString();
   const [year, setYear] = React.useState<number>(parseInt(currentYear));
 
   React.useEffect(() => {
@@ -74,7 +74,7 @@ const SelectYearWithMonth = ({
   const handleIncrease = () => setYear((prev) => prev + 1);
 
   const months = calender === 'jalali' ? jalaliMonths : gregorianMonths;
-  const displayYear = calender === 'jalali' ? moment(`${year}`, 'jYYYY').format('jYYYY') : year.toString();
+  const displayYear = calender === 'jalali' ? jalaliMoment(`${year}`, 'jYYYY').format('jYYYY') : year.toString();
 
   const selectedMonthLabel = selectedMonth ? months.find((m) => m.value === selectedMonth) : null;
 

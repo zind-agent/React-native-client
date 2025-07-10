@@ -1,30 +1,35 @@
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Loading from '@/components/shared/Loading';
 import { useRouter } from 'expo-router';
 import { useAppStore } from '@/store/appState';
+import Loading from '@/components/shared/Loading';
 
 export const LanguageGate = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
-  const [langSelected, setLangSelected] = useState<boolean | null>(null);
   const { setLanguage, setCalender } = useAppStore();
   const router = useRouter();
 
   useEffect(() => {
-    AsyncStorage.getItem('lang').then((lang) => {
-      if (lang) {
-        setLangSelected(true);
-        setLanguage(lang as 'fa' | 'en');
-        setCalender(lang === 'fa' ? 'jalali' : 'gregorian');
-      } else {
-        setLangSelected(false);
-        router.replace('/language');
+    const checkLanguage = async () => {
+      try {
+        const lang = await AsyncStorage.getItem('lang');
+        if (lang) {
+          setLanguage(lang as 'fa' | 'en');
+          setCalender(lang === 'fa' ? 'jalali' : 'gregorian');
+        } else {
+          setTimeout(() => router.push('/language'), 0);
+        }
+      } catch (error) {
+        console.error('Error reading AsyncStorage:', error);
+        setTimeout(() => router.push('/language'), 0);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
-  }, []);
+    };
+    checkLanguage();
+  }, [router]);
 
   if (loading) return <Loading />;
 
-  return langSelected ? <>{children}</> : null;
+  return <>{children}</>;
 };

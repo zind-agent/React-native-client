@@ -18,12 +18,15 @@ import { Button, ButtonText } from '@/components/ui/button';
 import { router } from 'expo-router';
 import { useAppStore } from '@/store/appState';
 import { ArrowDownIcon, Icon } from '@/components/ui/icon';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home: React.FC = () => {
   const { setHideTabBar } = useAppStore();
   const [task, setTask] = React.useState<Number>(0);
   const lastOffset = useRef(0);
-
+  const changeLanguage = async () => {
+    AsyncStorage.removeItem('lang');
+  };
   return (
     <FlatList
       data={[{ key: 'content' }]}
@@ -83,6 +86,9 @@ const Home: React.FC = () => {
               </GradientCard>
             </HStack>
           </VStack>
+          <Button onPress={changeLanguage}>
+            <ButtonText>Change Language</ButtonText>
+          </Button>
 
           {/*  section two for today task  */}
           {task === 0 ? (
