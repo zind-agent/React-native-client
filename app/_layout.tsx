@@ -1,6 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import 'react-native-reanimated';
 import 'react-native-gesture-handler';
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
@@ -11,6 +12,11 @@ import '../global.css';
 import Loading from '@/components/shared/Loading';
 import { LanguageGate } from '@/constants/LanguageGate';
 import { ToastProvider } from '@gluestack-ui/toast';
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 export { ErrorBoundary } from 'expo-router';
 

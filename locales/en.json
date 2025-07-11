@@ -1,5 +1,5 @@
 {
-  "welcome_to_home": "Welcome to Home",
+  "welcome_to_zind": "Welcome to Zind",
   "hi": "Hi",
   "clear_storage": "Clear Storage",
   "login_mobile_number": "Login with Mobile Number",
@@ -140,7 +140,7 @@
     "confirm": "Confirm",
     "today": "Today",
     "any_schedule": "You don't have any schedule",
-    "add_todo_in_time": "Add Task in Time",
+    "add_todo_in_time": "Add Task",
     "append_title_required": "Title is required",
     "append_time_required": "Time is required",
     "min": "Min",
@@ -150,7 +150,9 @@
     "start_time": "Start Time",
     "end_time": "End Time",
     "add_task": "Add Task",
-    "add_by_ai": "Add By AI"
+    "add_by_ai": "Add By AI",
+    "is_cancel": "Is Cancel?",
+    "date": "Date"
   },
   "add": "Add",
   "title": "Title",

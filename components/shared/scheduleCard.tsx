@@ -1,28 +1,22 @@
 import { Card } from '@/components/ui/card';
 import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
-import { Text, Pressable } from 'react-native';
+import { Text, Pressable, StyleProp, ViewStyle } from 'react-native';
 import { Badge } from '@/components/ui/badge';
 import { Box } from '../ui/box';
 import { Colors } from '@/constants/Colors';
 import { tags as todoTags } from '@/constants/TodoAddTags';
+import { Todo } from '@/storage/todoStorage';
 
 interface ScheduleCardProps {
-  task: {
-    id: string;
-    title: string;
-    tags: string[];
-    start_time: string;
-    end_time: string;
-    date: string;
-    isCompleted: boolean;
-  };
+  task: Todo;
   onPress?: () => void;
+  style?: StyleProp<ViewStyle>;
 }
 
-const ScheduleCard = ({ task, onPress }: ScheduleCardProps) => {
+const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
   const CardContent = () => (
-    <Card className="min-w-56 w-max rounded-r-lg p-2 px-3 mx-1 my-1" style={{ backgroundColor: Colors.light.surface, elevation: 2 }}>
+    <Card className="min-w-56 min-h-[80px] w-max mx-1 my-1" style={[{ backgroundColor: Colors.light.surface, elevation: 2 }, style]}>
       <Box className="p-1">
         <HStack className="items-start px-2" style={{ borderLeftWidth: 1, borderColor: task.isCompleted ? Colors.light.light : Colors.light.primary }}>
           <VStack className="flex-1">

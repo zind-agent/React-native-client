@@ -4,7 +4,7 @@ import { Colors } from '@/constants/Colors';
 import { useAppStore } from '@/store/appState';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from 'i18next';
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { AddTodoForm } from './addTodoTitle';
@@ -18,23 +18,35 @@ import { TimePicker } from '../timePicker/timePicker';
 import { tags } from '@/constants/TodoAddTags';
 import { Switch } from '@/components/ui/switch';
 import { useTodoStore } from '@/store/todoState';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Loading from '../Loading';
 
 const addTodoSchema = z.object({
+  id: z.string(),
   title: z.string().min(1, { message: t('append_title_required') }),
   tags: z.array(z.string()),
   start_time: z.string().min(1, { message: t('append_time_required') }),
   end_time: z.string().min(1, { message: t('append_time_required') }),
   date: z.string().min(1, { message: t('append_date_required') }),
   is_completed: z.boolean(),
-  id: z.string(),
   createdAt: z.string(),
+  is_cancel: z.boolean(),
 });
 
 type AddTodoSchemaType = z.infer<typeof addTodoSchema>;
 
-const AddTodoInTime = memo(({ date }: { date: string }) => {
+interface AddTodoInTimeProps {
+  date: string;
+  id?: number;
+}
+
+const AddTodoInTime = memo(({ date, id }: AddTodoInTimeProps) => {
   const { addInTimeTodoDrawer, setAddInTimeTodoDrawer } = useAppStore();
-  const { addTodo } = useTodoStore();
+  const { addTodo, updateTodo, todos, loading } = useTodoStore();
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const todo = id ? todos.find((t) => t.id === id.toString()) : undefined;
+  const isEditMode = !!todo;
 
   const {
     control,
@@ -44,34 +56,63 @@ const AddTodoInTime = memo(({ date }: { date: string }) => {
     reset,
   } = useForm<AddTodoSchemaType>({
     resolver: zodResolver(addTodoSchema),
-    defaultValues: {
-      id: Date.now().toString(),
-      title: '',
-      tags: [],
-      start_time: '',
-      end_time: '',
-      is_completed: false,
-      date: date,
-      createdAt: new Date().toISOString(),
-    },
+    defaultValues: isEditMode
+      ? {
+          id: todo.id,
+          title: todo.title,
+          tags: todo.tags,
+          start_time: todo.start_time,
+          end_time: todo.end_time,
+          date: todo.date,
+          is_completed: todo.isCompleted,
+          createdAt: todo.createdAt,
+          is_cancel: todo.isCancel,
+        }
+      : {
+          id: Date.now().toString(),
+          title: '',
+          tags: [],
+          start_time: '',
+          end_time: '',
+          is_completed: false,
+          date: date,
+          createdAt: new Date().toISOString(),
+          is_cancel: false,
+        },
     mode: 'onSubmit',
   });
 
   useEffect(() => {
-    reset(() => ({
-      date: date,
-      start_time: '',
-      end_time: '',
-      is_completed: false,
-      tags: [],
-      title: '',
-      createdAt: new Date().toISOString(),
-      id: Date.now().toString(),
-    }));
-  }, [date, reset]);
+    reset(() =>
+      isEditMode
+        ? {
+            id: todo.id,
+            title: todo.title,
+            tags: todo.tags,
+            start_time: todo.start_time,
+            end_time: todo.end_time,
+            date: todo.date,
+            is_completed: todo.isCompleted,
+            createdAt: todo.createdAt,
+            is_cancel: todo.isCancel,
+          }
+        : {
+            id: Date.now().toString(),
+            title: '',
+            tags: [],
+            start_time: '',
+            end_time: '',
+            is_completed: false,
+            date: date,
+            createdAt: new Date().toISOString(),
+            is_cancel: false,
+          },
+    );
+  }, [date, todo, reset]);
 
   const startTime = watch('start_time');
   const endTime = watch('end_time');
+  const isCancel = watch('is_cancel');
 
   const timeDifference = useMemo(() => {
     if (!startTime || !endTime) return '';
@@ -101,36 +142,40 @@ const AddTodoInTime = memo(({ date }: { date: string }) => {
   }, [startTime, endTime]);
 
   const onSubmit = (data: AddTodoSchemaType) => {
-    addTodo({
-      id: Date.now().toString(),
+    const todoData = {
+      id: isEditMode ? todo.id : Date.now().toString(),
       title: data.title,
       tags: data.tags,
       start_time: data.start_time,
       end_time: data.end_time,
       date: data.date,
-      completed: data.is_completed,
-      createdAt: new Date().toISOString(),
-    }).then(() => {
+      isCompleted: data.is_completed,
+      createdAt: isEditMode ? todo.createdAt : new Date().toISOString(),
+      isCancel: data.is_cancel,
+    };
+
+    const action = isEditMode ? updateTodo(todoData) : addTodo(todoData);
+
+    action.then(() => {
       reset();
       setAddInTimeTodoDrawer(false);
     });
   };
 
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <>
-      <Button variant="solid" onPress={() => setAddInTimeTodoDrawer(true)} className="rounded-lg mx-10 mt-4">
-        <HStack className="items-center" space="lg">
-          <ButtonText className="text-md" style={{ color: Colors.light.light, fontWeight: 900 }}>
-            + {t('todos.add_todo_in_time')}
-          </ButtonText>
-        </HStack>
-      </Button>
-
       <Drawer isOpen={addInTimeTodoDrawer} onClose={() => setAddInTimeTodoDrawer(false)} size="lg" anchor="bottom" className="bg-black/60">
         <DrawerBackdrop />
         <DrawerContent style={{ backgroundColor: Colors.light.card }} className="h-max">
           <DrawerHeader className="justify-center py-1">
-            <Heading style={{ color: Colors.light.darkBlue }}>{t('todos.add_todo_in_time')}</Heading>
+            <Heading style={{ color: Colors.light.darkBlue }}>{isEditMode ? t('todos.edit_todo') : t('todos.add_todo_in_time')}</Heading>
           </DrawerHeader>
 
           <DrawerBody>
@@ -140,7 +185,7 @@ const AddTodoInTime = memo(({ date }: { date: string }) => {
                 control={control}
                 render={({ field }) => (
                   <AddTodoForm
-                    style={[{ borderWidth: 1, height: 70 }, { borderColor: Colors.light.light }]}
+                    style={[{ borderWidth: 1, height: 60 }, { borderColor: Colors.light.light }]}
                     value={field.value}
                     placeholder={t('title')}
                     onChange={field.onChange}
@@ -151,7 +196,47 @@ const AddTodoInTime = memo(({ date }: { date: string }) => {
             </MotiView>
 
             <MotiView from={{ opacity: 0, translateY: 30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 400, delay: 200 }}>
-              <VStack className="mt-6 mb-4 gap-4">
+              <VStack className="mt-6 mb-4 gap-5 rounded-lg p-7" style={{ backgroundColor: Colors.light.primary + '20' }}>
+                <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.date')}</Text>
+                <Box style={{ alignItems: 'center' }}>
+                  <Controller
+                    name="date"
+                    control={control}
+                    render={({ field }) => (
+                      <>
+                        <Button
+                          onPress={() => setShowDatePicker(true)}
+                          style={{
+                            height: 50,
+                            width: '100%',
+                            backgroundColor: Colors.light.primary + '40',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <ButtonText style={{ color: Colors.light.primary, fontWeight: '800' }}>{field.value ? `${field.value} ` : t('todos.select_date')}</ButtonText>
+                          <ButtonText style={{ color: Colors.light.primary, fontWeight: '800' }}>{new Date(field.value).toLocaleDateString('en-US', { weekday: 'long' })}</ButtonText>
+                        </Button>
+                        {showDatePicker && (
+                          <DateTimePicker
+                            value={field.value ? new Date(field.value) : new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={(_, selectedDate) => {
+                              setShowDatePicker(false);
+                              if (selectedDate) {
+                                field.onChange(formatDate(selectedDate));
+                              }
+                            }}
+                          />
+                        )}
+                        {errors.date && <Text style={{ color: Colors.light.accent, fontSize: 12, marginTop: 4 }}>{errors.date.message}</Text>}
+                      </>
+                    )}
+                  />
+                </Box>
+
                 <HStack className="justify-center items-center gap-5">
                   <Box style={{ alignItems: 'center' }}>
                     <Controller
@@ -244,7 +329,7 @@ const AddTodoInTime = memo(({ date }: { date: string }) => {
 
                   return (
                     <Box>
-                      <Text className="text-lg mx-3 mt-6 mb-3" style={{ color: Colors.light.darkBlue }}>
+                      <Text className="text-lg mx-3 mt-6 mb-3" style={{ color: Colors.light.darkBlue, fontWeight: '800' }}>
                         {t('tags')}
                       </Text>
                       <HStack className="justify-start items-center gap-2 mb-4 px-2 flex-wrap">
@@ -302,10 +387,39 @@ const AddTodoInTime = memo(({ date }: { date: string }) => {
                 control={control}
                 render={({ field }) => (
                   <HStack className="flex items-center justify-between mt-3">
-                    <Text style={{ color: Colors.light.darkBlue, fontSize: 16 }}>{t('todos.is_completed')}</Text>
+                    <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.is_completed')}</Text>
                     <Switch
                       size="lg"
-                      isDisabled={false}
+                      isDisabled={isCancel}
+                      trackColor={{
+                        false: Colors.light.light,
+                        true: Colors.light.primary,
+                      }}
+                      thumbColor={field.value ? Colors.light.primary : Colors.light.light}
+                      ios_backgroundColor={Colors.light.light}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    />
+                  </HStack>
+                )}
+              />
+            </MotiView>
+
+            <MotiView
+              from={{ opacity: 0, translateY: 90 }}
+              animate={{ opacity: 1, translateY: -10 }}
+              transition={{ type: 'timing', duration: 400, delay: 400 }}
+              className="mx-5"
+              style={{ display: isCancel ? 'flex' : 'none' }}
+            >
+              <Controller
+                name="is_cancel"
+                control={control}
+                render={({ field }) => (
+                  <HStack className="flex items-center justify-between mt-3">
+                    <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.is_cancel')}</Text>
+                    <Switch
+                      size="lg"
                       trackColor={{
                         false: Colors.light.light,
                         true: Colors.light.primary,
@@ -323,7 +437,7 @@ const AddTodoInTime = memo(({ date }: { date: string }) => {
             <MotiView from={{ opacity: 0, translateY: 50 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 400, delay: 600 }}>
               <Box className="mt-4 px-3 mb-4">
                 <Button onPress={handleSubmit(onSubmit)} className="w-full h-10 rounded-xl" style={{ backgroundColor: Colors.light.primary }}>
-                  <ButtonText style={{ color: Colors.light.surface }}>{t('submit')}</ButtonText>
+                  {loading ? <Loading /> : <ButtonText style={{ color: Colors.light.surface }}>{isEditMode ? t('todos.update') : t('submit')}</ButtonText>}
                 </Button>
               </Box>
             </MotiView>

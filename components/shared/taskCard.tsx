@@ -10,15 +10,9 @@ import { Icon } from '../ui/icon';
 import { DotIcon } from '@/assets/Icons/DotIcons';
 import { useAppStore } from '@/store/appState';
 import { Button } from '../ui/button';
+import { Todo } from '@/storage/todoStorage';
 
-interface TaskCardProps {
-  title: string;
-  startTime?: string;
-  endTime?: string;
-  tags?: string[];
-}
-
-const TaskCard: React.FC<TaskCardProps> = ({ title, startTime, endTime, tags }) => {
+const TaskCard: React.FC<Todo> = ({ title, start_time, end_time, tags, id }) => {
   const { language } = useAppStore();
 
   const badageColor = (itemTag: string): string => {
@@ -52,13 +46,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ title, startTime, endTime, tags }) 
   };
 
   return (
-    <VStack className="relative p-5 mb-1 rounded-lg mt-1" style={{ backgroundColor: Colors.light.card }}>
+    <VStack className="relative p-5 mb-1 rounded-lg mt-1" style={{ backgroundColor: Colors.light.card, elevation: 1 }}>
       <VStack className="px-3 h-[85px]" style={borderStyles}>
         <HStack className="justify-between">
           <Box>
             <Text style={{ color: Colors.light.darkBlue, fontSize: 18 }}>{title}</Text>
             <Text style={{ color: Colors.light.subtext, fontSize: 12 }}>
-              {startTime ?? '00:00'} - {endTime ?? '00:00'}
+              {start_time ?? '00:00'} - {end_time ?? '00:00'}
             </Text>
           </Box>
           <Button className="px-0 bg-transparent">

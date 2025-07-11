@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Todo, getTodos, clearTodos, addTodo, updateTodo, deleteTodo } from '@/storage/todoStorage';
+import { Todo, getTodos, clearTodos, addTodo, updateTodo as storageUpdateTodo, deleteTodo } from '@/storage/todoStorage';
 import { useEffect } from 'react';
 
 interface TodoState {
@@ -7,12 +7,12 @@ interface TodoState {
   selectedDate: string;
   loading: boolean;
   error: string | null;
-  setSelectedDate: (date: string) => void;
+  setSelectedDate: (date: string, filterNotCompleted?: boolean, filterNotCanceled?: boolean) => Promise<void>;
   addTodo: (todo: Todo) => Promise<void>;
-  toggleTodo: (id: string) => Promise<void>;
+  updateTodo: (todo: Todo) => Promise<void>;
   removeTodo: (id: string) => Promise<void>;
   clearTodos: () => Promise<void>;
-  loadTodos: (date: string) => Promise<void>;
+  loadTodos: (date: string, filterNotCompleted?: boolean, filterNotCanceled?: boolean) => Promise<void>;
   refreshTodos: () => Promise<void>;
 }
 
@@ -21,24 +21,26 @@ export const useTodoStore = create<TodoState>((set, get) => ({
   todos: [],
   loading: false,
   error: null,
+  filterNotCompleted: false,
+  filterNotCanceled: false,
 
-  setSelectedDate: async (date: string) => {
+  setSelectedDate: async (date: string, filterNotCompleted?: boolean, filterNotCanceled?: boolean) => {
     set({ selectedDate: date, loading: true, error: null });
     try {
-      const todos = await getTodos(date);
+      const todos = await getTodos(date, filterNotCompleted, filterNotCanceled);
       set({ todos, loading: false });
-    } catch (error) {
-      set({ loading: false });
+    } catch (error: any) {
+      set({ loading: false, error: error.message });
     }
   },
 
-  loadTodos: async (date: string) => {
-    set({ loading: true });
+  loadTodos: async (date: string, filterNotCompleted?: boolean, filterNotCanceled?: boolean) => {
+    set({ loading: true, error: null });
     try {
-      const todos = await getTodos(date);
-      set({ todos: todos, loading: false });
-    } catch (error) {
-      set({ loading: false });
+      const todos = await getTodos(date, filterNotCompleted, filterNotCanceled);
+      set({ todos, loading: false });
+    } catch (error: any) {
+      set({ loading: false, error: error.message });
     }
   },
 
@@ -48,34 +50,20 @@ export const useTodoStore = create<TodoState>((set, get) => ({
   },
 
   addTodo: async (todo: Todo) => {
-    set({ loading: true });
+    set({ loading: true, error: null });
     try {
       await addTodo(todo);
-      if (todo.date === get().selectedDate) {
-        const updatedTodos = await getTodos(todo.date);
-        set({ todos: updatedTodos, loading: false });
-      } else {
-        set({ loading: false });
-      }
-    } catch (error) {
-      set({ loading: false });
+    } catch (error: any) {
+      set({ loading: false, error: error.message });
     }
   },
 
-  toggleTodo: async (id: string) => {
+  updateTodo: async (todo: Todo) => {
     set({ loading: true, error: null });
     try {
-      const { todos } = get();
-      const todo = todos.find((t) => t.id === id);
-
-      if (todo) {
-        const updatedTodo = { ...todo, completed: !todo.completed };
-        await updateTodo(updatedTodo);
-        const updatedTodos = todos.map((t) => (t.id === id ? updatedTodo : t));
-        set({ todos: updatedTodos, loading: false });
-      }
-    } catch (error) {
-      set({ loading: false });
+      await storageUpdateTodo(todo).finally(() => set({ loading: false }));
+    } catch (error: any) {
+      set({ loading: false, error: error.message });
     }
   },
 
@@ -83,11 +71,11 @@ export const useTodoStore = create<TodoState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       await deleteTodo(id);
-
-      const updatedTodos = get().todos.filter((todo) => todo.id !== id);
+      const { selectedDate } = get();
+      const updatedTodos = await getTodos(selectedDate);
       set({ todos: updatedTodos, loading: false });
-    } catch (error) {
-      set({ loading: false });
+    } catch (error: any) {
+      set({ loading: false, error: error.message });
     }
   },
 
@@ -97,8 +85,8 @@ export const useTodoStore = create<TodoState>((set, get) => ({
       const { selectedDate } = get();
       await clearTodos(selectedDate);
       set({ todos: [], loading: false });
-    } catch (error) {
-      set({ loading: false });
+    } catch (error: any) {
+      set({ loading: false, error: error.message });
     }
   },
 }));

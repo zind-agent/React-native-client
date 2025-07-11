@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import SelectYearWithMonth from '@/components/shared/form/selectYearWithMonth';
 import WeeklyDatePicker from '@/components/shared/form/weekDatePicker';
@@ -10,22 +10,10 @@ import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import ScheduleList from '@/components/shared/scheduleList';
 import AddTodoInTime from '@/components/shared/form/addTodoInTime';
-
-const formatDateToString = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+import { useDateTime } from '@/hooks/useDateTime';
 
 const Todos = () => {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear().toString();
-  const currentMonth = (currentDate.getMonth() + 1).toString();
-  const currentDateString = formatDateToString(currentDate);
-  const [selectedYear, setSelectedYear] = useState<string | null>(currentYear);
-  const [selectedMonth, setSelectedMonth] = useState<string | null>(currentMonth);
-  const [selectedDate, setSelectedDate] = useState<string>(currentDateString);
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDate, setSelectedDate } = useDateTime();
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>

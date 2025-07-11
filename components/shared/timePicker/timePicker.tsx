@@ -49,7 +49,7 @@ export const TimePicker = ({ field, placeholder = '00:00', label, onTimeChange, 
     <>
       {label && (
         <MotiView from={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 100 }}>
-          <Text className="text-sm mb-2" style={{ color: Colors.light.darkBlue }}>
+          <Text className="text-sm mb-2" style={{ color: Colors.light.subtext, fontWeight: '800' }}>
             {label}
           </Text>
         </MotiView>

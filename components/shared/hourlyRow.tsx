@@ -37,7 +37,7 @@ const HourlyRow = ({ hour, tasks, isCurrentHour = false }: HourlyRowProps) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
               <HStack className="space-x-3 items-center">
                 {tasks.map((task, idx) => (
-                  <ScheduleCard key={idx} task={task} />
+                  <ScheduleCard key={idx} task={task} style={{ borderRadius: 12 }} />
                 ))}
               </HStack>
             </ScrollView>

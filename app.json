@@ -8,7 +8,7 @@
     "icon": "./assets/logo.png",
     "scheme": "myapp",
     "jsEngine": "hermes",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,

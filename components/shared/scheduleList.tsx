@@ -9,11 +9,15 @@ interface ScheduleListProps {
 }
 
 const ScheduleList = ({ date }: ScheduleListProps) => {
-  const { todos, loadTodos, loading } = useTodoStore();
+  const { todos, loadTodos, loading, refreshTodos } = useTodoStore();
 
   useEffect(() => {
     loadTodos(date);
   }, [date]);
+
+  useEffect(() => {
+    refreshTodos();
+  }, []);
 
   const hourlyData = useMemo(() => {
     const grouped: { [key: string]: any[] } = {};

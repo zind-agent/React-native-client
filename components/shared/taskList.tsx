@@ -1,22 +1,17 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { Button } from '../ui/button';
 import { Text } from '../Themed';
 import { Colors } from '@/constants/Colors';
 import { useAppStore } from '@/store/appState';
-import TaskCard from './taskCard';
+import { Todo } from '@/storage/todoStorage';
+import ScheduleCard from './scheduleCard';
 
-const tasks = [
-  { id: '1', title: 'Design Meeting', startTime: '09:00', endTime: '10:00', tags: ['office', 'urgent'] },
-  { id: '2', title: 'Code Review', startTime: '11:00', endTime: '12:00', tags: ['work'] },
-  { id: '3', title: 'Lunch with Client', startTime: '13:00', endTime: '14:00', tags: ['home'] },
-];
-
-const TaskList: React.FC = () => {
+const TaskList = memo(({ task }: { task: Todo[] }) => {
   const { language } = useAppStore();
 
   const renderHiddenItem = (_: any) => (
-    <React.Fragment>
+    <>
       <Button
         style={{
           backgroundColor: Colors.light.success,
@@ -26,7 +21,7 @@ const TaskList: React.FC = () => {
           height: '90%',
           position: 'absolute',
           left: 0,
-          borderRadius: 20,
+          borderRadius: 10,
         }}
         onPress={() => {}}
         className="my-2"
@@ -42,20 +37,20 @@ const TaskList: React.FC = () => {
           height: '90%',
           position: 'absolute',
           right: 0,
-          borderRadius: 20,
+          borderRadius: 10,
         }}
         onPress={() => {}}
         className="my-2"
       >
         <Text style={{ color: Colors.light.card, fontWeight: 'bold' }}>✖ {language === 'fa' ? 'لغو' : 'Cancel'}</Text>
       </Button>
-    </React.Fragment>
+    </>
   );
 
   return (
     <SwipeListView
-      data={tasks}
-      renderItem={({ item }) => <TaskCard key={item.id} {...item} />}
+      data={task}
+      renderItem={({ item }) => <ScheduleCard style={{ padding: 10, borderRadius: 10 }} key={item.id} task={item} />}
       renderHiddenItem={renderHiddenItem}
       leftOpenValue={100}
       rightOpenValue={-100}
@@ -64,6 +59,6 @@ const TaskList: React.FC = () => {
       showsVerticalScrollIndicator={false}
     />
   );
-};
+});
 
 export default TaskList;

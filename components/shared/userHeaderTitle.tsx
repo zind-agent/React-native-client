@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import { useWizardStore } from '@/store/wizardFormState';
@@ -18,13 +18,13 @@ const capitalizeWords = (str: string) => {
     .join(' ');
 };
 
-const UserHeaderTitle = () => {
+const UserHeaderTitle = memo(() => {
   const { firstname, lastname } = useWizardStore();
   return (
     <HStack className="mt-5 justify-between items-center">
       <VStack>
-        <Heading className="text-xl font-bold" size="2xl" style={{ color: Colors.light.darkBlue }}>
-          {t('hi')}, {capitalizeWords(firstname) ?? ''} {capitalizeWords(lastname) ?? ''}
+        <Heading className="text-lg font-bold" size="xl" style={{ color: Colors.light.darkBlue }}>
+          {t('hi')}, {capitalizeWords(firstname || t('welcome_to_zind'))} {capitalizeWords(lastname) ?? ''}
         </Heading>
         <Text style={{ color: Colors.light.subtext }}>{t('home.lets_make_this_day_productive')}</Text>
       </VStack>
@@ -61,6 +61,6 @@ const UserHeaderTitle = () => {
       </LinearGradient>
     </HStack>
   );
-};
+});
 
 export default UserHeaderTitle;

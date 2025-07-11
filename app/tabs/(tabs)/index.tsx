@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowRightIcon } from '@/assets/Icons/ArrowRight';
 import { CancelIcon } from '@/assets/Icons/Cancel';
 import { ClockIcon } from '@/assets/Icons/ClockIcon';
@@ -19,20 +19,27 @@ import { router } from 'expo-router';
 import { useAppStore } from '@/store/appState';
 import { ArrowDownIcon, Icon } from '@/components/ui/icon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTodoStore } from '@/store/todoState';
 
 const Home: React.FC = () => {
+  const { selectedDate } = useTodoStore();
+  const { loadTodos, todos } = useTodoStore();
+  useEffect(() => {
+    loadTodos(selectedDate);
+  }, [selectedDate]);
   const { setHideTabBar } = useAppStore();
-  const [task, setTask] = React.useState<Number>(0);
   const lastOffset = useRef(0);
+
   const changeLanguage = async () => {
-    AsyncStorage.removeItem('lang');
+    await AsyncStorage.removeItem('lang');
   };
+
   return (
     <FlatList
       data={[{ key: 'content' }]}
       scrollsToTop={false}
       renderItem={() => (
-        <Box className="px-5 bg-white">
+        <Box className="px-5">
           <UserHeaderTitle />
 
           {/*  section one for my Card  */}
@@ -86,12 +93,12 @@ const Home: React.FC = () => {
               </GradientCard>
             </HStack>
           </VStack>
-          <Button onPress={changeLanguage}>
+          <Button className="my-10" onPress={changeLanguage}>
             <ButtonText>Change Language</ButtonText>
           </Button>
 
           {/*  section two for today task  */}
-          {task === 0 ? (
+          {todos.length === 0 ? (
             <VStack className="mt-5 mb-10 h-full">
               <Heading style={{ color: Colors.light.darkBlue }} size="2xl">
                 {t('home.today_task')}
@@ -99,7 +106,6 @@ const Home: React.FC = () => {
               <Text className="text-center mt-10 px-10 text-2xl" style={{ color: Colors.light.subtext }}>
                 {t('home.no_task')}
               </Text>
-              <Icon className="mt-10 mx-auto" size="xl" as={ArrowDownIcon} color={Colors.light.subtext} />
             </VStack>
           ) : (
             <VStack className="mt-5 mb-10">
@@ -113,7 +119,7 @@ const Home: React.FC = () => {
                   </ButtonText>
                 </Button>
               </HStack>
-              <TaskList />
+              <TaskList task={todos} />
             </VStack>
           )}
         </Box>

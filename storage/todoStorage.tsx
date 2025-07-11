@@ -7,15 +7,16 @@ export interface Todo {
   start_time: string;
   end_time: string;
   date: string;
-  completed: boolean;
+  isCompleted: boolean;
   createdAt: string;
+  isCancel: boolean;
 }
 
 class TodoStorage {
   private db: SQLite.SQLiteDatabase;
 
   constructor() {
-    this.db = SQLite.openDatabaseSync('todos.db');
+    this.db = SQLite.openDatabaseSync('todos.zindDB');
     this.initDB();
   }
 
@@ -30,7 +31,8 @@ class TodoStorage {
           end_time TEXT NOT NULL,
           date TEXT NOT NULL,
           completed INTEGER NOT NULL DEFAULT 0,
-          createdAt TEXT NOT NULL
+          createdAt TEXT NOT NULL,
+          is_cancel INTEGER NOT NULL DEFAULT 0
         );
       `);
       console.log('پایگاه داده با موفقیت مقداردهی شد.');
@@ -48,8 +50,9 @@ class TodoStorage {
       start_time: todo.start_time,
       end_time: todo.end_time,
       date: todo.date,
-      completed: todo.completed ? 1 : 0,
+      completed: todo.isCompleted ? 1 : 0,
       createdAt: todo.createdAt,
+      is_cancel: todo.isCancel ? 0 : 1,
     };
   }
 
@@ -62,8 +65,9 @@ class TodoStorage {
         start_time: row.start_time,
         end_time: row.end_time,
         date: row.date,
-        completed: row.completed === 1,
+        isCompleted: row.completed === 1,
         createdAt: row.createdAt,
+        isCancel: row.is_cancel === 0,
       };
     } catch (error) {
       console.error(`خطا در تبدیل ردیف به Todo برای id ${row.id}:`, error);
@@ -85,9 +89,9 @@ class TodoStorage {
       for (const todo of todos) {
         const row = this.todoToRow(todo);
         await this.db.runAsync(
-          `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt],
+          `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt , is_cancel) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )`,
+          [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel],
         );
       }
       await this.db.runAsync('COMMIT;');
@@ -98,12 +102,27 @@ class TodoStorage {
     }
   }
 
-  async getTodos(date: string): Promise<Todo[]> {
+  async getTodos(date: string, filterNotCompleted: boolean = false, filterNotCanceled: boolean = false): Promise<Todo[]> {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       throw new Error(`فرمت تاریخ نامعتبر است: ${date}. فرمت مورد انتظار: YYYY-MM-DD`);
     }
     try {
-      const results = await this.db.getAllAsync('SELECT * FROM todos WHERE date = ? ORDER BY createdAt DESC', [date]);
+      let query = 'SELECT * FROM todos WHERE date = ?';
+      const params = [date];
+
+      if (filterNotCompleted || filterNotCanceled) {
+        const conditions = [];
+        if (filterNotCompleted) {
+          conditions.push('completed = 0');
+        }
+        if (filterNotCanceled) {
+          conditions.push('is_cancel = 1');
+        }
+        query += ` AND ${conditions.join(' AND ')}`;
+      }
+
+      query += ' ORDER BY createdAt DESC';
+      const results = await this.db.getAllAsync(query, params);
       return (results as any[]).map((row) => this.rowToTodo(row));
     } catch (error: any) {
       console.error(`خطا در دریافت کارها برای تاریخ ${date}:`, error);
@@ -139,9 +158,9 @@ class TodoStorage {
     try {
       const row = this.todoToRow(todo);
       await this.db.runAsync(
-        `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt],
+        `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt , is_cancel) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)`,
+        [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel],
       );
     } catch (error: any) {
       console.error(`خطا در افزودن کار با شناسه ${todo.id}:`, error);
@@ -157,8 +176,8 @@ class TodoStorage {
       const row = this.todoToRow(todo);
       await this.db.runAsync(
         `UPDATE todos SET title = ?, tags = ?, start_time = ?, end_time = ?, 
-         date = ?, completed = ?, createdAt = ? WHERE id = ?`,
-        [row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.id],
+         date = ?, completed = ?, createdAt = ? , is_cancel = ? WHERE id = ?`,
+        [row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel, row.id],
       );
     } catch (error: any) {
       console.error(`خطا در به‌روزرسانی کار با شناسه ${todo.id}:`, error);
@@ -195,8 +214,8 @@ export const saveTodos = (todos: Todo[], date: string) => {
   return todoStorage.saveTodos(todos, date);
 };
 
-export const getTodos = (date: string): Promise<Todo[]> => {
-  return todoStorage.getTodos(date);
+export const getTodos = (date: string, filterNotCompleted: boolean = false, filterNotCanceled: boolean = false): Promise<Todo[]> => {
+  return todoStorage.getTodos(date, filterNotCompleted, filterNotCanceled);
 };
 
 export const clearTodos = (date: string) => {

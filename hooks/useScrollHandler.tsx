@@ -10,7 +10,7 @@ export const useScrollHandler = () => {
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const currentScrollY = event.nativeEvent.contentOffset.y;
 
-      if (currentScrollY > lastScrollY.current && currentScrollY > 30) {
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
         setHideTabBar(true);
       } else if (currentScrollY < lastScrollY.current) {
         setHideTabBar(false);

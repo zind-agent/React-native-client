@@ -8,12 +8,14 @@ import { MotiView, useDynamicAnimation, motify } from 'moti';
 import { useAppStore } from '@/store/appState';
 import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import AddButton from '@/components/shared/addButton';
+import { useScrollHandler } from '@/hooks/useScrollHandler';
 
 const MotiPressable = motify(Pressable)();
 
 export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   const insets = useSafeAreaInsets();
-  const { hideTabBar, setAddInTimeTodoDrawer } = useAppStore();
+  const { hideTabBar } = useAppStore();
+  const { handleScroll } = useScrollHandler();
 
   const tabBarAnimation = useDynamicAnimation(() => ({
     translateY: 0,
@@ -21,8 +23,9 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
   }));
 
   useEffect(() => {
+    handleScroll;
     tabBarAnimation.animateTo({
-      translateY: hideTabBar ? 100 : 0,
+      translateY: hideTabBar ? 120 : 0,
       opacity: hideTabBar ? 0 : 1,
       transition: {
         type: 'timing',
@@ -37,7 +40,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
   return (
     <MotiView
       state={tabBarAnimation}
-      className="absolute flex-row justify-between mb-3 rounded-xl h-[77px] left-0 right-0 mx-4"
+      className="absolute flex-row justify-between mb-3 rounded-xl h-[57px] left-0 right-0 mx-4"
       style={{
         bottom: insets.bottom,
         backgroundColor: Colors.light.card,
@@ -48,7 +51,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
             shadowOpacity: 0.2,
             shadowRadius: 4,
           },
-          android: { elevation: 1 },
+          android: { elevation: 2 },
         }),
       }}
     >
