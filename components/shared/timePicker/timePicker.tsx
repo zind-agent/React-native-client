@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { MotiView } from 'moti';
 import { Colors } from '@/constants/Colors';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 
 interface TimePickerProps {
   field: any;
@@ -16,7 +16,7 @@ interface TimePickerProps {
   rotateDirection?: 'left' | 'right';
 }
 
-export const TimePicker = ({ field, placeholder = '00:00', label, onTimeChange, width = 120, height = 40, disabled = false, rotateDirection = 'right' }: TimePickerProps) => {
+export const TimePicker = memo(({ field, placeholder = '00:00', label, onTimeChange, width = 120, height = 40, disabled = false, rotateDirection = 'right' }: TimePickerProps) => {
   const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
   const [timePressed, setTimePressed] = useState(false);
 
@@ -107,4 +107,4 @@ export const TimePicker = ({ field, placeholder = '00:00', label, onTimeChange, 
       />
     </>
   );
-};
+});

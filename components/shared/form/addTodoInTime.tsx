@@ -4,7 +4,7 @@ import { Colors } from '@/constants/Colors';
 import { useAppStore } from '@/store/appState';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { t } from 'i18next';
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { AddTodoForm } from './addTodoTitle';
@@ -83,32 +83,32 @@ const AddTodoInTime = memo(({ date, id }: AddTodoInTimeProps) => {
   });
 
   useEffect(() => {
-    reset(() =>
-      isEditMode
-        ? {
-            id: todo.id,
-            title: todo.title,
-            tags: todo.tags,
-            start_time: todo.start_time,
-            end_time: todo.end_time,
-            date: todo.date,
-            is_completed: todo.isCompleted,
-            createdAt: todo.createdAt,
-            is_cancel: todo.isCancel,
-          }
-        : {
-            id: Date.now().toString(),
-            title: '',
-            tags: [],
-            start_time: '',
-            end_time: '',
-            is_completed: false,
-            date: date,
-            createdAt: new Date().toISOString(),
-            is_cancel: false,
-          },
-    );
-  }, [date, todo, reset]);
+    if (isEditMode && todo) {
+      reset({
+        id: todo.id,
+        title: todo.title,
+        tags: todo.tags,
+        start_time: todo.start_time,
+        end_time: todo.end_time,
+        date: todo.date,
+        is_completed: todo.isCompleted,
+        createdAt: todo.createdAt,
+        is_cancel: todo.isCancel,
+      });
+    } else if (!isEditMode) {
+      reset({
+        id: Date.now().toString(),
+        title: '',
+        tags: [],
+        start_time: '',
+        end_time: '',
+        is_completed: false,
+        date: date,
+        createdAt: new Date().toISOString(),
+        is_cancel: false,
+      });
+    }
+  }, [date, isEditMode, todo, reset]);
 
   const startTime = watch('start_time');
   const endTime = watch('end_time');
@@ -141,310 +141,273 @@ const AddTodoInTime = memo(({ date, id }: AddTodoInTimeProps) => {
     }
   }, [startTime, endTime]);
 
-  const onSubmit = (data: AddTodoSchemaType) => {
-    const todoData = {
-      id: isEditMode ? todo.id : Date.now().toString(),
-      title: data.title,
-      tags: data.tags,
-      start_time: data.start_time,
-      end_time: data.end_time,
-      date: data.date,
-      isCompleted: data.is_completed,
-      createdAt: isEditMode ? todo.createdAt : new Date().toISOString(),
-      isCancel: data.is_cancel,
-    };
+  const onSubmit = useCallback(
+    (data: AddTodoSchemaType) => {
+      const todoData = {
+        id: isEditMode ? todo.id : Date.now().toString(),
+        title: data.title,
+        tags: data.tags,
+        start_time: data.start_time,
+        end_time: data.end_time,
+        date: data.date,
+        isCompleted: data.is_completed,
+        createdAt: isEditMode ? todo.createdAt : new Date().toISOString(),
+        isCancel: data.is_cancel,
+      };
 
-    const action = isEditMode ? updateTodo(todoData) : addTodo(todoData);
+      const action = isEditMode ? updateTodo(todoData) : addTodo(todoData);
 
-    action.then(() => {
-      reset();
-      setAddInTimeTodoDrawer(false);
-    });
-  };
+      action.then(() => {
+        reset();
+        setAddInTimeTodoDrawer(false);
+      });
+    },
+    [isEditMode, todo, updateTodo, addTodo, reset, setAddInTimeTodoDrawer],
+  );
 
-  const formatDate = (date: Date) => {
+  const formatDate = useCallback((date: Date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-  };
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
-    <>
-      <Drawer isOpen={addInTimeTodoDrawer} onClose={() => setAddInTimeTodoDrawer(false)} size="lg" anchor="bottom" className="bg-black/60">
-        <DrawerBackdrop />
-        <DrawerContent style={{ backgroundColor: Colors.light.card }} className="h-max">
-          <DrawerHeader className="justify-center py-1">
-            <Heading style={{ color: Colors.light.darkBlue }}>{isEditMode ? t('todos.edit_todo') : t('todos.add_todo_in_time')}</Heading>
-          </DrawerHeader>
+    <Drawer isOpen={addInTimeTodoDrawer} onClose={() => setAddInTimeTodoDrawer(false)} size="lg" anchor="bottom" className="bg-black/60">
+      <DrawerBackdrop />
+      <DrawerContent style={{ backgroundColor: Colors.light.card }} className="h-max">
+        <DrawerHeader className="justify-center py-1">
+          <Heading style={{ color: Colors.light.darkBlue }}>{isEditMode ? t('todos.edit_todo') : t('todos.add_todo_in_time')}</Heading>
+        </DrawerHeader>
 
-          <DrawerBody>
-            <MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 400 }}>
-              <Controller
-                name="title"
-                control={control}
-                render={({ field }) => (
-                  <AddTodoForm
-                    style={[{ borderWidth: 1, height: 60 }, { borderColor: Colors.light.light }]}
-                    value={field.value}
-                    placeholder={t('title')}
-                    onChange={field.onChange}
-                    error={errors.title?.message}
-                  />
-                )}
-              />
-            </MotiView>
+        <DrawerBody>
+          <MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 300 }}>
+            <Controller
+              name="title"
+              control={control}
+              render={({ field }) => (
+                <AddTodoForm
+                  style={[{ borderWidth: 1, height: 60 }, { borderColor: Colors.light.light }]}
+                  value={field.value}
+                  placeholder={t('title')}
+                  onChange={field.onChange}
+                  error={errors.title?.message}
+                />
+              )}
+            />
+          </MotiView>
 
-            <MotiView from={{ opacity: 0, translateY: 30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 400, delay: 200 }}>
-              <VStack className="mt-6 mb-4 gap-5 rounded-lg p-7" style={{ backgroundColor: Colors.light.primary + '20' }}>
-                <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.date')}</Text>
+          <MotiView from={{ opacity: 0, translateY: 30 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 300 }}>
+            <VStack className="mt-6 mb-4 gap-5 rounded-lg p-7" style={{ backgroundColor: Colors.light.primary + '20' }}>
+              <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.date')}</Text>
+              <Box style={{ alignItems: 'center' }}>
+                <Controller
+                  name="date"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Button
+                        onPress={() => setShowDatePicker(true)}
+                        style={{
+                          height: 50,
+                          width: '100%',
+                          backgroundColor: Colors.light.primary + '40',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <ButtonText style={{ color: Colors.light.primary, fontWeight: '800' }}>{field.value ? `${field.value} ` : t('todos.select_date')}</ButtonText>
+                        <ButtonText style={{ color: Colors.light.primary, fontWeight: '800' }}>{new Date(field.value).toLocaleDateString('en-US', { weekday: 'long' })}</ButtonText>
+                      </Button>
+                      {showDatePicker && (
+                        <DateTimePicker
+                          value={field.value ? new Date(field.value) : new Date()}
+                          mode="date"
+                          display="default"
+                          onChange={(_, selectedDate) => {
+                            setShowDatePicker(false);
+                            if (selectedDate) {
+                              field.onChange(formatDate(selectedDate));
+                            }
+                          }}
+                        />
+                      )}
+                      {errors.date && <Text style={{ color: Colors.light.accent, fontSize: 12, marginTop: 4 }}>{errors.date.message}</Text>}
+                    </>
+                  )}
+                />
+              </Box>
+
+              <HStack className="justify-center items-center gap-5">
                 <Box style={{ alignItems: 'center' }}>
                   <Controller
-                    name="date"
+                    name="start_time"
                     control={control}
-                    render={({ field }) => (
-                      <>
-                        <Button
-                          onPress={() => setShowDatePicker(true)}
-                          style={{
-                            height: 50,
-                            width: '100%',
-                            backgroundColor: Colors.light.primary + '40',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <ButtonText style={{ color: Colors.light.primary, fontWeight: '800' }}>{field.value ? `${field.value} ` : t('todos.select_date')}</ButtonText>
-                          <ButtonText style={{ color: Colors.light.primary, fontWeight: '800' }}>{new Date(field.value).toLocaleDateString('en-US', { weekday: 'long' })}</ButtonText>
-                        </Button>
-                        {showDatePicker && (
-                          <DateTimePicker
-                            value={field.value ? new Date(field.value) : new Date()}
-                            mode="date"
-                            display="default"
-                            onChange={(_, selectedDate) => {
-                              setShowDatePicker(false);
-                              if (selectedDate) {
-                                field.onChange(formatDate(selectedDate));
-                              }
-                            }}
-                          />
-                        )}
-                        {errors.date && <Text style={{ color: Colors.light.accent, fontSize: 12, marginTop: 4 }}>{errors.date.message}</Text>}
-                      </>
-                    )}
+                    render={({ field }) => <TimePicker field={field} label={t('todos.start_time')} placeholder="00:00" rotateDirection="right" width={120} height={50} />}
                   />
                 </Box>
 
-                <HStack className="justify-center items-center gap-5">
-                  <Box style={{ alignItems: 'center' }}>
-                    <Controller
-                      name="start_time"
-                      control={control}
-                      render={({ field }) => <TimePicker field={field} label={t('todos.start_time')} placeholder="00:00" rotateDirection="right" width={120} height={50} />}
-                    />
-                  </Box>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: Colors.light.primary,
+                    marginTop: 20,
+                  }}
+                >
+                  →
+                </Text>
 
-                  <MotiView from={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200, delay: 300 }}>
-                    <MotiView
-                      animate={{
-                        translateX: [0, 5, 0],
-                      }}
-                      transition={{
-                        type: 'timing',
-                        duration: 2000,
-                        loop: true,
+                <Box style={{ alignItems: 'center' }}>
+                  <Controller
+                    name="end_time"
+                    control={control}
+                    render={({ field }) => <TimePicker field={field} label={t('todos.end_time')} placeholder="00:00" rotateDirection="left" width={120} height={50} />}
+                  />
+                </Box>
+              </HStack>
+
+              {timeDifference && (
+                <MotiView from={{ opacity: 0, translateY: 10 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 300 }}>
+                  <Box className="items-center">
+                    <Box
+                      style={{
+                        backgroundColor: Colors.light.primary + '15',
+                        borderRadius: 20,
+                        paddingHorizontal: 16,
+                        paddingVertical: 8,
+                        borderWidth: 1,
+                        borderColor: Colors.light.primary + '30',
                       }}
                     >
-                      <Text
-                        style={{
-                          fontSize: 20,
-                          color: Colors.light.primary,
-                          marginTop: 20,
-                        }}
-                      >
-                        →
+                      <Text className="text-sm font-medium" style={{ color: Colors.light.primary }}>
+                        Duration: {timeDifference}
                       </Text>
-                    </MotiView>
-                  </MotiView>
-
-                  <Box style={{ alignItems: 'center' }}>
-                    <Controller
-                      name="end_time"
-                      control={control}
-                      render={({ field }) => <TimePicker field={field} label={t('todos.end_time')} placeholder="00:00" rotateDirection="left" width={120} height={50} />}
-                    />
-                  </Box>
-                </HStack>
-
-                {timeDifference && (
-                  <MotiView from={{ opacity: 0, translateY: 10, scale: 0.9 }} animate={{ opacity: 1, translateY: 0, scale: 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200 }}>
-                    <Box className="items-center">
-                      <MotiView
-                        animate={{
-                          scale: [1, 1.05, 1],
-                        }}
-                        transition={{
-                          type: 'timing',
-                          duration: 2000,
-                          loop: true,
-                        }}
-                      >
-                        <Box
-                          style={{
-                            backgroundColor: Colors.light.primary + '15',
-                            borderRadius: 20,
-                            paddingHorizontal: 16,
-                            paddingVertical: 8,
-                            borderWidth: 1,
-                            borderColor: Colors.light.primary + '30',
-                          }}
-                        >
-                          <Text className="text-sm font-medium" style={{ color: Colors.light.primary }}>
-                            Duration: {timeDifference}
-                          </Text>
-                        </Box>
-                      </MotiView>
                     </Box>
-                  </MotiView>
-                )}
-              </VStack>
-            </MotiView>
+                  </Box>
+                </MotiView>
+              )}
+            </VStack>
+          </MotiView>
 
-            <MotiView from={{ opacity: 0, translateY: 40 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 400, delay: 400 }}>
-              <Controller
-                name="tags"
-                control={control}
-                render={({ field }) => {
-                  const selectedTags = field.value || [];
+          <MotiView from={{ opacity: 0, translateY: 40 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 300 }}>
+            <Controller
+              name="tags"
+              control={control}
+              render={({ field }) => {
+                const selectedTags = field.value || [];
 
-                  const toggleTag = (tagValue: string) => {
-                    if (selectedTags.includes(tagValue)) {
-                      field.onChange(selectedTags.filter((v: string) => v !== tagValue));
-                    } else {
-                      field.onChange([...selectedTags, tagValue]);
-                    }
-                  };
+                const toggleTag = (tagValue: string) => {
+                  if (selectedTags.includes(tagValue)) {
+                    field.onChange(selectedTags.filter((v: string) => v !== tagValue));
+                  } else {
+                    field.onChange([...selectedTags, tagValue]);
+                  }
+                };
 
-                  return (
-                    <Box>
-                      <Text className="text-lg mx-3 mt-6 mb-3" style={{ color: Colors.light.darkBlue, fontWeight: '800' }}>
-                        {t('tags')}
-                      </Text>
-                      <HStack className="justify-start items-center gap-2 mb-4 px-2 flex-wrap">
-                        {tags.map((tag, index) => {
-                          const isSelected = selectedTags.includes(tag.value);
-                          return (
-                            <MotiView
-                              key={tag.value}
-                              from={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{
-                                type: 'spring',
-                                damping: 15,
-                                stiffness: 200,
-                                delay: index * 50,
+                return (
+                  <Box>
+                    <Text className="text-lg mx-3 mt-6 mb-3" style={{ color: Colors.light.darkBlue, fontWeight: '800' }}>
+                      {t('tags')}
+                    </Text>
+                    <HStack className="justify-start items-center gap-2 mb-4 px-2 flex-wrap">
+                      {tags.map((tag) => {
+                        const isSelected = selectedTags.includes(tag.value);
+                        return (
+                          <Button
+                            key={tag.value}
+                            style={{
+                              backgroundColor: isSelected ? tag.color || Colors.light.tag.homeOpacity : 'transparent',
+                              borderWidth: 1,
+                              borderColor: tag.color || Colors.light.tag.homeOpacity,
+                            }}
+                            className="h-10 px-4 rounded-xl"
+                            onPress={() => toggleTag(tag.value)}
+                          >
+                            <ButtonText
+                              style={{
+                                color: isSelected ? 'white' : tag.color || Colors.light.tag.homeOpacity,
                               }}
                             >
-                              <Button
-                                style={{
-                                  backgroundColor: isSelected ? tag.color || Colors.light.tag.homeOpacity : 'transparent',
-                                  borderWidth: 1,
-                                  borderColor: tag.color || Colors.light.tag.homeOpacity,
-                                }}
-                                className="h-10 px-4 rounded-xl"
-                                onPress={() => toggleTag(tag.value)}
-                              >
-                                <MotiView
-                                  animate={{
-                                    scale: isSelected ? 1.05 : 1,
-                                  }}
-                                  transition={{ type: 'timing', duration: 150 }}
-                                >
-                                  <ButtonText
-                                    style={{
-                                      color: isSelected ? 'white' : tag.color || Colors.light.tag.homeOpacity,
-                                    }}
-                                  >
-                                    {tag.label}
-                                  </ButtonText>
-                                </MotiView>
-                              </Button>
-                            </MotiView>
-                          );
-                        })}
-                      </HStack>
-                    </Box>
-                  );
-                }}
-              />
-            </MotiView>
+                              {tag.label}
+                            </ButtonText>
+                          </Button>
+                        );
+                      })}
+                    </HStack>
+                  </Box>
+                );
+              }}
+            />
+          </MotiView>
 
-            <MotiView from={{ opacity: 0, translateY: 90 }} animate={{ opacity: 1, translateY: -10 }} transition={{ type: 'timing', duration: 400, delay: 400 }} className="mx-5">
-              <Controller
-                name="is_completed"
-                control={control}
-                render={({ field }) => (
-                  <HStack className="flex items-center justify-between mt-3">
-                    <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.is_completed')}</Text>
-                    <Switch
-                      size="lg"
-                      isDisabled={isCancel}
-                      trackColor={{
-                        false: Colors.light.light,
-                        true: Colors.light.primary,
-                      }}
-                      thumbColor={field.value ? Colors.light.primary : Colors.light.light}
-                      ios_backgroundColor={Colors.light.light}
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    />
-                  </HStack>
-                )}
-              />
-            </MotiView>
+          <MotiView from={{ opacity: 0, translateY: 90 }} animate={{ opacity: 1, translateY: -10 }} transition={{ type: 'timing', duration: 300 }} className="mx-5">
+            <Controller
+              name="is_completed"
+              control={control}
+              render={({ field }) => (
+                <HStack className="flex items-center justify-between mt-3">
+                  <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.is_completed')}</Text>
+                  <Switch
+                    size="lg"
+                    isDisabled={isCancel}
+                    trackColor={{
+                      false: Colors.light.light,
+                      true: Colors.light.primary,
+                    }}
+                    thumbColor={field.value ? Colors.light.primary : Colors.light.light}
+                    ios_backgroundColor={Colors.light.light}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  />
+                </HStack>
+              )}
+            />
+          </MotiView>
 
-            <MotiView
-              from={{ opacity: 0, translateY: 90 }}
-              animate={{ opacity: 1, translateY: -10 }}
-              transition={{ type: 'timing', duration: 400, delay: 400 }}
-              className="mx-5"
-              style={{ display: isCancel ? 'flex' : 'none' }}
-            >
-              <Controller
-                name="is_cancel"
-                control={control}
-                render={({ field }) => (
-                  <HStack className="flex items-center justify-between mt-3">
-                    <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.is_cancel')}</Text>
-                    <Switch
-                      size="lg"
-                      trackColor={{
-                        false: Colors.light.light,
-                        true: Colors.light.primary,
-                      }}
-                      thumbColor={field.value ? Colors.light.primary : Colors.light.light}
-                      ios_backgroundColor={Colors.light.light}
-                      onValueChange={field.onChange}
-                      value={field.value}
-                    />
-                  </HStack>
-                )}
-              />
-            </MotiView>
+          <MotiView
+            from={{ opacity: 0, translateY: 90 }}
+            animate={{ opacity: 1, translateY: -10 }}
+            transition={{ type: 'timing', duration: 300 }}
+            className="mx-5"
+            style={{ display: isCancel ? 'flex' : 'none' }}
+          >
+            <Controller
+              name="is_cancel"
+              control={control}
+              render={({ field }) => (
+                <HStack className="flex items-center justify-between mt-3">
+                  <Text style={{ color: Colors.light.darkBlue, fontSize: 16, fontWeight: '800' }}>{t('todos.is_cancel')}</Text>
+                  <Switch
+                    size="lg"
+                    trackColor={{
+                      false: Colors.light.light,
+                      true: Colors.light.primary,
+                    }}
+                    thumbColor={field.value ? Colors.light.primary : Colors.light.light}
+                    ios_backgroundColor={Colors.light.light}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  />
+                </HStack>
+              )}
+            />
+          </MotiView>
 
-            <MotiView from={{ opacity: 0, translateY: 50 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 400, delay: 600 }}>
-              <Box className="mt-4 px-3 mb-4">
-                <Button onPress={handleSubmit(onSubmit)} className="w-full h-10 rounded-xl" style={{ backgroundColor: Colors.light.primary }}>
-                  {loading ? <Loading /> : <ButtonText style={{ color: Colors.light.surface }}>{isEditMode ? t('todos.update') : t('submit')}</ButtonText>}
-                </Button>
-              </Box>
-            </MotiView>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </>
+          <MotiView from={{ opacity: 0, translateY: 50 }} animate={{ opacity: 1, translateY: 0 }} transition={{ type: 'timing', duration: 300 }}>
+            <Box className="mt-4 px-3 mb-4">
+              <Button onPress={handleSubmit(onSubmit)} className="w-full h-10 rounded-xl" style={{ backgroundColor: Colors.light.primary }}>
+                <ButtonText style={{ color: Colors.light.surface }}>{isEditMode ? t('todos.update') : t('submit')}</ButtonText>
+              </Button>
+            </Box>
+          </MotiView>
+        </DrawerBody>
+      </DrawerContent>
+    </Drawer>
   );
 });
 

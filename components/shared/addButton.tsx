@@ -2,27 +2,58 @@ import { MotiView } from 'moti';
 import { Platform, Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Icon, AddIcon, GlobeIcon } from '@/components/ui/icon';
-import { useRouter } from 'expo-router';
+import { usePathname, useRouter } from 'expo-router';
 import { useAppStore } from '@/store/appState';
 import { t } from 'i18next';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Colors } from '@/constants/Colors';
 
 const AddButton = () => {
   const { setAddInTimeTodoDrawer } = useAppStore();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const path = usePathname();
+
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
 
   return (
     <View
       style={{
+        display: path === '/tabs/profile' ? 'none' : 'flex',
         position: 'relative',
         width: 60,
         height: 60,
         marginTop: -30,
-        zIndex: 10,
+        zIndex: 1001,
       }}
     >
+      {isOpen && (
+        <View
+          style={{
+            position: 'absolute',
+            top: -1000,
+            left: -1000,
+            right: -1000,
+            bottom: -1000,
+            zIndex: 1000,
+          }}
+        >
+          <Pressable
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+            }}
+            onPress={handleClose}
+          />
+        </View>
+      )}
+
       <Pressable onPress={() => setIsOpen(!isOpen)}>
         <LinearGradient
           colors={['#a855f7', '#06b6d4']}
@@ -33,7 +64,7 @@ const AddButton = () => {
             height: 60,
             borderRadius: 30,
             justifyContent: 'center',
-            zIndex: 10,
+            zIndex: 1002,
             alignItems: 'center',
             ...Platform.select({
               ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 4 },
@@ -57,7 +88,7 @@ const AddButton = () => {
               padding: 10,
               backgroundColor: Colors.light.surface,
               borderRadius: 8,
-              zIndex: 8,
+              zIndex: 1002,
               flexDirection: 'row',
               alignItems: 'center',
               ...Platform.select({
@@ -69,6 +100,7 @@ const AddButton = () => {
             <Pressable
               onPress={() => {
                 setAddInTimeTodoDrawer(true);
+                handleClose();
               }}
               style={{ flexDirection: 'row', alignItems: 'center' }}
             >
@@ -84,10 +116,10 @@ const AddButton = () => {
             style={{
               position: 'absolute',
               width: 120,
-              zIndex: 8,
               padding: 10,
               backgroundColor: Colors.light.surface,
               borderRadius: 8,
+              zIndex: 1002,
               flexDirection: 'row',
               alignItems: 'center',
               ...Platform.select({
@@ -99,7 +131,7 @@ const AddButton = () => {
             <Pressable
               onPress={() => {
                 router.push('/tabs/(tabs)/addTodoAi');
-                setIsOpen(false);
+                handleClose();
               }}
               style={{ flexDirection: 'row', alignItems: 'center' }}
             >
