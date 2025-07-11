@@ -193,7 +193,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
             backgroundColor: Colors.light.surface,
             transform: language === 'fa' ? [{ rotate: '180deg' }] : [],
           }}
-          onPress={() => router.push('/tabs/profile')}
+          onPress={() => router.push('/tabs/(tabs)')}
         >
           <BackIcon />
         </Button>

@@ -1,15 +1,16 @@
 import { Text } from '@/components/Themed';
 import { Button } from '@/components/ui/button';
 import { Center } from '@/components/ui/center';
-import { useAppStore } from '@/store/appState';
-import { Redirect } from 'expo-router';
+//import { useAppStore } from '@/store/appState';
+//import { Redirect } from 'expo-router';
 import React from 'react';
 import { router } from 'expo-router';
 
-const AddTodo = () => {
-  const { isLogin } = useAppStore();
+const AddTodoAi = () => {
+  // const { isLogin } = useAppStore();
 
-  if (!isLogin) return <Redirect href="/tabs/(auth)/mobileAuth" />;
+  //if (!isLogin) return <Redirect href="/tabs/(auth)/mobileAuth" />;
+  console.log('addTodoAi');
 
   return (
     <Center className="flex-1">
@@ -20,4 +21,4 @@ const AddTodo = () => {
   );
 };
 
-export default AddTodo;
+export default AddTodoAi;

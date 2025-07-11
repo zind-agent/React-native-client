@@ -3,6 +3,11 @@ import { FlatList } from 'react-native';
 import HourlyRow from './hourlyRow';
 import { useTodoStore } from '@/store/todoState';
 import Loading from './Loading';
+import { Text } from '../Themed';
+import { VStack } from '../ui/vstack';
+import { Heading } from '../ui/heading';
+import { Colors } from '@/constants/Colors';
+import { t } from 'i18next';
 
 interface ScheduleListProps {
   date: string;
@@ -39,6 +44,16 @@ const ScheduleList = ({ date }: ScheduleListProps) => {
 
   if (loading) {
     return <Loading />;
+  }
+
+  if (todos.length === 0) {
+    return (
+      <VStack className="mt-5 mb-10 h-full">
+        <Text className="text-center mt-10 px-10 text-2xl" style={{ color: Colors.light.subtext }}>
+          {t('home.no_task')}
+        </Text>
+      </VStack>
+    );
   }
 
   return (

@@ -17,9 +17,9 @@ import { FlatList } from 'react-native';
 import { Button, ButtonText } from '@/components/ui/button';
 import { router } from 'expo-router';
 import { useAppStore } from '@/store/appState';
-import { ArrowDownIcon, Icon } from '@/components/ui/icon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTodoStore } from '@/store/todoState';
+import AddTodoInTime from '@/components/shared/form/addTodoInTime';
 
 const Home: React.FC = () => {
   const { selectedDate } = useTodoStore();
@@ -40,6 +40,7 @@ const Home: React.FC = () => {
       scrollsToTop={false}
       renderItem={() => (
         <Box className="px-5">
+          <AddTodoInTime date={selectedDate} />
           <UserHeaderTitle />
 
           {/*  section one for my Card  */}

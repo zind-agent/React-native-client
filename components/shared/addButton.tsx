@@ -68,8 +68,7 @@ const AddButton = () => {
           >
             <Pressable
               onPress={() => {
-                router.push('/tabs/(tabs)/addTodo');
-                setIsOpen(false);
+                setAddInTimeTodoDrawer(true);
               }}
               style={{ flexDirection: 'row', alignItems: 'center' }}
             >
@@ -99,7 +98,7 @@ const AddButton = () => {
           >
             <Pressable
               onPress={() => {
-                setAddInTimeTodoDrawer(true);
+                router.push('/tabs/(tabs)/addTodoAi');
                 setIsOpen(false);
               }}
               style={{ flexDirection: 'row', alignItems: 'center' }}
