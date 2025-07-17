@@ -68,11 +68,11 @@ const AddButton = () => {
             alignItems: 'center',
             ...Platform.select({
               ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 4 },
-              android: { elevation: 4, shadowColor: '#000' },
+              android: { elevation: 2, shadowColor: '#000' },
             }),
           }}
         >
-          <Icon as={AddIcon} size="lg" color={Colors.light.card} />
+          <Icon as={AddIcon} size="xl" color={Colors.main.background} />
         </LinearGradient>
       </Pressable>
 
@@ -86,7 +86,7 @@ const AddButton = () => {
               position: 'absolute',
               width: 120,
               padding: 10,
-              backgroundColor: Colors.light.surface,
+              backgroundColor: Colors.main.background,
               borderRadius: 8,
               zIndex: 1002,
               flexDirection: 'row',
@@ -104,8 +104,8 @@ const AddButton = () => {
               }}
               style={{ flexDirection: 'row', alignItems: 'center' }}
             >
-              <Icon as={AddIcon} size="sm" color={Colors.light.info} style={{ marginRight: 8 }} />
-              <Text style={{ color: Colors.light.text, fontSize: 14 }}>{t('todos.add_task')}</Text>
+              <Icon as={AddIcon} size="sm" color={Colors.main.info} style={{ marginRight: 8 }} />
+              <Text style={{ color: Colors.main.textPrimary, fontSize: 14 }}>{t('todos.add_task')}</Text>
             </Pressable>
           </MotiView>
 
@@ -117,7 +117,7 @@ const AddButton = () => {
               position: 'absolute',
               width: 120,
               padding: 10,
-              backgroundColor: Colors.light.surface,
+              backgroundColor: Colors.main.background,
               borderRadius: 8,
               zIndex: 1002,
               flexDirection: 'row',
@@ -135,8 +135,8 @@ const AddButton = () => {
               }}
               style={{ flexDirection: 'row', alignItems: 'center' }}
             >
-              <Icon as={GlobeIcon} size="sm" color={Colors.light.info} style={{ marginRight: 8 }} />
-              <Text style={{ color: Colors.light.text, fontSize: 14 }}>{t('todos.add_by_ai')}</Text>
+              <Icon as={GlobeIcon} size="sm" color={Colors.main.info} style={{ marginRight: 8 }} />
+              <Text style={{ color: Colors.main.textPrimary, fontSize: 14 }}>{t('todos.add_by_ai')}</Text>
             </Pressable>
           </MotiView>
         </>

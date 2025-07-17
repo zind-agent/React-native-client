@@ -35,7 +35,7 @@ const Todos = () => {
           <HStack className="items-center justify-between mb-2">
             <Heading
               style={{
-                color: Colors.light.darkBlue,
+                color: Colors.main10275A,
                 fontSize: 28,
               }}
             >
@@ -49,13 +49,13 @@ const Todos = () => {
         <HStack className="items-center justify-between mb-2 mt-5 pb-3">
           <Heading
             style={{
-              color: Colors.light.darkBlue,
+              color: Colors.main10275A,
               fontSize: 20,
             }}
           >
             {t('todos.today')}
           </Heading>
-          <Heading style={{ color: Colors.light.darkBlue, fontSize: 16 }}>{selectedDate ?? '-'}</Heading>
+          <Heading style={{ color: Colors.main10275A, fontSize: 16 }}>{selectedDate ?? '-'}</Heading>
         </HStack>
       </View>
 

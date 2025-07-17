@@ -10,7 +10,6 @@ const AddTodoAi = () => {
   // const { isLogin } = useAppStore();
 
   //if (!isLogin) return <Redirect href="/tabs/(auth)/mobileAuth" />;
-  console.log('addTodoAi');
 
   return (
     <Center className="flex-1">

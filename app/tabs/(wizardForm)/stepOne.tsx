@@ -107,15 +107,15 @@ const StepOne = () => {
           name="description"
           render={({ field, fieldState }) => (
             <VStack>
-              <Text style={{ color: Colors.light.darkBlue }} className="mt-5">
+              <Text style={{ color: Colors.main10275A }} className="mt-5">
                 {t('description')}
               </Text>
               <Textarea
                 className="my-1 w-full rounded-xl px-4 h-[150px]"
                 style={{
-                  backgroundColor: Colors.light.surface,
+                  backgroundColor: Colors.main.background,
                   borderWidth: 1,
-                  borderColor: Colors.light.light,
+                  borderColor: Colors.main.primaryLight,
                 }}
                 size="sm"
                 isReadOnly={false}
@@ -128,7 +128,7 @@ const StepOne = () => {
                   placeholder={t('write_description_placeholder')}
                   className="h-10 items-start"
                   style={{ textAlignVertical: 'top' }}
-                  placeholderTextColor={Colors.light.light}
+                  placeholderTextColor={Colors.main.primaryLight}
                 />
               </Textarea>
             </VStack>
@@ -138,9 +138,9 @@ const StepOne = () => {
       <Button
         className="rounded-xl h-[50px] mt-3"
         style={{
-          backgroundColor: Colors.light.primary,
+          backgroundColor: Colors.main.primary,
           borderWidth: 1,
-          borderColor: Colors.light.light,
+          borderColor: Colors.main.primaryLight,
         }}
         onPress={handleSubmit(onSubmit)}
       >

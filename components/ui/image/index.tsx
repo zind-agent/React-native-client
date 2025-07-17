@@ -25,10 +25,7 @@ const imageStyle = tva({
 const UIImage = createImage({ Root: RNImage });
 
 type ImageProps = VariantProps<typeof imageStyle> & React.ComponentProps<typeof UIImage>;
-const Image = React.forwardRef<
-  React.ElementRef<typeof UIImage>,
-  ImageProps & { className?: string }
->(({ size = 'md', className, ...props }, ref) => {
+const Image = React.forwardRef<React.ElementRef<typeof UIImage>, ImageProps & { className?: string }>(({ size = 'md', className, ...props }, ref) => {
   return (
     <UIImage
       className={imageStyle({ size, class: className })}

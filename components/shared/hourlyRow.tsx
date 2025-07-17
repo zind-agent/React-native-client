@@ -16,16 +16,16 @@ const HourlyRow = ({ hour, tasks, isCurrentHour = false }: HourlyRowProps) => {
     <VStack
       className="border-b border-slate-200 py-3 px-4"
       style={{
-        backgroundColor: isCurrentHour ? Colors.light.surface : 'transparent',
+        backgroundColor: isCurrentHour ? Colors.main.background : 'transparent',
         borderLeftWidth: isCurrentHour ? 3 : 0,
-        borderLeftColor: isCurrentHour ? Colors.light.info : 'transparent',
+        borderLeftColor: isCurrentHour ? Colors.main.info : 'transparent',
       }}
     >
       <HStack className="items-start space-x-4">
         <Text
           className="text-slate-800 font-semibold text-base w-14 text-left"
           style={{
-            color: isCurrentHour ? Colors.light.info : Colors.light.text,
+            color: isCurrentHour ? Colors.main.info : Colors.maintextPrimary,
             fontWeight: isCurrentHour ? '700' : '600',
           }}
         >

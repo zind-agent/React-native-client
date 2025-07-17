@@ -18,7 +18,7 @@ module.exports = {
         success: {
           DEFAULT: '#A5D8FF',
         },
-        surface: {
+        background: {
           DEFAULT: '#F7F9FB',
         },
         text: {

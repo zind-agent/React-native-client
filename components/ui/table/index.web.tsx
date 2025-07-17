@@ -1,14 +1,5 @@
 import React, { createContext, useMemo, useContext } from 'react';
-import {
-  tableStyle,
-  tableHeaderStyle,
-  tableBodyStyle,
-  tableFooterStyle,
-  tableHeadStyle,
-  tableRowStyleStyle,
-  tableDataStyle,
-  tableCaptionStyle,
-} from './styles';
+import { tableStyle, tableHeaderStyle, tableBodyStyle, tableFooterStyle, tableHeadStyle, tableRowStyleStyle, tableDataStyle, tableCaptionStyle } from './styles';
 
 const TableHeaderContext = createContext<{
   isHeaderRow: boolean;

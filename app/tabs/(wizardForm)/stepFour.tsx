@@ -58,10 +58,10 @@ const StepTwo = () => {
         <Box>
           <WizardStepper />
           <HeaderTitle title={t('priorities.title')} path={'../(wizardForm)/stepOne'} />
-          <Heading size="lg" className="px-2 mt-4" style={{ color: Colors.light.darkBlue }}>
+          <Heading size="lg" className="px-2 mt-4" style={{ color: Colors.main10275A }}>
             {t('priorities.subtitle')}
           </Heading>
-          <Text className="px-3" style={{ color: Colors.light.subtext }}>
+          <Text className="px-3" style={{ color: Colors.main8E9EAB }}>
             {t('priorities.description')}
           </Text>
 
@@ -77,11 +77,11 @@ const StepTwo = () => {
                   paddingVertical: 8,
                   paddingHorizontal: 12,
                   borderRadius: 12,
-                  backgroundColor: selected.includes(item.key) ? Colors.light.primary + '20' : Colors.light.surface,
+                  backgroundColor: selected.includes(item.key) ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
                 <ZindCheckbox checked={selected.includes(item.key)} onPress={isCheckHandler.bind(null, item.key)} />
-                <Text style={{ fontSize: 14, color: Colors.light.text }}>{t(item.label)}</Text>
+                <Text style={{ fontSize: 14, color: Colors.maintextPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}
           </VStack>
@@ -92,9 +92,9 @@ const StepTwo = () => {
         <Button
           className="rounded-xl h-[50px]"
           style={{
-            backgroundColor: isButtonDisabled ? Colors.light.light : Colors.light.primary,
+            backgroundColor: isButtonDisabled ? Colors.main.primaryLight : Colors.main.primary,
             borderWidth: 1,
-            borderColor: Colors.light.light,
+            borderColor: Colors.main.primaryLight,
           }}
           onPress={onSubmit}
           disabled={isButtonDisabled}

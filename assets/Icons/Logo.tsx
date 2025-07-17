@@ -4,13 +4,7 @@ import { Svg, Path, Rect, Defs, LinearGradient, Stop } from 'react-native-svg';
 const YourSvgComponent = () => {
   return (
     <Svg width="188" height="31" viewBox="0 0 188 31" fill="none">
-      <Rect
-        y="1.40527"
-        width="27.9999"
-        height="27.1895"
-        rx="2.79998"
-        fill="url(#paint0_linear_10988_36724)"
-      />
+      <Rect y="1.40527" width="27.9999" height="27.1895" rx="2.79998" fill="url(#paint0_linear_10988_36724)" />
       <Path d="M7 13.5614L13.9999 8.40527V10.8386L7 15.9947V13.5614Z" fill="white" />
       <Path d="M21 13.5615L14.0001 8.40533V10.8386L21 15.9948V13.5615Z" fill="white" />
       <Path d="M7 19.1614L13.9999 14.0052V16.4386L7 21.5947V19.1614Z" fill="white" />
@@ -20,14 +14,7 @@ const YourSvgComponent = () => {
         fill="white"
       />
       <Defs>
-        <LinearGradient
-          id="paint0_linear_10988_36724"
-          x1="14"
-          y1="1.40527"
-          x2="31.1111"
-          y2="30.6386"
-          gradientUnits="userSpaceOnUse"
-        >
+        <LinearGradient id="paint0_linear_10988_36724" x1="14" y1="1.40527" x2="31.1111" y2="30.6386" gradientUnits="userSpaceOnUse">
           <Stop stopColor="#4AA9FF" />
           <Stop offset="1" stopColor="#004282" />
         </LinearGradient>

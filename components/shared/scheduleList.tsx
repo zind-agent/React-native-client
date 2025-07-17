@@ -5,7 +5,6 @@ import { useTodoStore } from '@/store/todoState';
 import Loading from './Loading';
 import { Text } from '../Themed';
 import { VStack } from '../ui/vstack';
-import { Heading } from '../ui/heading';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 
@@ -14,14 +13,10 @@ interface ScheduleListProps {
 }
 
 const ScheduleList = ({ date }: ScheduleListProps) => {
-  const { todos, loadTodos, loading, refreshTodos } = useTodoStore();
+  const { todos, loadTodos, loading } = useTodoStore();
 
   useEffect(() => {
     loadTodos(date);
-  }, [date]);
-
-  useEffect(() => {
-    refreshTodos();
   }, []);
 
   const hourlyData = useMemo(() => {
@@ -49,7 +44,7 @@ const ScheduleList = ({ date }: ScheduleListProps) => {
   if (todos.length === 0) {
     return (
       <VStack className="mt-5 mb-10 h-full">
-        <Text className="text-center mt-10 px-10 text-2xl" style={{ color: Colors.light.subtext }}>
+        <Text className="text-center mt-10 px-10 text-2xl" style={{ color: Colors.main.background }}>
           {t('home.no_task')}
         </Text>
       </VStack>

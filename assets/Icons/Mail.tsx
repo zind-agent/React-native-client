@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { Svg, Path } from 'react-native-svg';
 
-const MailIcon = ({ color = Colors.light.light }) => {
+const MailIcon = ({ color = Colors.main.primary }) => {
   return (
     <Svg width="23" height="21" viewBox="0 0 23 21" fill="none">
       <Path

@@ -146,7 +146,7 @@
     "min": "Min",
     "hour": "Hour",
     "untile": "Until",
-    "is_completed": "Is Completed?",
+    "is_completed": "Your task is completed?",
     "start_time": "Start Time",
     "end_time": "End Time",
     "add_task": "Add Task",
@@ -154,6 +154,7 @@
     "is_cancel": "Is Cancel?",
     "date": "Date"
   },
+  "create_event": "Create Event",
   "add": "Add",
   "title": "Title",
   "tags": "Tags",

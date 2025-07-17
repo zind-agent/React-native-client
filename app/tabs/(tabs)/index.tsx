@@ -1,7 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { ArrowRightIcon } from '@/assets/Icons/ArrowRight';
-import { CancelIcon } from '@/assets/Icons/Cancel';
-import { ClockIcon } from '@/assets/Icons/ClockIcon';
 import { CumpouterIcons } from '@/assets/Icons/ComputerIcons';
 import { GradientCard } from '@/components/shared/gradientCard';
 import TaskList from '@/components/shared/taskList';
@@ -17,7 +14,6 @@ import { FlatList } from 'react-native';
 import { Button, ButtonText } from '@/components/ui/button';
 import { router } from 'expo-router';
 import { useAppStore } from '@/store/appState';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTodoStore } from '@/store/todoState';
 import AddTodoInTime from '@/components/shared/form/addTodoInTime';
 
@@ -30,10 +26,6 @@ const Home: React.FC = () => {
   const { setHideTabBar } = useAppStore();
   const lastOffset = useRef(0);
 
-  const changeLanguage = async () => {
-    await AsyncStorage.removeItem('lang');
-  };
-
   return (
     <FlatList
       data={[{ key: 'content' }]}
@@ -45,77 +37,37 @@ const Home: React.FC = () => {
 
           {/*  section one for my Card  */}
           <VStack className="mt-5">
-            <Heading style={{ color: Colors.light.darkBlue }} size="2xl" className="px-3">
-              {t('home.my_task')}
-            </Heading>
-            <GradientCard colors={[Colors.light.info, Colors.light.success]} height={140}>
+            <GradientCard colors={[Colors.main.info, Colors.main.success]} height={140}>
               <CumpouterIcons />
               <VStack className="pr-5">
-                <Heading style={{ color: Colors.light.darkBlue }} size="lg">
+                <Heading style={{ color: Colors.main.background }} size="lg">
                   {t('home.completed')}
                 </Heading>
-                <Text className="text-center" style={{ color: Colors.light.darkBlue, fontSize: 17 }}>
+                <Text className="text-center" style={{ color: Colors.main.background, fontSize: 17 }}>
                   0 {t('home.task')}
                 </Text>
               </VStack>
             </GradientCard>
-            <HStack space="md" className="mt-3">
-              <GradientCard colors={[Colors.light.accent, Colors.light.tag.home]} start={{ x: 1, y: 1 }} end={{ x: 1, y: 0 }} width="50%" height={130}>
-                <VStack space="sm" className="justify-start items-start">
-                  <HStack className="justify-between items-center w-full">
-                    <CancelIcon />
-                    <ArrowRightIcon />
-                  </HStack>
-                  <VStack className="justify-between">
-                    <Text className="text-center" style={{ color: Colors.light.card, fontSize: 16 }}>
-                      {t('home.cancel')}
-                    </Text>
-                    <Text className="text-center" style={{ color: Colors.light.card, fontSize: 12 }}>
-                      0 {t('home.task')}
-                    </Text>
-                  </VStack>
-                </VStack>
-              </GradientCard>
-              <GradientCard colors={[Colors.light.primary, Colors.light.button]} start={{ x: 1, y: 1 }} end={{ x: 1, y: 0 }} width="50%" height={130}>
-                <VStack space="sm" className="justify-start items-start">
-                  <HStack className="justify-between items-center w-full">
-                    <ClockIcon />
-                    <ArrowRightIcon />
-                  </HStack>
-                  <VStack className="justify-between">
-                    <Text className="text-center" style={{ color: Colors.light.card, fontSize: 16 }}>
-                      {t('home.pending')}
-                    </Text>
-                    <Text className="text-center" style={{ color: Colors.light.card, fontSize: 12 }}>
-                      0 {t('home.task')}
-                    </Text>
-                  </VStack>
-                </VStack>
-              </GradientCard>
-            </HStack>
           </VStack>
-          <Button className="my-10" onPress={changeLanguage}>
-            <ButtonText>Change Language</ButtonText>
-          </Button>
 
           {/*  section two for today task  */}
           {todos.length === 0 ? (
             <VStack className="mt-5 mb-10 h-full">
-              <Heading style={{ color: Colors.light.darkBlue }} size="2xl">
+              <Heading style={{ color: Colors.main.textSecondary }} size="2xl">
                 {t('home.today_task')}
               </Heading>
-              <Text className="text-center mt-10 px-10 text-2xl" style={{ color: Colors.light.subtext }}>
+              <Text className="text-center mt-10 px-10 text-lg" style={{ color: Colors.main.textSecondary }}>
                 {t('home.no_task')}
               </Text>
             </VStack>
           ) : (
             <VStack className="mt-5 mb-10">
               <HStack className="justify-between items-center px-1">
-                <Heading style={{ color: Colors.light.darkBlue }} size="2xl">
+                <Heading style={{ color: Colors.main.textPrimary }} size="2xl">
                   {t('home.today_task')}
                 </Heading>
                 <Button className="bg-transparent" onPress={() => router.push('/tabs/(tabs)/todos')}>
-                  <ButtonText style={{ color: Colors.light.darkBlue }} className="text-sm">
+                  <ButtonText style={{ color: Colors.main.textPrimary }} className="text-sm">
                     {t('home.view_all')}
                   </ButtonText>
                 </Button>

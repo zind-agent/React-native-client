@@ -1,6 +1,5 @@
-import { FormControl, FormControlError, FormControlErrorText, FormControlErrorIcon } from '@/components/ui/form-control';
+import { FormControl, FormControlError, FormControlErrorText } from '@/components/ui/form-control';
 import { Input, InputField } from '@/components/ui/input';
-import { AlertCircleIcon } from '@/components/ui/icon';
 import { Colors } from '@/constants/Colors';
 import React from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
@@ -14,24 +13,16 @@ interface AddTodoFormProps {
 }
 
 export const AddTodoForm = ({ value, onChange, error, placeholder, style }: AddTodoFormProps) => {
-  const flattenStyle = Array.isArray(style) ? Object.assign({}, ...style) : style || {};
   return (
     <FormControl isInvalid={!!error} isRequired size="lg" className="mt-8">
-      <Input
-        className="my-1 rounded-xl px-4"
-        style={{
-          backgroundColor: Colors.light.surface,
-          ...flattenStyle,
-        }}
-      >
-        <InputField type="text" placeholder={placeholder} value={value} onChangeText={onChange} className="text-xl border-b-[1px] border-b-slate-300" />
+      <Input className="rounded-xl px-4" style={[{ backgroundColor: Colors.main.background, borderWidth: 0, borderBottomWidth: 1 }, style]}>
+        <InputField type="text" placeholder={placeholder} value={value} onChangeText={onChange} className="text-xl" />
       </Input>
 
       {error && (
         <FormControlError>
-          <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText style={{ color: Colors.light.accent }} className="text-sm">
-            ** {error} **
+          <FormControlErrorText style={{ color: Colors.main.accent }} className="text-sm">
+            {error}
           </FormControlErrorText>
         </FormControlError>
       )}

@@ -18,10 +18,10 @@ export const ZindCheckbox = ({ checked, onPress }: ZindCheckboxProps) => {
           height: 26,
           borderRadius: 8,
           borderWidth: 2,
-          borderColor: Colors.light.light,
+          borderColor: Colors.main.primaryLight,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: checked ? Colors.light.primary : 'transparent',
+          backgroundColor: checked ? Colors.main.primary : 'transparent',
         }}
         from={{ scale: 0.8, opacity: 0 }}
         animate={{
@@ -44,7 +44,7 @@ export const ZindCheckbox = ({ checked, onPress }: ZindCheckboxProps) => {
             height: 26,
             borderRadius: 8,
             borderWidth: 2,
-            borderColor: Colors.light.light,
+            borderColor: Colors.main.primary,
           }}
           from={{ opacity: 1 }}
           animate={{ opacity: checked ? 0 : 1 }}

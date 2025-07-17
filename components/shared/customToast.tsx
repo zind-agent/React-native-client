@@ -10,15 +10,15 @@ export const useShowToast = () => {
       const getBgColor = () => {
         switch (action) {
           case 'error':
-            return Colors.light.accent;
+            return Colors.main.accent;
           case 'success':
-            return Colors.light.tag.work;
+            return Colors.main.tag.work;
           case 'warning':
-            return Colors.light.warning;
+            return Colors.main.warning;
           case 'info':
-            return Colors.light.info;
+            return Colors.main.info;
           default:
-            return Colors.light.primary;
+            return Colors.main.primary;
         }
       };
 

@@ -8,6 +8,7 @@ export const LanguageGate = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const { setLanguage, setCalender } = useAppStore();
   const router = useRouter();
+  const [shouldNavigate, setShouldNavigate] = useState(false);
 
   useEffect(() => {
     const checkLanguage = async () => {
@@ -17,17 +18,23 @@ export const LanguageGate = ({ children }: { children: React.ReactNode }) => {
           setLanguage(lang as 'fa' | 'en');
           setCalender(lang === 'fa' ? 'jalali' : 'gregorian');
         } else {
-          setTimeout(() => router.push('/language'), 0);
+          setShouldNavigate(true);
         }
       } catch (error) {
         console.error('Error reading AsyncStorage:', error);
-        setTimeout(() => router.push('/language'), 0);
+        setShouldNavigate(true);
       } finally {
         setLoading(false);
       }
     };
     checkLanguage();
-  }, [router]);
+  }, []);
+
+  useEffect(() => {
+    if (!loading && shouldNavigate) {
+      router.push('/language');
+    }
+  }, [loading, shouldNavigate]);
 
   if (loading) return <Loading />;
 

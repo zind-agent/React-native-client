@@ -23,10 +23,10 @@ const UserHeaderTitle = memo(() => {
   return (
     <HStack className="mt-5 justify-between items-center">
       <VStack>
-        <Heading className="text-lg font-bold" size="xl" style={{ color: Colors.light.darkBlue }}>
+        <Heading className="text-lg font-bold" size="xl" style={{ color: Colors.main.primaryDark }}>
           {t('hi')}, {capitalizeWords(firstname || t('welcome_to_zind'))} {capitalizeWords(lastname) ?? ''}
         </Heading>
-        <Text style={{ color: Colors.light.subtext }}>{t('home.lets_make_this_day_productive')}</Text>
+        <Text style={{ color: Colors.main.textSecondary }}>{t('home.lets_make_this_day_productive')}</Text>
       </VStack>
 
       <LinearGradient
@@ -34,8 +34,8 @@ const UserHeaderTitle = memo(() => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
-          width: 90,
-          height: 90,
+          width: 80,
+          height: 80,
           borderRadius: 50,
           alignItems: 'center',
           justifyContent: 'center',
@@ -52,8 +52,8 @@ const UserHeaderTitle = memo(() => {
           <Image
             source={require('@/assets/images/personIcons.png')}
             style={{
-              width: 75,
-              height: 75,
+              width: 65,
+              height: 65,
               borderRadius: 40,
             }}
           />

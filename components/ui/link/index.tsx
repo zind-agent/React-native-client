@@ -15,7 +15,7 @@ export const UILink = createLink({
 });
 
 cssInterop(UILink, { className: 'style' });
-cssInterop(UILink.Text, { className: 'style' });
+cssInterop(UILinktextPrimary, { className: 'style' });
 
 const linkStyle = tva({
   base: 'group/link web:outline-0 data-[disabled=true]:web:cursor-not-allowed data-[focus-visible=true]:web:ring-2 data-[focus-visible=true]:web:ring-indicator-primary data-[focus-visible=true]:web:outline-0 data-[disabled=true]:opacity-4 ',
@@ -62,32 +62,26 @@ const linkTextStyle = tva({
   },
 });
 
-type ILinkProps = React.ComponentProps<typeof UILink> &
-  VariantProps<typeof linkStyle> & { className?: string };
+type ILinkProps = React.ComponentProps<typeof UILink> & VariantProps<typeof linkStyle> & { className?: string };
 
-const Link = React.forwardRef<React.ElementRef<typeof UILink>, ILinkProps>(
-  ({ className, ...props }, ref) => {
-    return <UILink ref={ref} {...props} className={linkStyle({ class: className })} />;
-  },
-);
+const Link = React.forwardRef<React.ElementRef<typeof UILink>, ILinkProps>(({ className, ...props }, ref) => {
+  return <UILink ref={ref} {...props} className={linkStyle({ class: className })} />;
+});
 
-type ILinkTextProps = React.ComponentProps<typeof UILink.Text> &
-  VariantProps<typeof linkTextStyle> & { className?: string };
+type ILinkTextProps = React.ComponentProps<typeof UILinktextPrimary> & VariantProps<typeof linkTextStyle> & { className?: string };
 
-const LinkText = React.forwardRef<React.ElementRef<typeof UILink.Text>, ILinkTextProps>(
-  ({ className, size = 'md', ...props }, ref) => {
-    return (
-      <UILink.Text
-        ref={ref}
-        {...props}
-        className={linkTextStyle({
-          class: className,
-          size,
-        })}
-      />
-    );
-  },
-);
+const LinkText = React.forwardRef<React.ElementRef<typeof UILinktextPrimary>, ILinkTextProps>(({ className, size = 'md', ...props }, ref) => {
+  return (
+    <UILinktextPrimary
+      ref={ref}
+      {...props}
+      className={linkTextStyle({
+        class: className,
+        size,
+      })}
+    />
+  );
+});
 
 Link.displayName = 'Link';
 LinkText.displayName = 'LinkText';

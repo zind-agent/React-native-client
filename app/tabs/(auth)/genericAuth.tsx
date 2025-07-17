@@ -175,7 +175,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
       <Box
         className="h-max rounded-b-[40] pb-10"
         style={{
-          backgroundColor: Colors.light.primary,
+          backgroundColor: Colors.main.primary,
           ...Platform.select({
             ios: {
               shadowColor: '#000',
@@ -190,7 +190,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         <Button
           className="w-[40px] h-[40px] rounded-xl shadow-button mt-10 mx-10"
           style={{
-            backgroundColor: Colors.light.surface,
+            backgroundColor: Colors.main.background,
             transform: language === 'fa' ? [{ rotate: '180deg' }] : [],
           }}
           onPress={() => router.push('/tabs/(tabs)')}
@@ -202,7 +202,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
           <Heading size="2xl" className="text-white">
             {t(config.title)}
           </Heading>
-          <Text style={{ color: Colors.light.surface }}>{t('Your privacy and security are our top priorities')}</Text>
+          <Text style={{ color: Colors.main.background }}>{t('Your privacy and security are our top priorities')}</Text>
 
           <Controller
             name="identifier"
@@ -248,7 +248,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         <Button
           isDisabled={!canSubmit}
           style={{
-            backgroundColor: canSubmit ? Colors.light.primary : Colors.light.light,
+            backgroundColor: canSubmit ? Colors.main.primary : Colors.main.primaryLight,
             opacity: canSubmit ? 1 : 0.8,
           }}
           className="h-16 rounded-xl mt-3"
@@ -265,22 +265,22 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         </Button>
 
         <HStack className="justify-center items-center gap-5 my-5 px-5">
-          <Box style={{ flex: 1, height: 1, backgroundColor: Colors.light.light }} />
+          <Box style={{ flex: 1, height: 1, backgroundColor: Colors.main.primaryLight }} />
           <Text className="text-primary">{t('or')}</Text>
-          <Box style={{ flex: 1, height: 1, backgroundColor: Colors.light.light }} />
+          <Box style={{ flex: 1, height: 1, backgroundColor: Colors.main.primaryLight }} />
         </HStack>
 
         <VStack className="gap-3">
-          <Button style={{ backgroundColor: Colors.light.light }} className="h-16 rounded-xl flex justify-center">
+          <Button style={{ backgroundColor: Colors.main.primaryLight }} className="h-16 rounded-xl flex justify-center">
             <ButtonIcon as={GoogleIcon} />
-            <ButtonText style={{ color: Colors.light.darkBlue }} className="font-heading">
+            <ButtonText style={{ color: Colors.main10275A }} className="font-heading">
               {t('continue with google')}
             </ButtonText>
           </Button>
 
-          <Button style={{ backgroundColor: Colors.light.light }} className="h-16 rounded-xl flex justify-center" onPress={handleNavigateToAlternative}>
-            <MailIcon color={Colors.light.darkBlue} />
-            <ButtonText style={{ color: Colors.light.darkBlue }} className="font-heading">
+          <Button style={{ backgroundColor: Colors.main.primaryLight }} className="h-16 rounded-xl flex justify-center" onPress={handleNavigateToAlternative}>
+            <MailIcon color={Colors.main10275A} />
+            <ButtonText style={{ color: Colors.main10275A }} className="font-heading">
               {t(config.alternativeText)}
             </ButtonText>
           </Button>

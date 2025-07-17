@@ -83,7 +83,7 @@ const SelectYearWithMonth = ({
       <Button onPress={() => setShowDrawer(true)} className="rounded-xl bg-transparent">
         <HStack className="items-center" space="sm">
           <CalenderIcon />
-          <ButtonText className="text-md" style={{ color: selectedYear && selectedMonth ? Colors.light.darkBlue : Colors.light.light }}>
+          <ButtonText className="text-md" style={{ color: selectedYear && selectedMonth ? Colors.main10275A : Colors.main.primaryLight }}>
             {selectedYear && selectedMonth
               ? `${displayYear} | ${language === 'fa' ? `${selectedMonthLabel?.labelFa} - ${selectedMonthLabel?.labelEn}` : `${selectedMonthLabel?.labelEn} - ${selectedMonthLabel?.labelFa}`}`
               : t('select_year_month')}
@@ -93,18 +93,18 @@ const SelectYearWithMonth = ({
 
       <Drawer isOpen={showDrawer} onClose={() => setShowDrawer(false)} size="lg" anchor="bottom" className="bg-black/60">
         <DrawerBackdrop />
-        <DrawerContent style={{ backgroundColor: Colors.light.surface }} className="h-max">
+        <DrawerContent style={{ backgroundColor: Colors.main.background }} className="h-max">
           <DrawerHeader className="justify-center py-1">
             {/* Year Selector */}
             <HStack className="items-center gap-10 mb-4">
-              <Pressable onPress={handleDecrease} className="rounded-lg p-1" style={{ backgroundColor: Colors.light.primary }}>
-                <Icon className="p-4 mx-auto size-2" as={ArrowLeftIcon} color={Colors.light.surface} />
+              <Pressable onPress={handleDecrease} className="rounded-lg p-1" style={{ backgroundColor: Colors.main.primary }}>
+                <Icon className="p-4 mx-auto size-2" as={ArrowLeftIcon} color={Colors.main.background} />
               </Pressable>
 
-              <Text style={{ fontSize: 24, color: Colors.light.darkBlue }}>{displayYear}</Text>
+              <Text style={{ fontSize: 24, color: Colors.main10275A }}>{displayYear}</Text>
 
-              <Pressable onPress={handleIncrease} className="rounded-lg p-1" style={{ backgroundColor: Colors.light.primary }}>
-                <Icon className="p-4 mx-auto size-2" as={ArrowRightIcon} color={Colors.light.surface} />
+              <Pressable onPress={handleIncrease} className="rounded-lg p-1" style={{ backgroundColor: Colors.main.primary }}>
+                <Icon className="p-4 mx-auto size-2" as={ArrowRightIcon} color={Colors.main.background} />
               </Pressable>
             </HStack>
           </DrawerHeader>
@@ -119,9 +119,9 @@ const SelectYearWithMonth = ({
                     variant={selectedMonth === option.value ? 'solid' : 'outline'}
                     className="h-12 rounded-xl"
                     style={{
-                      backgroundColor: selectedMonth === option.value ? Colors.light.primary : Colors.light.surface,
+                      backgroundColor: selectedMonth === option.value ? Colors.main.primary : Colors.main.background,
                       borderWidth: 1,
-                      borderColor: Colors.light.light,
+                      borderColor: Colors.main.primaryLight,
                     }}
                   >
                     <ButtonText className={`text-lg ${selectedMonth === option.value ? 'text-white' : 'text-black'}`}>
@@ -131,7 +131,7 @@ const SelectYearWithMonth = ({
                 ))}
               </VStack>
 
-              <Button onPress={() => setShowDrawer(false)} className="mt-4 h-14 rounded-xl w-full" style={{ backgroundColor: Colors.light.primary }}>
+              <Button onPress={() => setShowDrawer(false)} className="mt-4 h-14 rounded-xl w-full" style={{ backgroundColor: Colors.main.primary }}>
                 <ButtonText className="text-white text-lg">{t('confirm')}</ButtonText>
               </Button>
             </VStack>

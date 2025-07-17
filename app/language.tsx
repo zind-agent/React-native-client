@@ -41,8 +41,8 @@ const Language = () => {
           return (
             <MotiView
               key={lang}
-              from={{ backgroundColor: Colors.light.subtext }}
-              animate={{ backgroundColor: isSelected ? Colors.light.primary : Colors.light.light }}
+              from={{ backgroundColor: Colors.main.primary }}
+              animate={{ backgroundColor: isSelected ? Colors.main.primary : Colors.main.primaryLight }}
               transition={{ type: 'timing', duration: 100 }}
               className="rounded-xl"
             >
@@ -61,8 +61,8 @@ const Language = () => {
       <Button variant="link" onPress={selectLanguage}>
         <Text
           style={{
-            color: Colors.light.primary,
-            borderBottomColor: Colors.light.primary,
+            color: Colors.main.primary,
+            borderBottomColor: Colors.main.primary,
             borderBottomWidth: 1,
             fontSize: 16,
           }}

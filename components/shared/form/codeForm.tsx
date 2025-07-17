@@ -86,9 +86,9 @@ export const CodeForm = ({ value, onChange, error, onResendCode, length = 4 }: C
     <FormControl isInvalid={!!error} isRequired size="lg" className="mt-8">
       <Box className="mt-4 items-center">
         <HStack className="w-full justify-between mb-3 px-2 items-center">
-          <Text className="text-surface">{t('we send code')}</Text>
+          <Text className="text-background">{t('we send code')}</Text>
           {secondsLeft > 0 ? (
-            <Text className="text-surface">{formatTime(secondsLeft)}</Text>
+            <Text className="text-background">{formatTime(secondsLeft)}</Text>
           ) : (
             <Button variant="link" onPress={handleResend}>
               <ButtonText>{t('resend code')}</ButtonText>
@@ -103,9 +103,9 @@ export const CodeForm = ({ value, onChange, error, onResendCode, length = 4 }: C
             key={index}
             className="my-1 h-16 rounded-xl w-[22%]"
             style={{
-              backgroundColor: Colors.light.surface,
+              backgroundColor: Colors.main.background,
               borderWidth: 1,
-              borderColor: error ? Colors.light.accent : otpValues[index] ? Colors.light.primary : Colors.light.light,
+              borderColor: error ? Colors.main.accent : otpValues[index] ? Colors.main.primary : Colors.main.primaryLight,
             }}
           >
             <InputField

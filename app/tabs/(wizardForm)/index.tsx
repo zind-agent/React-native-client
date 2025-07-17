@@ -15,7 +15,7 @@ const WizardForm = () => {
       <Box
         className="h-1/2 rounded-b-[40] pb-5 flex justify-center px-10"
         style={{
-          backgroundColor: Colors.light.primary,
+          backgroundColor: Colors.main.primary,
           ...Platform.select({
             ios: {
               shadowColor: '#000',
@@ -33,9 +33,9 @@ const WizardForm = () => {
         <Heading className="text-white mt-.5" size="xl">
           {t('start_your_journey_with_zind')}
         </Heading>
-        <Text className="text-surface">{t('intro_question_message')}</Text>
-        <Text className="mt-14 text-surface text-lg">{t('takes_less_than_a_minute')}</Text>
-        <Text className="text-surface text-lg">{t('our_goal')}</Text>
+        <Text className="text-background">{t('intro_question_message')}</Text>
+        <Text className="mt-14 text-background text-lg">{t('takes_less_than_a_minute')}</Text>
+        <Text className="text-background text-lg">{t('our_goal')}</Text>
       </Box>
       <Box className="px-4 mb-10 space-2">
         <Button className="border-b-1 rounded-[15px] h-[55px] font-bold" onPress={() => router.push('/tabs/stepOne')}>

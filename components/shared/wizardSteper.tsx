@@ -45,9 +45,9 @@ const WizardStepper = () => {
                   justifyContent: 'center',
                   marginBottom: 5,
                   elevation: 2,
-                  backgroundColor: isCompleted ? Colors.light.primary : isActive ? Colors.light.primary : Colors.light.light,
+                  backgroundColor: isCompleted ? Colors.main.primary : isActive ? Colors.main.primary : Colors.main.primaryLight,
                   borderWidth: isActive ? 2 : 0,
-                  borderColor: Colors.light.primary,
+                  borderColor: Colors.main.primary,
                 }}
               >
                 {isCompleted ? (
@@ -66,7 +66,7 @@ const WizardStepper = () => {
                   <Text
                     className="text-lg font-bold"
                     style={{
-                      color: isActive ? 'white' : Colors.light.surface,
+                      color: isActive ? 'white' : Colors.main.background,
                     }}
                   >
                     {stepNumber}
@@ -78,7 +78,7 @@ const WizardStepper = () => {
                 <Text
                   className="text-[10px] text-center font-heading"
                   style={{
-                    color: isActive ? Colors.light.darkBlue : Colors.light.light,
+                    color: isActive ? Colors.main.background : Colors.main.primaryLight,
                   }}
                 >
                   {stepLabel}
@@ -88,7 +88,7 @@ const WizardStepper = () => {
 
             {!isLast && (
               <Box className="absolute top-[18px] h-0.5 z-0" style={{ left: language == 'fa' ? '-60%' : '60%', right: language == 'fa' ? '60%' : '-60%' }}>
-                <Box className="absolute w-full h-full" style={{ backgroundColor: Colors.light.light }} />
+                <Box className="absolute w-full h-full" style={{ backgroundColor: Colors.main.primaryLight }} />
                 <MotiView
                   from={{ width: 0 }}
                   animate={{
@@ -101,7 +101,7 @@ const WizardStepper = () => {
                   }}
                   style={{
                     height: '100%',
-                    backgroundColor: Colors.light.primary,
+                    backgroundColor: Colors.main.primary,
                   }}
                 />
               </Box>

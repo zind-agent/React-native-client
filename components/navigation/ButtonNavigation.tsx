@@ -4,8 +4,7 @@ import { Pressable } from '../ui/pressable';
 import { Colors } from '@/constants/Colors';
 import React, { useEffect } from 'react';
 import { Platform, View, Dimensions } from 'react-native';
-import { MotiView, useDynamicAnimation, motify } from 'moti';
-import { useAppStore } from '@/store/appState';
+import { MotiView, motify } from 'moti';
 import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import AddButton from '@/components/shared/addButton';
 
@@ -13,34 +12,16 @@ const MotiPressable = motify(Pressable)();
 
 export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   const insets = useSafeAreaInsets();
-  const { hideTabBar } = useAppStore();
-
-  const tabBarAnimation = useDynamicAnimation(() => ({
-    translateY: 0,
-    opacity: 1,
-  }));
-
-  useEffect(() => {
-    tabBarAnimation.animateTo({
-      translateY: hideTabBar ? 120 : 0,
-      opacity: hideTabBar ? 0 : 1,
-      transition: {
-        type: 'timing',
-        duration: 250,
-      },
-    });
-  }, [hideTabBar]);
 
   const { width } = Dimensions.get('window');
   const buttonSize = 64;
 
   return (
     <MotiView
-      state={tabBarAnimation}
       className="absolute flex-row justify-between mb-3 rounded-t-2xl rounded-b-md h-[57px] left-0 right-0 mx-4"
       style={{
         bottom: insets.bottom,
-        backgroundColor: Colors.light.card,
+        backgroundColor: Colors.main.background,
         ...Platform.select({
           ios: {
             shadowColor: '#000',
@@ -48,7 +29,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
             shadowOpacity: 0.2,
             shadowRadius: 4,
           },
-          android: { elevation: 2 },
+          android: { elevation: 0.5 },
         }),
       }}
     >
@@ -75,12 +56,12 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
         };
 
         const IconComponent = options.tabBarIcon;
-        const animatedColor = useSharedValue(isFocused ? Colors.light.primary : Colors.light.light);
+        const animatedColor = useSharedValue(isFocused ? Colors.main.primary : Colors.main.primaryLight);
         const colorString = useDerivedValue(() => animatedColor.value);
 
         useEffect(() => {
-          animatedColor.value = withTiming(isFocused ? Colors.light.primary : Colors.light.light, {
-            duration: 450,
+          animatedColor.value = withTiming(isFocused ? Colors.main.primary : Colors.main.primaryLight, {
+            duration: 250,
           });
         }, [isFocused, animatedColor]);
 

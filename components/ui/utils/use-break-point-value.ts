@@ -64,9 +64,7 @@ export const getBreakPointValue = (values: BreakPointValue, width: number) => {
 export function useBreakpointValue(values: BreakPointValue): any {
   const { width } = useWindowDimensions();
 
-  const [currentBreakPointValue, setCurrentBreakPointValue] = useState(
-    getBreakPointValue(values, width),
-  );
+  const [currentBreakPointValue, setCurrentBreakPointValue] = useState(getBreakPointValue(values, width));
 
   useEffect(() => {
     if (typeof values === 'object') {
@@ -80,10 +78,7 @@ export function useBreakpointValue(values: BreakPointValue): any {
   return currentBreakPointValue;
 }
 
-export function isValidBreakpoint(
-  breakPointWidth: any,
-  width: any = Dimensions.get('window')?.width,
-) {
+export function isValidBreakpoint(breakPointWidth: any, width: any = Dimensions.get('window')?.width) {
   const windowWidth = width;
 
   if (windowWidth >= breakPointWidth) {

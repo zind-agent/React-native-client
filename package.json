@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@expo/config-plugins": "~9.0.0",
+    "@expo/html-elements": "0.4.2",
     "@expo/vector-icons": "~14.0.4",
+    "@gluestack-ui/accordion": "^1.0.14",
     "@gluestack-ui/button": "^1.0.8",
     "@gluestack-ui/checkbox": "^0.1.33",
     "@gluestack-ui/divider": "^0.1.10",

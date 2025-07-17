@@ -14,7 +14,7 @@ const TaskList = memo(({ task }: { task: Todo[] }) => {
     <>
       <Button
         style={{
-          backgroundColor: Colors.light.success,
+          backgroundColor: Colors.main.success,
           justifyContent: language === 'fa' ? 'flex-end' : 'flex-start',
           alignItems: 'center',
           width: '50%',
@@ -26,11 +26,11 @@ const TaskList = memo(({ task }: { task: Todo[] }) => {
         onPress={() => {}}
         className="my-2"
       >
-        <Text style={{ color: Colors.light.card, fontWeight: 'bold' }}>✔ {language === 'fa' ? 'تکمیل' : 'Complete'}</Text>
+        <Text style={{ color: Colors.main.card, fontWeight: 'bold' }}>✔ {language === 'fa' ? 'تکمیل' : 'Complete'}</Text>
       </Button>
       <Button
         style={{
-          backgroundColor: Colors.light.accent,
+          backgroundColor: Colors.main.accent,
           justifyContent: language === 'fa' ? 'flex-start' : 'flex-end',
           alignItems: 'center',
           width: '50%',
@@ -42,7 +42,7 @@ const TaskList = memo(({ task }: { task: Todo[] }) => {
         onPress={() => {}}
         className="my-2"
       >
-        <Text style={{ color: Colors.light.card, fontWeight: 'bold' }}>✖ {language === 'fa' ? 'لغو' : 'Cancel'}</Text>
+        <Text style={{ color: Colors.main.card, fontWeight: 'bold' }}>✖ {language === 'fa' ? 'لغو' : 'Cancel'}</Text>
       </Button>
     </>
   );

@@ -87,7 +87,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate }: Props) => {
       <HStack className="items-center justify-between my-3">
         <Pressable onPress={() => handleWeekChange('prev')} disabled={isAnimating}>
           <MotiView animate={{ scale: isAnimating ? 0.8 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 150 }}>
-            <Icon as={ArrowLeftIcon} size="md" color={Colors.light.darkBlue} />
+            <Icon as={ArrowLeftIcon} size="md" color={Colors.main10275A} />
           </MotiView>
         </Pressable>
 
@@ -105,7 +105,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate }: Props) => {
                 key={day.date}
                 onPress={() => setSelectedDate(day.date)}
                 style={{
-                  backgroundColor: selectedDate === day.date ? Colors.light.primary : 'transparent',
+                  backgroundColor: selectedDate === day.date ? Colors.main.primary : 'transparent',
                   borderRadius: 12,
                   paddingHorizontal: 8,
                   paddingVertical: 4,
@@ -118,7 +118,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate }: Props) => {
                 <MotiView animate={{ scale: selectedDate === day.date ? 1.2 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200 }}>
                   <Text
                     style={{
-                      color: selectedDate === day.date ? Colors.light.surface : Colors.light.darkBlue,
+                      color: selectedDate === day.date ? Colors.main.background : Colors.main10275A,
                       fontSize: 16,
                       textAlign: 'center',
                     }}
@@ -127,7 +127,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate }: Props) => {
                   </Text>
                   <Text
                     style={{
-                      color: selectedDate === day.date ? Colors.light.surface : Colors.light.darkBlue,
+                      color: selectedDate === day.date ? Colors.main.background : Colors.main10275A,
                       fontSize: 16,
                       textAlign: 'center',
                     }}
@@ -142,7 +142,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate }: Props) => {
 
         <Pressable onPress={() => handleWeekChange('next')} disabled={isAnimating}>
           <MotiView animate={{ scale: isAnimating ? 0.8 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 150 }}>
-            <Icon as={ArrowRightIcon} size="md" color={Colors.light.darkBlue} />
+            <Icon as={ArrowRightIcon} size="md" color={Colors.main10275A} />
           </MotiView>
         </Pressable>
       </HStack>
@@ -158,7 +158,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate }: Props) => {
             >
               <Text
                 style={{
-                  color: Colors.light.darkBlue,
+                  color: Colors.main10275A,
                   fontSize: 14,
                 }}
               >
@@ -167,7 +167,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate }: Props) => {
               <Box
                 style={{
                   height: 1,
-                  backgroundColor: Colors.light.darkBlue,
+                  backgroundColor: Colors.main10275A,
                 }}
               />
             </MotiView>

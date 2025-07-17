@@ -17,16 +17,16 @@ export const StepForm = ({ title, value, onChange, error, placeholder }: StepFor
   return (
     <FormControl isInvalid={!!error} isRequired size="lg" className="mt-4">
       <HStack className="items-center">
-        <FormControlLabelText className="px-3" style={{ color: Colors.light.darkBlue }}>
+        <FormControlLabelText className="px-3" style={{ color: Colors.main10275A }}>
           {title}
         </FormControlLabelText>
       </HStack>
       <Input
         className="my-1 h-16 w-full rounded-xl px-4"
         style={{
-          backgroundColor: Colors.light.surface,
+          backgroundColor: Colors.main.background,
           borderWidth: 1,
-          borderColor: error != null ? Colors.light.accent : Colors.light.light,
+          borderColor: error != null ? Colors.main.accent : Colors.main.primaryLight,
         }}
       >
         <InputField
@@ -35,8 +35,8 @@ export const StepForm = ({ title, value, onChange, error, placeholder }: StepFor
           value={value}
           onChangeText={onChange}
           className="text-lg w-full"
-          style={{ borderColor: Colors.light.light }}
-          placeholderTextColor={Colors.light.light}
+          style={{ borderColor: Colors.main.primaryLight }}
+          placeholderTextColor={Colors.main.primaryLight}
         />
       </Input>
     </FormControl>

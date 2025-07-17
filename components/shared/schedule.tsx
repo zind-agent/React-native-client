@@ -11,7 +11,7 @@ interface Task {
   title: string;
   startTime: string;
   endTime: string;
-  category: 'Urgent' | 'Home' | 'Work' | 'Personal';
+  category: string;
   color: string;
 }
 
@@ -23,13 +23,6 @@ interface HourlyScheduleProps {
 }
 
 const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) => {
-  const categoryColors = {
-    Urgent: '#FF6B6B',
-    Home: '#4ECDC4',
-    Work: '#45B7D1',
-    Personal: '#96CEB4',
-  };
-
   const formatHour = (hour: number) => {
     return hour.toString().padStart(2, '0') + ':00';
   };
@@ -45,12 +38,11 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
     <Pressable
       onPress={() => onTaskPress(task)}
       style={{
-        backgroundColor: Colors.light.card,
+        backgroundColor: Colors.main.cardBackground,
         borderRadius: 12,
         padding: 12,
         marginBottom: 8,
         borderLeftWidth: 4,
-        borderLeftColor: categoryColors[task.category],
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
@@ -64,7 +56,7 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
             style={{
               fontSize: 16,
               fontWeight: '600',
-              color: Colors.light.darkBlue,
+              color: Colors.main.textPrimary,
               marginBottom: 4,
             }}
           >
@@ -73,7 +65,7 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
           <Text
             style={{
               fontSize: 12,
-              color: Colors.light.darkBlue,
+              color: Colors.main.textPrimary,
               opacity: 0.7,
             }}
           >
@@ -84,7 +76,6 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
           style={{
             fontSize: 12,
             color: 'white',
-            backgroundColor: categoryColors[task.category],
             paddingHorizontal: 8,
             paddingVertical: 4,
             borderRadius: 8,
@@ -100,11 +91,11 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
     <Pressable
       onPress={() => onAddTask(hour)}
       style={{
-        backgroundColor: Colors.light.card,
+        backgroundColor: Colors.main.cardBackground,
         borderRadius: 12,
         padding: 16,
         borderWidth: 1,
-        borderColor: Colors.light.light,
+        borderColor: Colors.main.primaryLight,
         borderStyle: 'dashed',
         alignItems: 'center',
         justifyContent: 'center',
@@ -113,7 +104,7 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
       <Text
         style={{
           fontSize: 14,
-          color: Colors.light.light,
+          color: Colors.main.primaryLight,
           marginBottom: 8,
         }}
       >
@@ -122,7 +113,7 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
       <Text
         style={{
           fontSize: 16,
-          color: Colors.light.darkBlue,
+          color: Colors.main.textPrimary,
           fontWeight: '600',
         }}
       >
@@ -141,7 +132,7 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
             style={{
               fontSize: 16,
               fontWeight: '600',
-              color: Colors.light.darkBlue,
+              color: Colors.main.textPrimary,
             }}
           >
             {formatHour(hour)}
@@ -181,7 +172,7 @@ const HourlySchedule = ({ tasks, onAddTask, onTaskPress }: HourlyScheduleProps) 
               <Box
                 style={{
                   height: 1,
-                  backgroundColor: Colors.light.light,
+                  backgroundColor: Colors.main.primaryLight,
                   marginVertical: 8,
                   marginLeft: 76,
                 }}

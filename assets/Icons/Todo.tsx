@@ -2,6 +2,7 @@ import { Colors } from '@/constants/Colors';
 import { Svg, Path } from 'react-native-svg';
 import { Animated, Easing } from 'react-native';
 import { useEffect, useRef } from 'react';
+import { getAnimatedColors, useIconAnimation } from '@/components/animationIcons';
 
 interface TodoIconProps {
   focused: boolean;
@@ -10,29 +11,13 @@ interface TodoIconProps {
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const TodoIcon = ({ focused }: TodoIconProps) => {
-  const animation = useRef(new Animated.Value(focused ? 1 : 0)).current;
+  const animation = useIconAnimation(focused);
 
-  useEffect(() => {
-    Animated.timing(animation, {
-      toValue: focused ? 1 : 0,
-      duration: 100,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
-    }).start();
-  }, [focused]);
-
-  const fillColor = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [Colors.light.primary, Colors.light.surface],
-  });
-
-  const strokeColor = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['transparent', Colors.light.light],
-  });
+  const fillColor = getAnimatedColors(animation, Colors.main.primary, 'transparent');
+  const strokeColor = getAnimatedColors(animation, 'transparent', Colors.main.primaryLight);
 
   return (
-    <Svg width="27" height="27" viewBox="0 0 24 24" fill="none">
+    <Svg width="27" height="27" viewBox="0 0 23 24" fill="none">
       <AnimatedPath
         fillRule="evenodd"
         clipRule="evenodd"
@@ -44,29 +29,11 @@ const TodoIcon = ({ focused }: TodoIconProps) => {
         strokeLinejoin="round"
       />
 
-      <Path
-        d="M12.837 14.027H5.17972"
-        stroke={Colors.light.light}
-        strokeWidth="1.58197"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <Path d="M12.837 14.027H5.17972" stroke={Colors.main.primaryLight} strokeWidth="1.58197" strokeLinecap="round" strokeLinejoin="round" />
 
-      <Path
-        d="M12.837 10.0372H5.17972"
-        stroke={Colors.light.light}
-        strokeWidth="1.58197"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <Path d="M12.837 10.0372H5.17972" stroke={Colors.main.primaryLight} strokeWidth="1.58197" strokeLinecap="round" strokeLinejoin="round" />
 
-      <Path
-        d="M8.10156 6.05273H5.17972"
-        stroke={Colors.light.light}
-        strokeWidth="1.58197"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <Path d="M8.10156 6.05273H5.17972" stroke={Colors.main.primaryLight} strokeWidth="1.58197" strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
 };

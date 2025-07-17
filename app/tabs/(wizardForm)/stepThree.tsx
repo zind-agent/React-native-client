@@ -82,15 +82,15 @@ const StepThree = () => {
         <Box>
           <WizardStepper />
           <HeaderTitle title={t('lifestyle.your_current_lifestyle')} path={'../(wizardForm)/stepTwo'} />
-          <Heading size="lg" className="px-3 mt-2" style={{ color: Colors.light.darkBlue }}>
+          <Heading size="lg" className="px-3 mt-2" style={{ color: Colors.main10275A }}>
             {t('lifestyle.quick_snapshot_subtitle')}
           </Heading>
-          <Text className="px-3" style={{ color: Colors.light.subtext }}>
+          <Text className="px-3" style={{ color: Colors.main8E9EAB }}>
             {t('lifestyle.tell_us_about_current_state')}
           </Text>
 
           <VStack space="md" className="mt-8">
-            <Text className="px-3 text-lg" style={{ color: Colors.light.text }}>
+            <Text className="px-3 text-lg" style={{ color: Colors.maintextPrimary }}>
               {t('lifestyle.question_one.main')}
             </Text>
             {OneQuestion.map((item) => (
@@ -104,17 +104,17 @@ const StepThree = () => {
                   paddingVertical: 8,
                   paddingHorizontal: 12,
                   borderRadius: 12,
-                  backgroundColor: selectedOptions.questionOne === item.key ? Colors.light.primary + '20' : Colors.light.surface,
+                  backgroundColor: selectedOptions.questionOne === item.key ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
                 {selectedOptions.questionOne === item.key ? <ZindCheckbox checked={true} onPress={() => {}} /> : <ZindCheckbox checked={false} onPress={() => handleSelect('questionOne', item.key)} />}
-                <Text style={{ fontSize: 14, color: Colors.light.text }}>{t(item.label)}</Text>
+                <Text style={{ fontSize: 14, color: Colors.maintextPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}
           </VStack>
 
           <VStack space="md" className="mt-8">
-            <Text className="px-3 text-lg" style={{ color: Colors.light.text }}>
+            <Text className="px-3 text-lg" style={{ color: Colors.maintextPrimary }}>
               {t('lifestyle.question_two.main')}
             </Text>
             {TwoQuestion.map((item) => (
@@ -128,17 +128,17 @@ const StepThree = () => {
                   paddingVertical: 8,
                   paddingHorizontal: 12,
                   borderRadius: 12,
-                  backgroundColor: selectedOptions.questionTwo === item.key ? Colors.light.primary + '20' : Colors.light.surface,
+                  backgroundColor: selectedOptions.questionTwo === item.key ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
                 {selectedOptions.questionTwo === item.key ? <ZindCheckbox checked={true} onPress={() => {}} /> : <ZindCheckbox checked={false} onPress={() => handleSelect('questionTwo', item.key)} />}
-                <Text style={{ fontSize: 14, color: Colors.light.text }}>{t(item.label)}</Text>
+                <Text style={{ fontSize: 14, color: Colors.maintextPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}
           </VStack>
 
           <VStack space="md" className="mt-8">
-            <Text className="px-3 text-lg" style={{ color: Colors.light.text }}>
+            <Text className="px-3 text-lg" style={{ color: Colors.maintextPrimary }}>
               {t('lifestyle.question_three.main')}
             </Text>
             {ThreeQuestion.map((item) => (
@@ -152,7 +152,7 @@ const StepThree = () => {
                   paddingVertical: 8,
                   paddingHorizontal: 12,
                   borderRadius: 12,
-                  backgroundColor: selectedOptions.questionThree === item.key ? Colors.light.primary + '20' : Colors.light.surface,
+                  backgroundColor: selectedOptions.questionThree === item.key ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
                 {selectedOptions.questionThree === item.key ? (
@@ -160,7 +160,7 @@ const StepThree = () => {
                 ) : (
                   <ZindCheckbox checked={false} onPress={() => handleSelect('questionThree', item.key)} />
                 )}
-                <Text style={{ fontSize: 14, color: Colors.light.text }}>{t(item.label)}</Text>
+                <Text style={{ fontSize: 14, color: Colors.maintextPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}
           </VStack>
@@ -171,9 +171,9 @@ const StepThree = () => {
         <Button
           className="rounded-xl h-[50px]"
           style={{
-            backgroundColor: isButtonDisabled ? Colors.light.light : Colors.light.primary,
+            backgroundColor: isButtonDisabled ? Colors.main.primaryLight : Colors.main.primary,
             borderWidth: 1,
-            borderColor: Colors.light.light,
+            borderColor: Colors.main.primaryLight,
           }}
           onPress={onSubmit}
           disabled={isButtonDisabled}

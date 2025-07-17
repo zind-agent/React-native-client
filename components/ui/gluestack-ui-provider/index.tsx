@@ -6,14 +6,7 @@ import { ToastProvider } from '@gluestack-ui/toast';
 import { useColorScheme } from 'nativewind';
 import { ModeType } from './types';
 
-export function GluestackUIProvider({
-  mode = 'light',
-  ...props
-}: {
-  mode?: ModeType;
-  children?: React.ReactNode;
-  style?: ViewProps['style'];
-}) {
+export function GluestackUIProvider({ mode = 'light', ...props }: { mode?: ModeType; children?: React.ReactNode; style?: ViewProps['style'] }) {
   const { colorScheme, setColorScheme } = useColorScheme();
 
   useEffect(() => {

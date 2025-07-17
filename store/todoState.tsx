@@ -13,7 +13,6 @@ interface TodoState {
   removeTodo: (id: string) => Promise<void>;
   clearTodos: () => Promise<void>;
   loadTodos: (date: string, filterNotCompleted?: boolean, filterNotCanceled?: boolean) => Promise<void>;
-  refreshTodos: () => Promise<void>;
 }
 
 export const useTodoStore = create<TodoState>((set, get) => ({
@@ -44,15 +43,11 @@ export const useTodoStore = create<TodoState>((set, get) => ({
     }
   },
 
-  refreshTodos: async () => {
-    const { selectedDate } = get();
-    await get().loadTodos(selectedDate);
-  },
-
   addTodo: async (todo: Todo) => {
     set({ loading: true, error: null });
     try {
       await addTodo(todo);
+      set({ loading: false });
     } catch (error: any) {
       set({ loading: false, error: error.message });
     }

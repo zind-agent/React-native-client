@@ -19,7 +19,7 @@ export const AuthForm = ({ value, onChange, error, placeholder }: AuthFormProps)
         className="my-1 h-16 rounded-xl px-4"
         style={{
           direction: 'rtl',
-          backgroundColor: Colors.light.surface,
+          backgroundColor: Colors.main.background,
           borderWidth: 0,
           borderColor: 'transparent',
         }}
@@ -31,7 +31,7 @@ export const AuthForm = ({ value, onChange, error, placeholder }: AuthFormProps)
       {error && (
         <FormControlError>
           <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText style={{ color: Colors.light.accent }} className="text-sm">
+          <FormControlErrorText style={{ color: Colors.main.accent }} className="text-sm">
             ** {error} **
           </FormControlErrorText>
         </FormControlError>

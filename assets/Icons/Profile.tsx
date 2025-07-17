@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { Svg, Path } from 'react-native-svg';
-import { Animated, Easing } from 'react-native';
-import { useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
+import { getAnimatedColors, useIconAnimation } from '@/components/animationIcons';
 
 interface ProfileIconProps {
   focused: boolean;
@@ -10,26 +10,10 @@ interface ProfileIconProps {
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const ProfileIcon = ({ focused }: ProfileIconProps) => {
-  const animation = useRef(new Animated.Value(focused ? 1 : 0)).current;
+  const animation = useIconAnimation(focused);
 
-  useEffect(() => {
-    Animated.timing(animation, {
-      toValue: focused ? 1 : 0,
-      duration: 100,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
-    }).start();
-  }, [focused]);
-
-  const fillColor = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [Colors.light.primary, Colors.light.surface],
-  });
-
-  const strokeColor = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['transparent', Colors.light.light],
-  });
+  const fillColor = getAnimatedColors(animation, Colors.main.primary, 'transparent');
+  const strokeColor = getAnimatedColors(animation, 'transparent', Colors.main.primaryLight);
 
   return (
     <Svg width="27" height="27" viewBox="0 0 24 24" fill="none">
@@ -44,13 +28,7 @@ const ProfileIcon = ({ focused }: ProfileIconProps) => {
         strokeLinejoin="round"
       />
 
-      <Path
-        stroke={Colors.light.light}
-        d="M6.74841 14.4559H16.9224"
-        strokeWidth="1.58197"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <Path stroke={Colors.main.primaryLight} d="M6.74841 14.4559H16.9224" strokeWidth="1.58197" strokeLinecap="round" strokeLinejoin="round" />
     </Svg>
   );
 };
