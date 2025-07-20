@@ -107,7 +107,7 @@ const StepOne = () => {
           name="description"
           render={({ field, fieldState }) => (
             <VStack>
-              <Text style={{ color: Colors.main10275A }} className="mt-5">
+              <Text style={{ color: Colors.main.textPrimary }} className="mt-5">
                 {t('description')}
               </Text>
               <Textarea

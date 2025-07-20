@@ -1,7 +1,6 @@
 import { Colors } from '@/constants/Colors';
 import { Svg, Path } from 'react-native-svg';
-import { Animated, Easing } from 'react-native';
-import { useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
 import { getAnimatedColors, useIconAnimation } from '@/components/animationIcons';
 
 interface TodoIconProps {

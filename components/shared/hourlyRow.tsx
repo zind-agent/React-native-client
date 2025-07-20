@@ -4,14 +4,20 @@ import { Text } from 'react-native';
 import { ScrollView } from 'react-native';
 import ScheduleCard from './scheduleCard';
 import { Colors } from '@/constants/Colors';
+import { Todo } from '@/storage/todoStorage';
 
 interface HourlyRowProps {
   hour: string;
   tasks: any[];
   isCurrentHour?: boolean;
+  onEditTask?: (task: Todo) => void;
 }
 
-const HourlyRow = ({ hour, tasks, isCurrentHour = false }: HourlyRowProps) => {
+const HourlyRow = ({ hour, tasks, isCurrentHour = false, onEditTask }: HourlyRowProps) => {
+  const handleEditTask = (task: Todo) => {
+    onEditTask?.(task);
+  };
+
   return (
     <VStack
       className="border-b border-slate-200 py-3 px-4"
@@ -25,7 +31,7 @@ const HourlyRow = ({ hour, tasks, isCurrentHour = false }: HourlyRowProps) => {
         <Text
           className="text-slate-800 font-semibold text-base w-14 text-left"
           style={{
-            color: isCurrentHour ? Colors.main.info : Colors.maintextPrimary,
+            color: isCurrentHour ? Colors.main.info : Colors.main.textPrimary,
             fontWeight: isCurrentHour ? '700' : '600',
           }}
         >
@@ -37,7 +43,7 @@ const HourlyRow = ({ hour, tasks, isCurrentHour = false }: HourlyRowProps) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
               <HStack className="space-x-3 items-center">
                 {tasks.map((task, idx) => (
-                  <ScheduleCard key={idx} task={task} style={{ borderRadius: 12 }} />
+                  <ScheduleCard key={idx} task={task} onPress={handleEditTask} style={{ borderRadius: 10, backgroundColor: Colors.main.cardBackground }} />
                 ))}
               </HStack>
             </ScrollView>

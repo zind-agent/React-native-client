@@ -133,10 +133,12 @@
     "cancel": "Canceled",
     "today_task": "Today Task",
     "view_all": "View All",
+    "today_progress_summery": "Today's completed tasks",
     "no_task": "No task is available to today task. Please create a task from the button below"
   },
   "todos": {
-    "task": "Task",
+    "todo_list": "Todo List",
+    "day_of_week": "Day of week",
     "confirm": "Confirm",
     "today": "Today",
     "any_schedule": "You don't have any schedule",
@@ -152,11 +154,15 @@
     "add_task": "Add Task",
     "add_by_ai": "Add By AI",
     "is_cancel": "Is Cancel?",
-    "date": "Date"
+    "date": "Date",
+    "edit_event": "Edit Task",
+    "write_description_todo": "Write a short description about this task"
   },
+  "select_reminder_days": "Select Reminder Days",
   "create_event": "Create Event",
   "add": "Add",
   "title": "Title",
   "tags": "Tags",
-  "submit": "Submit"
+  "submit": "Submit",
+  "advanced": "Advanced"
 }

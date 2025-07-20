@@ -84,13 +84,14 @@ const AddButton = () => {
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
             style={{
               position: 'absolute',
-              width: 120,
+              width: 140,
               padding: 10,
               backgroundColor: Colors.main.background,
               borderRadius: 8,
               zIndex: 1002,
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'center',
               ...Platform.select({
                 ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.2, shadowRadius: 4 },
                 android: { elevation: 2 },

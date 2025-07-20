@@ -10,8 +10,8 @@ import { VStack } from '@/components/ui/vstack';
 import { Pressable } from '@/components/ui/pressable';
 import CalenderIcon from '@/assets/Icons/CalenderIcon';
 import { Text } from 'react-native';
-import { ArrowLeftIcon, ArrowRightIcon, Icon } from '@/components/ui/icon';
 import jalaliMoment from 'jalali-moment';
+import LeftIcon from '@/assets/Icons/LeftIcon';
 
 interface MonthOption {
   value: string;
@@ -83,7 +83,7 @@ const SelectYearWithMonth = ({
       <Button onPress={() => setShowDrawer(true)} className="rounded-xl bg-transparent">
         <HStack className="items-center" space="sm">
           <CalenderIcon />
-          <ButtonText className="text-md" style={{ color: selectedYear && selectedMonth ? Colors.main10275A : Colors.main.primaryLight }}>
+          <ButtonText className="text-md" style={{ color: selectedYear && selectedMonth ? Colors.main.textSecondary : Colors.main.primaryLight }}>
             {selectedYear && selectedMonth
               ? `${displayYear} | ${language === 'fa' ? `${selectedMonthLabel?.labelFa} - ${selectedMonthLabel?.labelEn}` : `${selectedMonthLabel?.labelEn} - ${selectedMonthLabel?.labelFa}`}`
               : t('select_year_month')}
@@ -95,16 +95,15 @@ const SelectYearWithMonth = ({
         <DrawerBackdrop />
         <DrawerContent style={{ backgroundColor: Colors.main.background }} className="h-max">
           <DrawerHeader className="justify-center py-1">
-            {/* Year Selector */}
             <HStack className="items-center gap-10 mb-4">
-              <Pressable onPress={handleDecrease} className="rounded-lg p-1" style={{ backgroundColor: Colors.main.primary }}>
-                <Icon className="p-4 mx-auto size-2" as={ArrowLeftIcon} color={Colors.main.background} />
+              <Pressable onPress={handleDecrease} className="rounded-lg p-3" style={{ backgroundColor: Colors.main.primary }}>
+                <LeftIcon height={23} width={23} />
               </Pressable>
 
-              <Text style={{ fontSize: 24, color: Colors.main10275A }}>{displayYear}</Text>
+              <Text style={{ fontSize: 24, color: Colors.main.textPrimary }}>{displayYear}</Text>
 
-              <Pressable onPress={handleIncrease} className="rounded-lg p-1" style={{ backgroundColor: Colors.main.primary }}>
-                <Icon className="p-4 mx-auto size-2" as={ArrowRightIcon} color={Colors.main.background} />
+              <Pressable onPress={handleIncrease} className="rounded-lg p-3 rotate-180" style={{ backgroundColor: Colors.main.primary }}>
+                <LeftIcon height={23} width={23} />
               </Pressable>
             </HStack>
           </DrawerHeader>

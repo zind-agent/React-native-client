@@ -1,23 +1,28 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useEffect } from 'react';
 import SelectYearWithMonth from '@/components/shared/form/selectYearWithMonth';
 import WeeklyDatePicker from '@/components/shared/form/weekDatePicker';
-import UserHeaderTitle from '@/components/shared/userHeaderTitle';
 import { Heading } from '@/components/ui/heading';
 import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
-import ScheduleList from '@/components/shared/scheduleList';
-import AddTodoInTime from '@/components/shared/form/addTodoInTime';
 import { useDateTime } from '@/hooks/useDateTime';
+import { Box } from '@/components/ui/box';
+import HeaderPage from '@/components/shared/headerPage';
+import TodoListView from '@/components/shared/todoListView';
+import { useTodoStore } from '@/store/todoState';
 
 const Todos = () => {
+  const { loadTodos } = useTodoStore();
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDate, setSelectedDate } = useDateTime();
 
+  useEffect(() => {
+    loadTodos(selectedDate);
+  }, [loadTodos]);
+
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <View
+    <Box style={{ flex: 1, backgroundColor: 'white' }}>
+      <Box
         style={{
           paddingHorizontal: 20,
           paddingTop: 10,
@@ -30,16 +35,16 @@ const Todos = () => {
           shadowRadius: 4,
         }}
       >
-        <UserHeaderTitle />
+        <HeaderPage title={t('todos.todo_list')} />
         <VStack className="mt-5">
           <HStack className="items-center justify-between mb-2">
             <Heading
               style={{
-                color: Colors.main10275A,
-                fontSize: 28,
+                color: Colors.main.textSecondary,
+                fontSize: 18,
               }}
             >
-              {t('todos.task')}
+              {t('todos.day_of_week')}
             </Heading>
             <SelectYearWithMonth selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
           </HStack>
@@ -49,21 +54,19 @@ const Todos = () => {
         <HStack className="items-center justify-between mb-2 mt-5 pb-3">
           <Heading
             style={{
-              color: Colors.main10275A,
+              color: Colors.main.textPrimary,
               fontSize: 20,
             }}
           >
             {t('todos.today')}
           </Heading>
-          <Heading style={{ color: Colors.main10275A, fontSize: 16 }}>{selectedDate ?? '-'}</Heading>
+          <Heading style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{selectedDate ?? '-'}</Heading>
         </HStack>
-      </View>
-
+      </Box>
       <VStack>
-        <ScheduleList date={selectedDate} />
-        <AddTodoInTime date={selectedDate} />
+        <TodoListView mode="grouped" />
       </VStack>
-    </View>
+    </Box>
   );
 };
 

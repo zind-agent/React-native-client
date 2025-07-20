@@ -9,10 +9,11 @@ export interface Todo {
   date: string;
   isCompleted: boolean;
   createdAt: string;
+  description: string;
   isCancel: boolean;
 }
 
-class TodoStorage {
+export class TodoStorage {
   private db: SQLite.SQLiteDatabase;
 
   constructor() {
@@ -22,7 +23,7 @@ class TodoStorage {
 
   private async initDB() {
     try {
-      await this.db.execAsync(`
+      await this.db.runAsync(`
         CREATE TABLE IF NOT EXISTS todos (
           id TEXT PRIMARY KEY,
           title TEXT NOT NULL,
@@ -30,15 +31,24 @@ class TodoStorage {
           start_time TEXT NOT NULL,
           end_time TEXT NOT NULL,
           date TEXT NOT NULL,
+          description TEXT,
           completed INTEGER NOT NULL DEFAULT 0,
           createdAt TEXT NOT NULL,
           is_cancel INTEGER NOT NULL DEFAULT 0
         );
+        CREATE INDEX IF NOT EXISTS idx_todos_date ON todos (date);
+        CREATE INDEX IF NOT EXISTS idx_todos_id ON todos (id);
+        CREATE INDEX IF NOT EXISTS idx_todos_completed_cancel ON todos (completed, is_cancel);
       `);
-      console.log('پایگاه داده با موفقیت مقداردهی شد.');
     } catch (error: any) {
       console.error('خطا در مقداردهی پایگاه داده:', error);
       throw new Error(`ناتوانی در مقداردهی پایگاه داده: ${error.message}`);
+    }
+  }
+
+  private validateDateFormat(date: string): void {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      throw new Error(`فرمت تاریخ نامعتبر است: ${date}. فرمت مورد انتظار: YYYY-MM-DD`);
     }
   }
 
@@ -52,7 +62,8 @@ class TodoStorage {
       date: todo.date,
       completed: todo.isCompleted ? 1 : 0,
       createdAt: todo.createdAt,
-      is_cancel: todo.isCancel ? 0 : 1,
+      description: todo.description,
+      is_cancel: todo.isCancel ? 1 : 0,
     };
   }
 
@@ -61,63 +72,63 @@ class TodoStorage {
       return {
         id: row.id,
         title: row.title,
-        tags: JSON.parse(row.tags || '[]'),
+        tags: row.tags ? JSON.parse(row.tags) : [],
         start_time: row.start_time,
         end_time: row.end_time,
         date: row.date,
-        isCompleted: row.completed === 1,
+        description: row.description,
+        isCompleted: !!row.completed,
         createdAt: row.createdAt,
-        isCancel: row.is_cancel === 0,
+        isCancel: !!row.is_cancel,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error(`خطا در تبدیل ردیف به Todo برای id ${row.id}:`, error);
-      return {
-        ...row,
-        tags: [],
-        completed: row.completed === 1,
-      };
+      throw new Error(`ناتوانی در تبدیل ردیف به Todo: ${error.message}`);
     }
   }
 
   async saveTodos(todos: Todo[], date: string): Promise<void> {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-      throw new Error(`فرمت تاریخ نامعتبر است: ${date}. فرمت مورد انتظار: YYYY-MM-DD`);
-    }
+    this.validateDateFormat(date);
     try {
       await this.db.runAsync('BEGIN TRANSACTION;');
       await this.db.runAsync('DELETE FROM todos WHERE date = ?', [date]);
       for (const todo of todos) {
         const row = this.todoToRow(todo);
         await this.db.runAsync(
-          `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt , is_cancel) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )`,
+          `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt, is_cancel) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel],
         );
       }
       await this.db.runAsync('COMMIT;');
     } catch (error: any) {
-      console.error(`خطا در ذخیره کارها برای تاریخ ${date}:`, error);
       await this.db.runAsync('ROLLBACK;');
-      throw new Error(`ناتوانی در ذخیره کارها: ${error.message}`);
+      console.error(`خطا در ذخیره تسک‌ها برای تاریخ ${date}:`, error);
+      throw new Error(`ناتوانی در ذخیره تسک‌ها: ${error.message}`);
+    }
+  }
+
+  async getTodoById(id: string): Promise<Todo | null> {
+    try {
+      const result = await this.db.getFirstAsync('SELECT * FROM todos WHERE id = ?', [id]);
+      if (!result) return null;
+      return this.rowToTodo(result);
+    } catch (error: any) {
+      console.error(`خطا در دریافت تسک با شناسه ${id}:`, error);
+      throw new Error(`ناتوانی در دریافت تسک: ${error.message}`);
     }
   }
 
   async getTodos(date: string, filterNotCompleted: boolean = false, filterNotCanceled: boolean = false): Promise<Todo[]> {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-      throw new Error(`فرمت تاریخ نامعتبر است: ${date}. فرمت مورد انتظار: YYYY-MM-DD`);
-    }
+    this.validateDateFormat(date);
     try {
       let query = 'SELECT * FROM todos WHERE date = ?';
       const params = [date];
 
       if (filterNotCompleted || filterNotCanceled) {
         const conditions = [];
-        if (filterNotCompleted) {
-          conditions.push('completed = 0');
-        }
-        if (filterNotCanceled) {
-          conditions.push('is_cancel = 1');
-        }
+        if (filterNotCompleted) conditions.push('completed = 0');
+        if (filterNotCanceled) conditions.push('is_cancel = 0'); // اصلاح: غیرلغوشده
         query += ` AND ${conditions.join(' AND ')}`;
       }
 
@@ -125,20 +136,62 @@ class TodoStorage {
       const results = await this.db.getAllAsync(query, params);
       return (results as any[]).map((row) => this.rowToTodo(row));
     } catch (error: any) {
-      console.error(`خطا در دریافت کارها برای تاریخ ${date}:`, error);
-      throw new Error(`ناتوانی در دریافت کارها: ${error.message}`);
+      console.error(`خطا در دریافت تسک‌ها برای تاریخ ${date}:`, error);
+      throw new Error(`ناتوانی در دریافت تسک‌ها: ${error.message}`);
+    }
+  }
+
+  async addTodo(todo: Todo): Promise<void> {
+    if (!todo.id || !todo.title || !todo.date) {
+      throw new Error('شناسه، عنوان یا تاریخ تسک نمی‌تواند خالی باشد.');
+    }
+    try {
+      const row = this.todoToRow(todo);
+      await this.db.runAsync(
+        `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt, is_cancel) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel],
+      );
+    } catch (error: any) {
+      console.error(`خطا در افزودن تسک با شناسه ${todo.id}:`, error);
+      throw new Error(`ناتوانی در افزودن تسک: ${error.message}`);
+    }
+  }
+
+  async updateTodo(todo: Todo): Promise<void> {
+    if (!todo.id || !todo.title || !todo.date) {
+      throw new Error('شناسه، عنوان یا تاریخ تسک نمی‌تواند خالی باشد.');
+    }
+    try {
+      const row = this.todoToRow(todo);
+      await this.db.runAsync(
+        `UPDATE todos SET title = ?, tags = ?, start_time = ?, end_time = ?, 
+         date = ?, completed = ?, createdAt = ?, is_cancel = ? WHERE id = ?`,
+        [row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel, row.id],
+      );
+    } catch (error: any) {
+      console.error(`خطا در به‌روزرسانی تسک با شناسه ${todo.id}:`, error);
+      throw new Error(`ناتوانی در به‌روزرسانی تسک: ${error.message}`);
+    }
+  }
+
+  async deleteTodo(id: string): Promise<void> {
+    if (!id) throw new Error('شناسه تسک نمی‌تواند خالی باشد.');
+    try {
+      await this.db.runAsync('DELETE FROM todos WHERE id = ?', [id]);
+    } catch (error: any) {
+      console.error(`خطا در حذف تسک با شناسه ${id}:`, error);
+      throw new Error(`ناتوانی در حذف تسک: ${error.message}`);
     }
   }
 
   async clearTodos(date: string): Promise<void> {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-      throw new Error(`فرمت تاریخ نامعتبر است: ${date}. فرمت مورد انتظار: YYYY-MM-DD`);
-    }
+    this.validateDateFormat(date);
     try {
       await this.db.runAsync('DELETE FROM todos WHERE date = ?', [date]);
     } catch (error: any) {
-      console.error(`خطا در پاک کردن کارها برای تاریخ ${date}:`, error);
-      throw new Error(`ناتوانی در پاک کردن کارها: ${error.message}`);
+      console.error(`خطا در پاک کردن تسک‌ها برای تاریخ ${date}:`, error);
+      throw new Error(`ناتوانی در پاک کردن تسک‌ها: ${error.message}`);
     }
   }
 
@@ -146,54 +199,8 @@ class TodoStorage {
     try {
       await this.db.runAsync('DELETE FROM todos');
     } catch (error: any) {
-      console.error('خطا در پاک کردن همه کارها:', error);
-      throw new Error(`ناتوانی در پاک کردن همه کارها: ${error.message}`);
-    }
-  }
-
-  async addTodo(todo: Todo): Promise<void> {
-    if (!todo.id || !todo.title || !todo.date) {
-      throw new Error('شناسه، عنوان یا تاریخ کار نمی‌تواند خالی باشد.');
-    }
-    try {
-      const row = this.todoToRow(todo);
-      await this.db.runAsync(
-        `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt , is_cancel) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)`,
-        [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel],
-      );
-    } catch (error: any) {
-      console.error(`خطا در افزودن کار با شناسه ${todo.id}:`, error);
-      throw new Error(`ناتوانی در افزودن کار: ${error.message}`);
-    }
-  }
-
-  async updateTodo(todo: Todo): Promise<void> {
-    if (!todo.id || !todo.title || !todo.date) {
-      throw new Error('شناسه، عنوان یا تاریخ کار نمی‌تواند خالی باشد.');
-    }
-    try {
-      const row = this.todoToRow(todo);
-      await this.db.runAsync(
-        `UPDATE todos SET title = ?, tags = ?, start_time = ?, end_time = ?, 
-         date = ?, completed = ?, createdAt = ? , is_cancel = ? WHERE id = ?`,
-        [row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel, row.id],
-      );
-    } catch (error: any) {
-      console.error(`خطا در به‌روزرسانی کار با شناسه ${todo.id}:`, error);
-      throw new Error(`ناتوانی در به‌روزرسانی کار: ${error.message}`);
-    }
-  }
-
-  async deleteTodo(id: string): Promise<void> {
-    if (!id) {
-      throw new Error('شناسه کار نمی‌تواند خالی باشد.');
-    }
-    try {
-      await this.db.runAsync('DELETE FROM todos WHERE id = ?', [id]);
-    } catch (error: any) {
-      console.error(`خطا در حذف کار با شناسه ${id}:`, error);
-      throw new Error(`ناتوانی در حذف کار: ${error.message}`);
+      console.error('خطا در پاک کردن همه تسک‌ها:', error);
+      throw new Error(`ناتوانی در پاک کردن همه تسک‌ها: ${error.message}`);
     }
   }
 
@@ -210,36 +217,4 @@ class TodoStorage {
 
 const todoStorage = new TodoStorage();
 
-export const saveTodos = (todos: Todo[], date: string) => {
-  return todoStorage.saveTodos(todos, date);
-};
-
-export const getTodos = (date: string, filterNotCompleted: boolean = false, filterNotCanceled: boolean = false): Promise<Todo[]> => {
-  return todoStorage.getTodos(date, filterNotCompleted, filterNotCanceled);
-};
-
-export const clearTodos = (date: string) => {
-  return todoStorage.clearTodos(date);
-};
-
-export const clearAllTodos = () => {
-  return todoStorage.clearAllTodos();
-};
-
-export const addTodo = (todo: Todo) => {
-  return todoStorage.addTodo(todo);
-};
-
-export const updateTodo = (todo: Todo) => {
-  return todoStorage.updateTodo(todo);
-};
-
-export const deleteTodo = (id: string) => {
-  return todoStorage.deleteTodo(id);
-};
-
-export const getAllDates = () => {
-  return todoStorage.getAllDates();
-};
-
-export { todoStorage };
+export default todoStorage;

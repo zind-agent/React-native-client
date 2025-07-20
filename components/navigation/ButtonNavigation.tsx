@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable } from '../ui/pressable';
 import { Colors } from '@/constants/Colors';
 import React, { useEffect } from 'react';
-import { Platform, View, Dimensions } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { MotiView, motify } from 'moti';
 import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import AddButton from '@/components/shared/addButton';
@@ -21,16 +21,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
       className="absolute flex-row justify-between mb-3 rounded-t-2xl rounded-b-md h-[57px] left-0 right-0 mx-4"
       style={{
         bottom: insets.bottom,
-        backgroundColor: Colors.main.background,
-        ...Platform.select({
-          ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.2,
-            shadowRadius: 4,
-          },
-          android: { elevation: 0.5 },
-        }),
+        backgroundColor: Colors.main.lightBlue,
       }}
     >
       <View
@@ -47,7 +38,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
-        if (route.name === 'addTodoAi') return null;
+        if (route.name === 'addTodoAi' || route.name === 'addTodo') return null;
 
         const onPress = () => {
           if (!isFocused) {

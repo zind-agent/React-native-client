@@ -9,7 +9,7 @@ import { Platform } from 'react-native';
 import { useAppStore } from '@/store/appState';
 import { Box } from '../ui/box';
 
-const HeaderTitle = ({ title, path }: { title: string; path: RelativePathString }) => {
+const HeaderTitle = ({ title, path, isLight = false }: { title: string; path: RelativePathString; isLight?: boolean }) => {
   const { language } = useAppStore();
   return (
     <HStack className="items-center gap-4 mt-5">
@@ -41,7 +41,7 @@ const HeaderTitle = ({ title, path }: { title: string; path: RelativePathString 
           <BackIcon color={Colors.main.background} />
         </Box>
       </Button>
-      <Heading style={{ color: Colors.main10275A }} className="font-ibmpBold" size="3xl">
+      <Heading style={{ color: isLight ? Colors.main.background : Colors.main.textPrimary }} className="font-ibmpBold" size="3xl">
         {title}
       </Heading>
     </HStack>
