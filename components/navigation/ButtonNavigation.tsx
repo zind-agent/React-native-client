@@ -21,7 +21,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
       className="absolute flex-row justify-between mb-3 rounded-t-2xl rounded-b-md h-[57px] left-0 right-0 mx-4"
       style={{
         bottom: insets.bottom,
-        backgroundColor: Colors.main.lightBlue,
+        backgroundColor: Colors.main.border,
       }}
     >
       <View

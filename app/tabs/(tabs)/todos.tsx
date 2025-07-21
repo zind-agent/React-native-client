@@ -11,22 +11,44 @@ import { Box } from '@/components/ui/box';
 import HeaderPage from '@/components/shared/headerPage';
 import TodoListView from '@/components/shared/todoListView';
 import { useTodoStore } from '@/store/todoState';
+import { Pressable, Text } from 'react-native';
+import jalaliMoment from 'jalali-moment';
+import { useAppStore } from '@/store/appState';
+import { Button, ButtonText } from '@/components/ui/button';
 
 const Todos = () => {
   const { loadTodos } = useTodoStore();
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDate, setSelectedDate } = useDateTime();
+  const { calender } = useAppStore();
 
   useEffect(() => {
     loadTodos(selectedDate);
-  }, [loadTodos]);
+  }, [loadTodos, selectedDate]);
+
+  const today = jalaliMoment();
+  const todayDate = calender === 'jalali' ? today.format('jYYYY-jMM-jDD') : today.format('YYYY-MM-DD');
+  const todayYear = calender === 'jalali' ? today.jYear().toString() : today.year().toString();
+  const todayMonth = calender === 'jalali' ? (today.jMonth() + 1).toString() : (today.month() + 1).toString();
+  const selectedWeekStart = selectedDate ? (calender === 'jalali' ? jalaliMoment(selectedDate, 'jYYYY-jMM-jDD').startOf('week') : jalaliMoment(selectedDate, 'YYYY-MM-DD').startOf('week')) : null;
+  const todayWeekStart = calender === 'jalali' ? jalaliMoment().startOf('week') : jalaliMoment().startOf('week');
+  const isCurrentWeek = selectedWeekStart && selectedWeekStart.isSame(todayWeekStart, 'day');
+  const isCurrentMonth = selectedYear === todayYear && selectedMonth === todayMonth;
+  const isToday = selectedDate === todayDate;
+
+  const goToToday = () => {
+    setSelectedYear(todayYear);
+    setSelectedMonth(todayMonth);
+    setSelectedDate(todayDate);
+  };
+
+  const shouldShowTodayButton = !isCurrentWeek || !isCurrentMonth || !isToday;
 
   return (
-    <Box style={{ flex: 1, backgroundColor: 'white' }}>
+    <Box style={{ flex: 1, backgroundColor: Colors.main.background }}>
       <Box
         style={{
           paddingHorizontal: 20,
           paddingTop: 10,
-          backgroundColor: 'white',
           zIndex: 1,
           elevation: 1,
           shadowColor: '#000',
@@ -48,7 +70,16 @@ const Todos = () => {
             </Heading>
             <SelectYearWithMonth selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
           </HStack>
-          <WeeklyDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+
+          <WeeklyDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} year={selectedYear ?? undefined} month={selectedMonth ?? undefined} />
+
+          {shouldShowTodayButton && (
+            <Box className="items-center mt-3">
+              <Button variant="link" onPress={goToToday}>
+                <ButtonText style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{t('todos.today')}</ButtonText>
+              </Button>
+            </Box>
+          )}
         </VStack>
 
         <HStack className="items-center justify-between mb-2 mt-5 pb-3">
@@ -58,7 +89,7 @@ const Todos = () => {
               fontSize: 20,
             }}
           >
-            {t('todos.today')}
+            {isToday ? t('todos.today') : t('todos.selected_date')}
           </Heading>
           <Heading style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{selectedDate ?? '-'}</Heading>
         </HStack>

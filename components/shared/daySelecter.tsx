@@ -1,5 +1,4 @@
 import { VStack } from '../ui/vstack';
-import { Text } from '../Themed';
 import { HStack } from '../ui/hstack';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';

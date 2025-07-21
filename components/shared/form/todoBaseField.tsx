@@ -29,7 +29,7 @@ export const TodoBasicFields: React.FC<TodoBasicFieldsProps> = ({ control, error
         render={({ field }) => (
           <AddTodoForm
             autoFocus
-            style={{ height: 40, borderColor: Colors.main.primaryLight, marginBottom: 10 }}
+            style={{ height: 40, borderColor: Colors.main.primaryLight, marginBottom: 10, backgroundColor: 'transparent' }}
             value={field.value}
             placeholder={t('title')}
             onChange={field.onChange}

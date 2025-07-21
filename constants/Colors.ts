@@ -1,24 +1,24 @@
 export const Colors = {
   main: {
-    background: '#FFFFFF',
-    cardBackground: '#F9FAFD',
-    border: '#E0E0E0',
+    background: '#121212',
+    cardBackground: '#1E1E1E',
+    border: '#2C2C2E',
 
     primary: '#5C6BC0',
-    primaryLight: '#C6CEDD',
-    primaryDark: '#10275A',
+    primaryLight: '#9FA8DA',
+    primaryDark: '#3949AB',
 
     accent: '#FF6B6B',
-    success: '#A5D8FF',
-    warning: '#FF9800',
-    info: '#2196F3',
+    success: '#64B5F6',
+    warning: '#FFA726',
+    info: '#42A5F5',
 
-    textPrimary: '#1C1C1E',
-    textSecondary: '#8E9EAB',
+    textPrimary: '#FFFFFF',
+    textSecondary: '#B0B0B0',
 
-    button: '#536DFE',
+    button: '#5C6BC0',
 
-    lightBlue: '#EBF1FF',
+    lightBlue: '#1A237E',
 
     tag: {
       office: 'rgba(179, 157, 219, 0.5)',

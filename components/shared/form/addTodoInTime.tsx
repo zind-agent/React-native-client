@@ -37,22 +37,17 @@ const AddTodoInTime = memo(() => {
   return (
     <Drawer isOpen={addInTimeTodoDrawer} onClose={() => setAddInTimeTodoDrawer(false)} size="lg" anchor="bottom" className="bg-black/50">
       <DrawerBackdrop />
-      <DrawerContent style={{ backgroundColor: Colors.main.background }} className="h-max rounded-t-[30px] border-t-0 p-3">
-        <DrawerHeader className="flex justify-center items-center">
-          <Heading style={{ color: Colors.main.primaryDark }}>{t('create_event')}</Heading>
-        </DrawerHeader>
-
+      <DrawerContent style={{ backgroundColor: Colors.main.cardBackground }} className="h-max rounded-t-[30px] border-t-0 p-3 px-7">
         <DrawerBody>
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 10}>
             <TodoBasicFields control={control} errors={errors} startTime={startTime} endTime={endTime} showDatePicker={showDatePicker} setShowDatePicker={setShowDatePicker} />
-
-            <Accordion size="md" variant="filled" type="single" isCollapsible className="mb-5">
+            <Accordion size="md" variant="filled" type="single" isCollapsible className="mb-5 mt-3 bg-transparent">
               <AccordionItem value="advanced">
                 <AccordionHeader>
-                  <AccordionTrigger className="border-b-[1px] h-12" style={{ borderColor: Colors.main.border }}>
+                  <AccordionTrigger className="border-b-[1px] h-12 rounded-md" style={{ borderColor: Colors.main.background, backgroundColor: Colors.main.background }}>
                     {({ isExpanded }) => (
                       <>
-                        <AccordionTitleText>{t('advanced')}</AccordionTitleText>
+                        <AccordionTitleText style={{ color: Colors.main.textPrimary }}>{t('advanced')}</AccordionTitleText>
                         {isExpanded ? <AccordionIcon as={ChevronUpIcon} className="ml-3" /> : <AccordionIcon as={ChevronDownIcon} className="ml-3" />}
                       </>
                     )}

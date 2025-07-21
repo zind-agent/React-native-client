@@ -91,7 +91,7 @@ const SelectYearWithMonth = ({
         </HStack>
       </Button>
 
-      <Drawer isOpen={showDrawer} onClose={() => setShowDrawer(false)} size="lg" anchor="bottom" className="bg-black/60">
+      <Drawer isOpen={showDrawer} onClose={() => setShowDrawer(false)} size="sm" anchor="bottom" className="bg-black/60">
         <DrawerBackdrop />
         <DrawerContent style={{ backgroundColor: Colors.main.background }} className="h-max">
           <DrawerHeader className="justify-center py-1">
@@ -110,25 +110,39 @@ const SelectYearWithMonth = ({
           <DrawerBody>
             <VStack className="items-center space-y-6">
               {/* Month Selector */}
-              <VStack className="w-full gap-2 space-y-3">
+              <Box
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
                 {months.map((option) => (
                   <Button
                     key={option.value}
                     onPress={() => setSelectedMonth(option.value)}
                     variant={selectedMonth === option.value ? 'solid' : 'outline'}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl mb-2"
                     style={{
                       backgroundColor: selectedMonth === option.value ? Colors.main.primary : Colors.main.background,
                       borderWidth: 1,
                       borderColor: Colors.main.primaryLight,
+                      flexBasis: '32%',
                     }}
                   >
-                    <ButtonText className={`text-lg ${selectedMonth === option.value ? 'text-white' : 'text-black'}`}>
-                      {language === 'fa' ? `${option.labelFa} - ${option.labelEn}` : `${option.labelEn} - ${option.labelFa}`}
+                    <ButtonText
+                      className="text-lg"
+                      style={{
+                        color: selectedMonth === option.value ? Colors.main.textPrimary : Colors.main.textSecondary,
+                        textAlign: 'center',
+                      }}
+                    >
+                      {language === 'fa' ? option.labelFa : option.labelEn}
                     </ButtonText>
                   </Button>
                 ))}
-              </VStack>
+              </Box>
 
               <Button onPress={() => setShowDrawer(false)} className="mt-4 h-14 rounded-xl w-full" style={{ backgroundColor: Colors.main.primary }}>
                 <ButtonText className="text-white text-lg">{t('confirm')}</ButtonText>
