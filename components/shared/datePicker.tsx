@@ -23,8 +23,12 @@ const DatePicker = <T extends Record<string, any>>({ field, setShowDatePicker, s
 
   return (
     <>
-      <Button onPress={() => setShowDatePicker(true)} style={{ backgroundColor: Colors.main.lightBlue }} className="rounded-lg h-[50px] w-full justify-between px-8">
-        <ButtonText style={{ color: Colors.main.primary, fontWeight: '800' }}>{field.value ? `${field.value} ` : t('todos.select_date')}</ButtonText>
+      <Button
+        onPress={() => setShowDatePicker(true)}
+        style={{ backgroundColor: Colors.main.primary + 30, borderColor: Colors.main.primary, borderWidth: 2 }}
+        className="rounded-lg h-[48px] w-full justify-between px-8 mt-3"
+      >
+        <ButtonText style={{ color: Colors.main.primary }}>{field.value ? `${field.value} ` : t('todos.select_date')}</ButtonText>
         <Icon as={CalenderIcon} color={Colors.main.primary} />
       </Button>
       {showDatePicker && (

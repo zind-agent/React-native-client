@@ -18,7 +18,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
 
   return (
     <MotiView
-      className="absolute flex-row justify-between mb-3 rounded-t-2xl rounded-b-md h-[57px] left-0 right-0 mx-4"
+      className="absolute flex-row justify-between mb-3 rounded-lg h-[57px] left-0 right-0 mx-4"
       style={{
         bottom: insets.bottom,
         backgroundColor: Colors.main.border,
@@ -52,7 +52,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
 
         useEffect(() => {
           animatedColor.value = withTiming(isFocused ? Colors.main.primary : Colors.main.primaryLight, {
-            duration: 250,
+            duration: 150,
           });
         }, [isFocused, animatedColor]);
 

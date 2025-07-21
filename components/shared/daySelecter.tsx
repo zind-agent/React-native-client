@@ -3,7 +3,7 @@ import { HStack } from '../ui/hstack';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { Button, ButtonText } from '../ui/button';
-import { Heading } from '../ui/heading';
+import { Text } from '../Themed';
 
 interface DaySelectorProps {
   field: {
@@ -24,7 +24,7 @@ const DaySelector = ({ field }: DaySelectorProps) => {
 
   return (
     <VStack className="gap-2 mb-5 mt-2">
-      <Heading style={{ color: Colors.main.textPrimary, fontSize: 15 }}>{t('select_reminder_days')}</Heading>
+      <Text style={{ color: Colors.main.textPrimary, fontSize: 15 }}>{t('select_reminder_days')}</Text>
       <HStack className="flex-wrap gap-2 justify-between">
         {daysOfWeek.map((day) => {
           const isSelected = value.includes(day);

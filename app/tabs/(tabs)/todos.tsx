@@ -15,6 +15,7 @@ import { Pressable, Text } from 'react-native';
 import jalaliMoment from 'jalali-moment';
 import { useAppStore } from '@/store/appState';
 import { Button, ButtonText } from '@/components/ui/button';
+import DetailTaskTodo from '@/components/shared/form/detailTodo';
 
 const Todos = () => {
   const { loadTodos } = useTodoStore();

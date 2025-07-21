@@ -1,9 +1,8 @@
 import React, { memo, useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import { Drawer, DrawerBackdrop, DrawerContent, DrawerBody, DrawerHeader } from '@/components/ui/drawer';
+import { Drawer, DrawerBackdrop, DrawerContent, DrawerBody } from '@/components/ui/drawer';
 import { Accordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionTitleText, AccordionContent, AccordionIcon } from '@/components/ui/accordion';
 import { Button, ButtonText } from '@/components/ui/button';
-import { Heading } from '@/components/ui/heading';
 import { ChevronDownIcon, ChevronUpIcon } from '@/components/ui/icon';
 import { Colors } from '@/constants/Colors';
 import { useAppStore } from '@/store/appState';
@@ -44,17 +43,17 @@ const AddTodoInTime = memo(() => {
             <Accordion size="md" variant="filled" type="single" isCollapsible className="mb-5 mt-3 bg-transparent">
               <AccordionItem value="advanced">
                 <AccordionHeader>
-                  <AccordionTrigger className="border-b-[1px] h-12 rounded-md" style={{ borderColor: Colors.main.background, backgroundColor: Colors.main.background }}>
+                  <AccordionTrigger className="border-b-[1px] h-12 rounded-md" style={{ borderColor: Colors.main.primary, backgroundColor: Colors.main.background + 50 }}>
                     {({ isExpanded }) => (
                       <>
-                        <AccordionTitleText style={{ color: Colors.main.textPrimary }}>{t('advanced')}</AccordionTitleText>
-                        {isExpanded ? <AccordionIcon as={ChevronUpIcon} className="ml-3" /> : <AccordionIcon as={ChevronDownIcon} className="ml-3" />}
+                        <AccordionTitleText style={{ color: Colors.main.textPrimary }}>{t('options')}</AccordionTitleText>
+                        {isExpanded ? <AccordionIcon as={ChevronUpIcon} className="ml-3 text-white" /> : <AccordionIcon as={ChevronDownIcon} className="ml-3 text-white" />}
                       </>
                     )}
                   </AccordionTrigger>
                 </AccordionHeader>
 
-                <AccordionContent style={{ backgroundColor: Colors.main.lightBlue }} className="rounded-b-lg">
+                <AccordionContent style={{ backgroundColor: Colors.main.background + 50 }} className="rounded-b-lg">
                   <TodoAdvancedFields control={control} />
                 </AccordionContent>
               </AccordionItem>

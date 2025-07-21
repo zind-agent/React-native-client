@@ -4,7 +4,6 @@ import { VStack } from '@/components/ui/vstack';
 import { Text } from '@/components/Themed';
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import DaySelector from '../daySelecter';
-import SelectedTags from '../selectedTags';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { AddTodoSchemaType } from '@/components/schema/addTodoSchema';
@@ -17,19 +16,14 @@ export const TodoAdvancedFields: React.FC<TodoAdvancedFieldsProps> = ({ control 
   return (
     <VStack className="gap-4">
       <Controller name="reminderDays" control={control} render={({ field }) => <DaySelector field={field} />} />
-
-      <Controller name="tags" control={control} render={({ field }) => <SelectedTags field={field} />} />
-
       <Controller
         control={control}
         name="description"
         render={({ field, fieldState }) => (
           <VStack>
-            <Text style={{ color: Colors.main.textPrimary }} className="mt-3">
-              {t('description')}
-            </Text>
+            <Text style={{ color: Colors.main.textPrimary }}>{t('description')}</Text>
             <Textarea
-              className="my-1 w-full rounded-lg px-4 h-[60px]"
+              className="my-1 w-full rounded-lg px-4 h-[80px]"
               style={{
                 backgroundColor: Colors.main.background,
                 borderWidth: 1,

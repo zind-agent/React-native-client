@@ -17,7 +17,16 @@ export const AddTodoForm = ({ value, onChange, error, placeholder, style, autoFo
   return (
     <FormControl isInvalid={!!error} isRequired size="lg" className="mt-8">
       <Input className="rounded-xl px-4" style={[{ backgroundColor: Colors.main.background, borderWidth: 0, borderBottomWidth: 1 }, style]}>
-        <InputField placeholderClassName="text-" type="text" placeholder={placeholder} value={value} onChangeText={onChange} className="text-xl" autoFocus={autoFocus} />
+        <InputField
+          type="text"
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChange}
+          className="text-xl"
+          autoFocus={autoFocus}
+          style={{ color: Colors.main.textPrimary }}
+          placeholderTextColor={Colors.main.textSecondary}
+        />
       </Input>
 
       {error && (

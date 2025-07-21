@@ -58,7 +58,7 @@ const Home: React.FC = () => {
 
       case 'progress':
         return (
-          <Center className="mt-3 h-36 w-full rounded-lg px-10 gap-4" style={{ backgroundColor: Colors.main.primaryLight }}>
+          <Center className="mt-3 h-36 w-full rounded-lg px-10 gap-4" style={{ backgroundColor: Colors.main.primaryDark }}>
             <Text className="text-center text-xl" style={{ color: Colors.main.textPrimary }}>
               {t('home.today_progress_summery')}
             </Text>

@@ -7,6 +7,8 @@ import { tags as todoTags } from '@/constants/TodoAddTags';
 import { Todo } from '@/storage/todoStorage';
 import { Icon } from '../ui/icon';
 import { ClockIcon } from '@/assets/Icons/Clock';
+import { useDrawerStore } from '@/store/drawerState';
+import DetailTaskTodo from './form/detailTodo';
 
 interface ScheduleCardProps {
   task: Todo;
@@ -15,9 +17,12 @@ interface ScheduleCardProps {
 }
 
 const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
+  const { setDetailDrawer, detailDrawer } = useDrawerStore();
   const handlePress = () => {
     if (onPress) {
-      onPress(task);
+      if (task.id != null) {
+        setDetailDrawer();
+      }
     }
   };
 
@@ -30,12 +35,14 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
           borderLeftWidth: 3,
         }}
       >
-        <Text className="text-xl font-semibold text-slate-800 mb-1">{task.title}</Text>
-        <Text className={'text-xl font-semibold text-slate-800 mb-1 ' + task.description == '' || task.description == null ? 'hidden' : 'none'}>{task.description}</Text>
+        <Text className="text-md mb-1" style={{ color: Colors.main.textSecondary }}>
+          {task.title}
+        </Text>
+        <Text className={'text-sm font-semibold mb-1 ' + task.description == '' || task.description == null ? 'hidden' : 'none'}>{task.description}</Text>
       </Box>
       <HStack className="flex-wrap items-center gap-4" style={{ gap: 4 }}>
         <Icon as={ClockIcon} />
-        <Text className="text-md mb-2" style={{ color: Colors.main.textSecondary }}>
+        <Text className="text-sm mb-2" style={{ color: Colors.main.textSecondary }}>
           {task.start_time} - {task.end_time}
         </Text>
 
@@ -59,15 +66,19 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
   );
 
   return (
-    <Pressable
-      onPress={handlePress}
-      style={({ pressed }) => ({
-        opacity: pressed ? 0.7 : 1,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
-      })}
-    >
-      <CardContent />
-    </Pressable>
+    <>
+      <Pressable
+        onPress={handlePress}
+        style={({ pressed }) => ({
+          opacity: pressed ? 0.7 : 1,
+          transform: [{ scale: pressed ? 0.98 : 1 }],
+        })}
+      >
+        <CardContent />
+      </Pressable>
+
+      {detailDrawer && <DetailTaskTodo id={Number(task.id)} />}
+    </>
   );
 };
 

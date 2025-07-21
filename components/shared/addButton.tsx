@@ -81,10 +81,10 @@ const AddButton = () => {
           <MotiView
             from={{ opacity: 0, translateY: -40, translateX: -90 }}
             animate={{ opacity: 1, translateY: -50, translateX: -100 }}
-            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 200 }}
             style={{
               position: 'absolute',
-              width: 140,
+              width: 120,
               padding: 10,
               backgroundColor: Colors.main.background,
               borderRadius: 8,
@@ -113,7 +113,7 @@ const AddButton = () => {
           <MotiView
             from={{ opacity: 0, translateX: -100, translateY: 0 }}
             animate={{ opacity: 1, translateY: 10, translateX: -140 }}
-            transition={{ type: 'spring', damping: 80, stiffness: 200 }}
+            transition={{ type: 'spring', damping: 30, stiffness: 200 }}
             style={{
               position: 'absolute',
               width: 120,
