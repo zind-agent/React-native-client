@@ -1,10 +1,10 @@
 import React from 'react';
-import { HStack } from '../ui/hstack';
-import { Button } from '../ui/button';
 import { router } from 'expo-router';
-import { Heading } from '../ui/heading';
 import { Colors } from '@/constants/Colors';
 import BellIcon from '@/assets/Icons/BellIcon';
+import { HStack } from '../ui/hstack';
+import { Heading } from '../ui/heading';
+import { Button } from '../ui/button';
 
 const HeaderPage = ({ title }: { title: string }) => {
   return (

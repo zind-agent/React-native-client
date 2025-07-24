@@ -3,17 +3,17 @@ import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/Themed';
-import HeaderTitle from '@/components/shared/headerTitle';
-import WizardStepper from '@/components/shared/wizardSteper';
 import { Colors } from '@/constants/Colors';
 import { useWizardStore } from '@/store/wizardFormState';
 import { t } from 'i18next';
 import { OneQuestion, ThreeQuestion, TwoQuestion } from '@/constants/LifeStyleEnumItems';
 import { Pressable, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { VStack } from '@/components/ui/vstack';
-import { ZindCheckbox } from '@/components/shared/checkBox';
 import { router } from 'expo-router';
-import { useShowToast } from '@/components/shared/customToast';
+import { useShowToast } from '@/components/common/customToast';
+import WizardStepper from '@/components/common/wizardSteper';
+import HeaderTitle from '@/components/common/headerTitle';
+import { Checkbox } from '@/components/common/checkBox';
 
 const StepThree = () => {
   const { setStep, setField, sleepTime, stressedFeeling, extersize } = useWizardStore();
@@ -107,7 +107,7 @@ const StepThree = () => {
                   backgroundColor: selectedOptions.questionOne === item.key ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
-                {selectedOptions.questionOne === item.key ? <ZindCheckbox checked={true} onPress={() => {}} /> : <ZindCheckbox checked={false} onPress={() => handleSelect('questionOne', item.key)} />}
+                {selectedOptions.questionOne === item.key ? <Checkbox checked={true} onPress={() => {}} /> : <Checkbox checked={false} onPress={() => handleSelect('questionOne', item.key)} />}
                 <Text style={{ fontSize: 14, color: Colors.main.textPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}
@@ -131,7 +131,7 @@ const StepThree = () => {
                   backgroundColor: selectedOptions.questionTwo === item.key ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
-                {selectedOptions.questionTwo === item.key ? <ZindCheckbox checked={true} onPress={() => {}} /> : <ZindCheckbox checked={false} onPress={() => handleSelect('questionTwo', item.key)} />}
+                {selectedOptions.questionTwo === item.key ? <Checkbox checked={true} onPress={() => {}} /> : <Checkbox checked={false} onPress={() => handleSelect('questionTwo', item.key)} />}
                 <Text style={{ fontSize: 14, color: Colors.main.textPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}
@@ -155,11 +155,7 @@ const StepThree = () => {
                   backgroundColor: selectedOptions.questionThree === item.key ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
-                {selectedOptions.questionThree === item.key ? (
-                  <ZindCheckbox checked={true} onPress={() => {}} />
-                ) : (
-                  <ZindCheckbox checked={false} onPress={() => handleSelect('questionThree', item.key)} />
-                )}
+                {selectedOptions.questionThree === item.key ? <Checkbox checked={true} onPress={() => {}} /> : <Checkbox checked={false} onPress={() => handleSelect('questionThree', item.key)} />}
                 <Text style={{ fontSize: 14, color: Colors.main.textPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}

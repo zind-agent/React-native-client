@@ -9,9 +9,9 @@ import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { Slot } from 'expo-router';
 import '../i18n';
 import '../global.css';
-import Loading from '@/components/shared/Loading';
 import { LanguageGate } from '@/constants/LanguageGate';
 import { ToastProvider } from '@gluestack-ui/toast';
+import Loading from '@/components/common/Loading';
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,

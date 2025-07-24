@@ -1,14 +1,14 @@
 import React, { memo } from 'react';
-import { HStack } from '../ui/hstack';
-import { VStack } from '../ui/vstack';
 import { useWizardStore } from '@/store/wizardFormState';
 import { t } from 'i18next';
-import { Heading } from '../ui/heading';
 import { Colors } from '@/constants/Colors';
-import { Text } from '../Themed';
 import { Image } from 'react-native';
-import { Box } from '../ui/box';
 import { LinearGradient } from 'expo-linear-gradient';
+import { HStack } from '../ui/hstack';
+import { Heading } from '../ui/heading';
+import { VStack } from '../ui/vstack';
+import { Text } from '../Themed';
+import { Box } from '../ui/box';
 
 const capitalizeWords = (str: string) => {
   return str

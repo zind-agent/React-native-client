@@ -1,6 +1,6 @@
 import { Colors } from '@/constants/Colors';
-import { Toast, ToastTitle, useToast } from '../ui/toast';
 import { useCallback } from 'react';
+import { Toast, ToastTitle, useToast } from '../ui/toast';
 
 export const useShowToast = () => {
   const toast = useToast();

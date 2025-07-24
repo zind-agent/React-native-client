@@ -3,13 +3,13 @@ import { Controller, Control } from 'react-hook-form';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Box } from '@/components/ui/box';
-import { AddTodoForm } from './addTodoTitle';
-import { TimePicker } from '../timePicker';
-import DatePicker from '../datePicker';
-import TimeDeffrence from '../timeDeffrence';
+import { AddTodoForm } from './addTodo/addTodoTitle';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { AddTodoSchemaType } from '@/components/schema/addTodoSchema';
+import DatePicker from '@/components/common/datePicker';
+import { TimePicker } from '@/components/common/timePicker';
+import TimeDeffrence from '@/components/common/timeDeffrence';
 
 interface TodoBasicFieldsProps {
   control: Control<AddTodoSchemaType>;

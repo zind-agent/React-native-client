@@ -1,13 +1,13 @@
 import React from 'react';
-import { Heading } from '../ui/heading';
 import { Colors } from '@/constants/Colors';
-import { Button } from '../ui/button';
-import { HStack } from '../ui/hstack';
 import { RelativePathString, router } from 'expo-router';
 import BackIcon from '@/assets/Icons/Back';
 import { Platform } from 'react-native';
 import { useAppStore } from '@/store/appState';
+import { HStack } from '../ui/hstack';
+import { Button } from '../ui/button';
 import { Box } from '../ui/box';
+import { Heading } from '../ui/heading';
 
 const HeaderTitle = ({ title, path, isLight = false }: { title: string; path: RelativePathString; isLight?: boolean }) => {
   const { language } = useAppStore();

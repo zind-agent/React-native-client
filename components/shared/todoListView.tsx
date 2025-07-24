@@ -4,8 +4,6 @@ import { FlatList } from 'react-native';
 import { useTodoStore } from '@/store/todoState';
 import { useGroupedTodos } from '@/hooks/useGroupedTodos';
 import ScheduleCard from './scheduleCard';
-import HourlyRow from './hourlyRow';
-import Loading from './Loading';
 import { Todo } from '@/storage/todoStorage';
 import { Button, ButtonText } from '../ui/button';
 import { VStack } from '../ui/vstack';
@@ -13,7 +11,9 @@ import { Text } from '../Themed';
 import { t } from 'i18next';
 import { Colors } from '@/constants/Colors';
 import { useEditTaskDrawer } from '@/hooks/useEditTaskDrawer';
-import HiddenItem from './hiddenItem';
+import HiddenItem from '../common/hiddenItem';
+import HourlyRow from '../common/hourlyRow';
+import Loading from '../common/Loading';
 
 interface TodoListViewProps {
   mode: 'flat' | 'grouped';

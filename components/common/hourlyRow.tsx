@@ -2,9 +2,9 @@ import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
 import { Text } from 'react-native';
 import { ScrollView } from 'react-native';
-import ScheduleCard from './scheduleCard';
 import { Colors } from '@/constants/Colors';
 import { Todo } from '@/storage/todoStorage';
+import ScheduleCard from '../shared/scheduleCard';
 
 interface HourlyRowProps {
   hour: string;

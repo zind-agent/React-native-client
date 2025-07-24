@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
-import UserHeaderTitle from '@/components/shared/userHeaderTitle';
 import { Text } from '@/components/Themed';
 import { Box } from '@/components/ui/box';
 import { Heading } from '@/components/ui/heading';
@@ -12,9 +11,10 @@ import { Button, ButtonText } from '@/components/ui/button';
 import { router } from 'expo-router';
 import { useTodoStore } from '@/store/todoState';
 import TodoListView from '@/components/shared/todoListView';
-import AddTodoInTime from '@/components/shared/form/addTodoInTime';
+import AddTodoInTime from '@/components/shared/forms/addTodo/addTodoInTime';
 import { Center } from '@/components/ui/center';
 import { Progress, ProgressFilledTrack } from '@/components/ui/progress';
+import UserHeaderTitle from '@/components/common/userHeaderTitle';
 
 interface HomeSection {
   id: string;

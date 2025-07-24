@@ -8,10 +8,10 @@ import { Colors } from '@/constants/Colors';
 import { useAppStore } from '@/store/appState';
 import { useTodoStore } from '@/store/todoState';
 import { t } from 'i18next';
-import Loading from '../Loading';
 import { useTodoForm } from '@/hooks/useTodoForm';
-import { TodoBasicFields } from './todoBaseField';
-import { TodoAdvancedFields } from './todoAdvancedField';
+import { TodoBasicFields } from '../todoBaseField';
+import { TodoAdvancedFields } from '../todoAdvancedField';
+import Loading from '@/components/common/Loading';
 
 const AddTodoInTime = memo(() => {
   const { addInTimeTodoDrawer, setAddInTimeTodoDrawer } = useAppStore();

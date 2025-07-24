@@ -1,5 +1,5 @@
 import BackIcon from '@/assets/Icons/Back';
-import { AuthForm } from '@/components/shared/form/authForm';
+import { AuthForm } from '@/components/shared/forms/auth/authForm';
 import { Text } from '@/components/Themed';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
@@ -17,10 +17,10 @@ import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import GoogleIcon from '@/assets/Icons/Google';
 import MailIcon from '@/assets/Icons/Mail';
-import Loading from '@/components/shared/Loading';
-import { CodeForm } from '@/components/shared/form/codeForm';
-import { useShowToast } from '@/components/shared/customToast';
 import { t } from 'i18next';
+import { useShowToast } from '@/components/common/customToast';
+import { CodeForm } from '@/components/shared/forms/auth/codeForm';
+import Loading from '@/components/common/Loading';
 
 const emailSchema = z.object({
   identifier: z.string().min(1, { message: 'email required' }).email({ message: 'email invalid' }),
@@ -66,23 +66,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
     },
   } as const;
 
-  if (!authType) {
-    return (
-      <VStack className="flex-1 justify-center items-center">
-        <Text>Error: authType not provided</Text>
-      </VStack>
-    );
-  }
-
   const identifierSchema = schemas[authType];
-  if (!identifierSchema) {
-    console.error(`Schema not found for authType: ${authType}`);
-    return (
-      <VStack className="flex-1 justify-center items-center">
-        <Text>Error: Invalid authType: {authType}</Text>
-      </VStack>
-    );
-  }
 
   const config = authConfigs[authType];
   const combinedSchema = identifierSchema.merge(codeSchema);
@@ -273,14 +257,14 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         <VStack className="gap-3">
           <Button style={{ backgroundColor: Colors.main.primaryLight }} className="h-16 rounded-xl flex justify-center">
             <ButtonIcon as={GoogleIcon} />
-            <ButtonText style={{ color: Colors.main10275A }} className="font-heading">
+            <ButtonText style={{ color: Colors.main.textPrimary }} className="font-heading">
               {t('continue with google')}
             </ButtonText>
           </Button>
 
           <Button style={{ backgroundColor: Colors.main.primaryLight }} className="h-16 rounded-xl flex justify-center" onPress={handleNavigateToAlternative}>
-            <MailIcon color={Colors.main10275A} />
-            <ButtonText style={{ color: Colors.main10275A }} className="font-heading">
+            <MailIcon color={Colors.main.textPrimary} />
+            <ButtonText style={{ color: Colors.main.textPrimary }} className="font-heading">
               {t(config.alternativeText)}
             </ButtonText>
           </Button>

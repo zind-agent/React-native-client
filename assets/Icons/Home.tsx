@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { Svg, Path } from 'react-native-svg';
 import { Animated } from 'react-native';
-import { getAnimatedColors, useIconAnimation } from '@/components/animationIcons';
+import { getAnimatedColors, useIconAnimation } from '@/hooks/animationIcons';
 
 interface HomeIconProps {
   focused: boolean;

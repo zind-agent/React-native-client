@@ -3,10 +3,10 @@ import { Controller, Control } from 'react-hook-form';
 import { VStack } from '@/components/ui/vstack';
 import { Text } from '@/components/Themed';
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
-import DaySelector from '../daySelecter';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { AddTodoSchemaType } from '@/components/schema/addTodoSchema';
+import DaySelector from '@/components/common/daySelecter';
 
 interface TodoAdvancedFieldsProps {
   control: Control<AddTodoSchemaType>;

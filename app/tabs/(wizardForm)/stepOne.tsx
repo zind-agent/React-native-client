@@ -1,7 +1,5 @@
-import SelectStepGender from '@/components/shared/form/selectStepGender';
-import { StepForm } from '@/components/shared/form/stepForm';
-import HeaderTitle from '@/components/shared/headerTitle';
-import WizardStepper from '@/components/shared/wizardSteper';
+import SelectStepGender from '@/components/shared/forms/selectStepGender';
+import { StepForm } from '@/components/shared/forms/auth/stepForm';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { HStack } from '@/components/ui/hstack';
@@ -17,6 +15,8 @@ import { t } from 'i18next';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import WizardStepper from '@/components/common/wizardSteper';
+import HeaderTitle from '@/components/common/headerTitle';
 
 const stepOneSchema = z.object({
   firstname: z.string().min(1),

@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { Svg, Path } from 'react-native-svg';
 import { Animated } from 'react-native';
-import { getAnimatedColors, useIconAnimation } from '@/components/animationIcons';
+import { getAnimatedColors, useIconAnimation } from '@/hooks/animationIcons';
 
 interface TodoIconProps {
   focused: boolean;
@@ -16,7 +16,7 @@ const TodoIcon = ({ focused }: TodoIconProps) => {
   const strokeColor = getAnimatedColors(animation, 'transparent', Colors.main.primaryLight);
 
   return (
-    <Svg width="27" height="27" viewBox="0 0 23 24" fill="none">
+    <Svg width="28" height="28" viewBox="0 0 23 24" fill="none">
       <AnimatedPath
         fillRule="evenodd"
         clipRule="evenodd"

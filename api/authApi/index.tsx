@@ -5,7 +5,7 @@ export const sendMassageAction = async (identifier: string): Promise<AuthResult>
   try {
     const response = await api.post('auth/request-otp/', { identifier });
 
-    if (response.status == 200) {
+    if (response.status === 200) {
       return {
         success: true,
         status: response.data.status,
@@ -36,7 +36,7 @@ export const sendMassageAction = async (identifier: string): Promise<AuthResult>
 export const sendOtpAction = async (identifier: string, code: string): Promise<AuthResult> => {
   try {
     const response = await api.post('auth/verify-otp/', { identifier, code });
-    if (response.status == 200) {
+    if (response.status === 200) {
       return {
         success: true,
         status: response.data.status,

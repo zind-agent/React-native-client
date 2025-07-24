@@ -3,10 +3,10 @@ import { MotiView } from 'moti';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '@/constants/Colors';
-import { Box } from '../ui/box';
 import { useAppStore } from '@/store/appState';
-import { Text } from '../Themed';
 import { useWizardStore } from '@/store/wizardFormState';
+import { Box } from '../ui/box';
+import { Text } from '../Themed';
 
 const WizardStepper = () => {
   const { t } = useTranslation();
@@ -87,7 +87,7 @@ const WizardStepper = () => {
             </Box>
 
             {!isLast && (
-              <Box className="absolute top-[18px] h-0.5 z-0" style={{ left: language == 'fa' ? '-60%' : '60%', right: language == 'fa' ? '60%' : '-60%' }}>
+              <Box className="absolute top-[18px] h-0.5 z-0" style={{ left: language === 'fa' ? '-60%' : '60%', right: language === 'fa' ? '60%' : '-60%' }}>
                 <Box className="absolute w-full h-full" style={{ backgroundColor: Colors.main.primaryLight }} />
                 <MotiView
                   from={{ width: 0 }}

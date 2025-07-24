@@ -3,16 +3,16 @@ import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/Themed';
-import HeaderTitle from '@/components/shared/headerTitle';
-import WizardStepper from '@/components/shared/wizardSteper';
 import { VStack } from '@/components/ui/vstack';
 import { Colors } from '@/constants/Colors';
 import { useWizardStore } from '@/store/wizardFormState';
 import { t } from 'i18next';
 import { Pressable, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { ZindCheckbox } from '@/components/shared/checkBox';
 import { router } from 'expo-router';
 import { PriorityEnumItems } from '@/constants/PriorityEnumItems';
+import WizardStepper from '@/components/common/wizardSteper';
+import HeaderTitle from '@/components/common/headerTitle';
+import { Checkbox } from '@/components/common/checkBox';
 
 const StepTwo = () => {
   const { setStep } = useWizardStore();
@@ -58,10 +58,10 @@ const StepTwo = () => {
         <Box>
           <WizardStepper />
           <HeaderTitle title={t('priorities.title')} path={'../(wizardForm)/stepOne'} />
-          <Heading size="lg" className="px-2 mt-4" style={{ color: Colors.main10275A }}>
+          <Heading size="lg" className="px-2 mt-4" style={{ color: Colors.main.textPrimary }}>
             {t('priorities.subtitle')}
           </Heading>
-          <Text className="px-3" style={{ color: Colors.main8E9EAB }}>
+          <Text className="px-3" style={{ color: Colors.main.textPrimary }}>
             {t('priorities.description')}
           </Text>
 
@@ -80,8 +80,8 @@ const StepTwo = () => {
                   backgroundColor: selected.includes(item.key) ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
-                <ZindCheckbox checked={selected.includes(item.key)} onPress={isCheckHandler.bind(null, item.key)} />
-                <Text style={{ fontSize: 14, color: Colors.maintextPrimary }}>{t(item.label)}</Text>
+                <Checkbox checked={selected.includes(item.key)} onPress={isCheckHandler.bind(null, item.key)} />
+                <Text style={{ fontSize: 14, color: Colors.main.textPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}
           </VStack>

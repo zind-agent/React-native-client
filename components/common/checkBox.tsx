@@ -4,12 +4,12 @@ import { MotiView } from 'moti';
 import { CheckIcon } from '@/assets/Icons/Check';
 import { Colors } from '@/constants/Colors';
 
-interface ZindCheckboxProps {
+interface CheckboxProps {
   checked: boolean;
   onPress: () => void;
 }
 
-export const ZindCheckbox = ({ checked, onPress }: ZindCheckboxProps) => {
+export const Checkbox = ({ checked, onPress }: CheckboxProps) => {
   return (
     <Pressable onPress={onPress} hitSlop={10}>
       <MotiView

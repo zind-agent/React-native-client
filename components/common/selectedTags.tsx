@@ -1,9 +1,9 @@
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
-import { HStack } from '../ui/hstack';
-import { Button, ButtonText } from '../ui/button';
+import { HStack } from '../../ui/hstack';
+import { Button, ButtonText } from '../../ui/button';
 import { tags } from '@/constants/TodoAddTags';
-import { Text } from '../Themed';
+import { Text } from '../../Themed';
 
 interface SelectedTagsProps {
   field: any;

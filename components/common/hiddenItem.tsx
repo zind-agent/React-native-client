@@ -1,10 +1,10 @@
 import React from 'react';
 import { MotiView } from 'moti';
-import { Button, ButtonText } from '../ui/button';
 import { Colors } from '@/constants/Colors';
 import { Todo } from '@/storage/todoStorage';
 import { useAppStore } from '@/store/appState';
 import { HStack } from '../ui/hstack';
+import { Button, ButtonText } from '../ui/button';
 
 interface HiddenItemProps {
   item: Todo;

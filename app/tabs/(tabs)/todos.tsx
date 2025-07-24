@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import SelectYearWithMonth from '@/components/shared/form/selectYearWithMonth';
-import WeeklyDatePicker from '@/components/shared/form/weekDatePicker';
+import SelectYearWithMonth from '@/components/shared/forms/selectYearWithMonth';
+import WeeklyDatePicker from '@/components/shared/forms/weekDatePicker';
 import { Heading } from '@/components/ui/heading';
 import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
@@ -8,14 +8,12 @@ import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { useDateTime } from '@/hooks/useDateTime';
 import { Box } from '@/components/ui/box';
-import HeaderPage from '@/components/shared/headerPage';
 import TodoListView from '@/components/shared/todoListView';
 import { useTodoStore } from '@/store/todoState';
-import { Pressable, Text } from 'react-native';
 import jalaliMoment from 'jalali-moment';
 import { useAppStore } from '@/store/appState';
 import { Button, ButtonText } from '@/components/ui/button';
-import DetailTaskTodo from '@/components/shared/form/detailTodo';
+import HeaderPage from '@/components/common/headerPage';
 
 const Todos = () => {
   const { loadTodos } = useTodoStore();

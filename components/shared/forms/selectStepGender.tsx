@@ -22,7 +22,7 @@ function SelectDrawer({ selectedValue, setSelectedValue }: { selectedValue: stri
 
   return (
     <Box>
-      <Text style={{ color: Colors.main10275A }} className="px-3 mt-5">
+      <Text style={{ color: Colors.main.textPrimary }} className="px-3 mt-5">
         {t('gender')}
       </Text>
       <Button
@@ -35,7 +35,7 @@ function SelectDrawer({ selectedValue, setSelectedValue }: { selectedValue: stri
           borderColor: Colors.main.primaryLight,
         }}
       >
-        <ButtonText className="text-lg" style={{ color: selectedValue ? Colors.main10275A : Colors.main.primaryLight }}>
+        <ButtonText className="text-lg" style={{ color: selectedValue ? Colors.main.textPrimary : Colors.main.primaryLight }}>
           {selectedValue ? options.find((o) => o.value === selectedValue)?.label : t('select_gender')}
         </ButtonText>
       </Button>
@@ -44,7 +44,7 @@ function SelectDrawer({ selectedValue, setSelectedValue }: { selectedValue: stri
         <DrawerBackdrop />
         <DrawerContent style={{ backgroundColor: Colors.main.background }}>
           <DrawerHeader>
-            <Heading size="xl" style={{ color: Colors.main10275A }}>
+            <Heading size="xl" style={{ color: Colors.main.textPrimary }}>
               {t('select_gender')}
             </Heading>
           </DrawerHeader>

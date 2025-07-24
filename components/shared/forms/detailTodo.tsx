@@ -3,9 +3,9 @@ import { Colors } from '@/constants/Colors';
 import React, { memo, useEffect } from 'react';
 import { useTodoStore } from '@/store/todoState';
 import { useDrawerStore } from '@/store/drawerState';
-import Loading from '../Loading';
 import { Box } from '@/components/ui/box';
 import { Text } from '@/components/Themed';
+import Loading from '@/components/common/Loading';
 
 interface EditTodoProps {
   id: number;

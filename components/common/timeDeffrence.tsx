@@ -1,8 +1,8 @@
 import { MotiView } from 'moti';
-import { Box } from '../ui/box';
 import { Colors } from '@/constants/Colors';
-import { Text } from '../Themed';
 import { useMemo } from 'react';
+import { Box } from '../ui/box';
+import { Text } from '../Themed';
 
 const TimeDeffrence = ({ startTime, endTime }: { startTime: string; endTime: string }) => {
   const timeDifference = useMemo(() => {

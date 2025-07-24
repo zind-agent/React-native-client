@@ -8,7 +8,7 @@ import { Todo } from '@/storage/todoStorage';
 import { Icon } from '../ui/icon';
 import { ClockIcon } from '@/assets/Icons/Clock';
 import { useDrawerStore } from '@/store/drawerState';
-import DetailTaskTodo from './form/detailTodo';
+import DetailTaskTodo from './forms/detailTodo';
 
 interface ScheduleCardProps {
   task: Todo;
