@@ -4,21 +4,26 @@ import { useCallback, useEffect } from 'react';
 import { useTodoStore } from '@/store/todoState';
 import { addTodoSchema, AddTodoSchemaType } from '@/components/schema/addTodoSchema';
 import { useAppStore } from '@/store/appState';
+import { TaskStatus } from '@/constants/TaskEnum';
+import { uniqueId } from 'lodash';
 
 export const useTodoForm = (selectedDate: string) => {
-  const { addTodo, loadTodos } = useTodoStore();
+  const { createTask } = useTodoStore();
   const { setAddInTimeTodoDrawer } = useAppStore();
+  const newId = uniqueId();
 
   const form = useForm<AddTodoSchemaType>({
     resolver: zodResolver(addTodoSchema),
     defaultValues: {
       title: '',
       tags: [],
-      start_time: '',
-      end_time: '',
+      startTime: '',
+      endTime: '',
       description: '',
+      categoryId: '',
+      goalId: '',
       date: selectedDate,
-      createdAt: new Date().toISOString(),
+      createdAt: '',
       reminderDays: [],
     },
     mode: 'onSubmit',
@@ -39,9 +44,11 @@ export const useTodoForm = (selectedDate: string) => {
     reset({
       title: '',
       tags: [],
-      start_time: formatTime(now),
-      end_time: formatTime(endTime),
+      startTime: formatTime(now),
+      endTime: formatTime(endTime),
       description: '',
+      categoryId: '',
+      goalId: '',
       date: selectedDate,
       createdAt: now.toISOString(),
       reminderDays: [],
@@ -52,21 +59,22 @@ export const useTodoForm = (selectedDate: string) => {
     async (data: AddTodoSchemaType) => {
       try {
         const todoData = {
-          id: Date.now().toString(),
-          title: data.title,
-          tags: data.tags,
-          start_time: data.start_time,
-          end_time: data.end_time,
+          id: newId,
+          title: data.title.trim(),
+          description: data.description?.trim() || '',
+          tags: data.tags || [],
+          startTime: data.startTime,
+          endTime: data.endTime,
           date: data.date,
-          isCompleted: false,
-          description: data.description,
+          status: TaskStatus.PENDING,
+          categoryId: data.categoryId ?? '',
+          goalId: data.goalId ?? '',
           createdAt: data.createdAt,
-          isCancel: false,
-          reminderDays: data.reminderDays,
+          updatedAt: '',
+          reminderDays: data.reminderDays?.map(String),
         };
 
-        await addTodo(todoData).then(() => {
-          loadTodos(selectedDate);
+        await createTask(todoData).then(() => {
           reset();
           setAddInTimeTodoDrawer(false);
         });
@@ -74,7 +82,7 @@ export const useTodoForm = (selectedDate: string) => {
         console.error('Error adding todo:', error);
       }
     },
-    [addTodo, reset],
+    [createTask, reset],
   );
 
   return {

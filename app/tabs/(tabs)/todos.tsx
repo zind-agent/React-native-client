@@ -16,13 +16,13 @@ import { Button, ButtonText } from '@/components/ui/button';
 import HeaderPage from '@/components/common/headerPage';
 
 const Todos = () => {
-  const { loadTodos } = useTodoStore();
+  const { loadTasks } = useTodoStore();
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDate, setSelectedDate } = useDateTime();
   const { calender } = useAppStore();
 
   useEffect(() => {
-    loadTodos(selectedDate);
-  }, [loadTodos, selectedDate]);
+    loadTasks(selectedDate);
+  }, [loadTasks, selectedDate]);
 
   const today = jalaliMoment();
   const todayDate = calender === 'jalali' ? today.format('jYYYY-jMM-jDD') : today.format('YYYY-MM-DD');

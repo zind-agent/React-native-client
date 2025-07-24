@@ -32,7 +32,9 @@ const Language = () => {
   return (
     <View className="gap-10" style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Box className="flex items-center justify-center">
-        <Heading className="text-2xl font-roboto center">Select Languages</Heading>
+        <Heading className="text-2xl center" style={{ color: Colors.main.textSecondary }}>
+          Select Languages
+        </Heading>
         <Text>Choose your preferred language to continue</Text>
       </Box>
       <Box className="flex items-center justify-center gap-3 px-10 w-full">

@@ -43,11 +43,11 @@ export const TodoBasicFields: React.FC<TodoBasicFieldsProps> = ({ control, error
 
         <HStack className="justify-center items-center gap-2 w-full">
           <Box style={{ alignItems: 'center' }}>
-            <Controller name="start_time" control={control} render={({ field }) => <TimePicker field={field} label={t('todos.start_time')} placeholder="00:00" width="[80%]" height="12" />} />
+            <Controller name="startTime" control={control} render={({ field }) => <TimePicker field={field} label={t('todos.start_time')} placeholder="00:00" width="[80%]" height="12" />} />
           </Box>
 
           <Box style={{ alignItems: 'center' }}>
-            <Controller name="end_time" control={control} render={({ field }) => <TimePicker field={field} label={t('todos.end_time')} placeholder="00:00" width="[80%]" height="12" />} />
+            <Controller name="endTime" control={control} render={({ field }) => <TimePicker field={field} label={t('todos.end_time')} placeholder="00:00" width="[80%]" height="12" />} />
           </Box>
         </HStack>
 

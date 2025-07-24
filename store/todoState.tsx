@@ -1,135 +1,169 @@
+import { TaskStatus } from '@/constants/TaskEnum';
+import { Task, taskStorage } from '@/storage/todoStorage';
 import { create } from 'zustand';
-import { useEffect } from 'react';
-import todoStorage, { Todo } from '@/storage/todoStorage';
 
-interface TodoState {
-  todos: Todo[];
-  todo: Todo | null;
-  todayInprogressTodos: Todo[];
+export interface TodoState {
+  // Data
+  tasks: Task[];
+  todayTasks: Task[];
+  pendingTodayTasks: Task[];
+  complitedTasks: Task[];
+  selectedTask: Task | null;
+
+  // UI State
   selectedDate: string;
-  currentDate: string;
-  loading: boolean;
-  error: string | null;
-  addTodo: (todo: Todo) => Promise<void>;
-  updateTodo: (todo: Todo) => Promise<void>;
-  removeTodo: (id: string) => Promise<void>;
-  clearTodos: () => Promise<void>;
-  getTodoById: (id: string) => Promise<Todo | null>;
-  loadTodos: (date: string, filterNotCompleted?: boolean, filterNotCanceled?: boolean) => Promise<void>;
-  setTodo: (todo: Todo | null) => void;
-  editDrawer: boolean;
-  setEditDrawer: () => void;
-  openEditDrawerById: ({ taskId }: { taskId: string }) => void;
-  editLoading: boolean;
-  loadTodayInprogressTodos: (filterNotCompleted?: boolean, filterNotCanceled?: boolean) => Promise<void>;
+  today: string;
+  isLoading: boolean;
+  isEditDrawerOpen: boolean;
+  setSelectedDate: (date: string) => Promise<void>;
+  setSelectedTask: (task: Task | null) => void;
+  setEditDrawerOpen: (open: boolean) => void;
+
+  // Task Operations
+  loadTasks: (date: string) => Promise<void>;
+  loadTodayTasks: () => Promise<void>;
+  loadPendingTodayTasks: () => Promise<void>;
+  loadComplitedTasks: () => Promise<void>;
+  createTask: (task: Task) => Promise<void>;
+  updateTask: (task: Task) => Promise<void>;
+  getCompletionPercentage: () => number;
 }
 
+const getCurrentDate = (): string => new Date().toISOString().split('T')[0];
+
 export const useTodoStore = create<TodoState>((set, get) => ({
-  selectedDate: new Date().toISOString().split('T')[0],
-  todos: [],
-  currentDate: new Date().toISOString().split('T')[0],
-  todayInprogressTodos: [],
-  todo: null,
-  loading: false,
+  tasks: [],
+  todayTasks: [],
+  pendingTodayTasks: [],
+  complitedTasks: [],
+  selectedDate: getCurrentDate(),
+  today: getCurrentDate(),
+  selectedTask: null,
   error: null,
-  modalLoading: false,
-  filterNotCompleted: false,
-  filterNotCanceled: false,
-  setTodo: (todo: Todo | null) => set({ todo }),
-  editDrawer: false,
-  editLoading: false,
-  setEditDrawer: () => set({ editDrawer: false, todo: null }),
+  isLoading: false,
+  isEditDrawerOpen: false,
 
-  openEditDrawerById: async ({ taskId }: { taskId: string }) => {
-    set({ editLoading: true });
-    if (taskId) {
-      const todo = await todoStorage.getTodoById(taskId);
-      if (todo) {
-        set({ todo, editLoading: false, editDrawer: true });
+  setSelectedDate: async (date: string) => {
+    set({ selectedDate: date });
+    await get().loadTasks(date);
+  },
+
+  setSelectedTask: (task: Task | null) => {
+    set({ selectedTask: task });
+  },
+
+  setEditDrawerOpen: (open: boolean) => {
+    const state = get();
+    set({
+      isEditDrawerOpen: open,
+      selectedTask: open ? state.selectedTask : null,
+    });
+  },
+
+  loadTasks: async (date: string) => {
+    set({ isLoading: true });
+    try {
+      const tasks = await taskStorage.loadTasksByDate(date);
+      set({ tasks, isLoading: false });
+    } catch (error) {
+      console.error('Failed to load tasks:', error);
+      set({
+        isLoading: false,
+      });
+    }
+  },
+
+  createTask: async (task: Task) => {
+    set({ isLoading: true });
+    try {
+      await taskStorage.createTask(task);
+
+      const state = get();
+
+      if (task.date === state.selectedDate) {
+        await state.loadTasks(state.selectedDate);
       }
+
+      if (task.date === state.today) {
+        await state.loadTodayTasks();
+        await state.loadPendingTodayTasks();
+      }
+
+      set({ isLoading: false });
+    } catch (error) {
+      console.error('Failed to create task:', error);
+      set({
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+  updateTask: async (task: Task) => {
+    set({ isLoading: true });
+    try {
+      await taskStorage.updateTask(task);
+
+      const state = get();
+      if (task.date === state.selectedDate) {
+        await state.loadTasks(state.selectedDate);
+      }
+
+      set({ isLoading: false });
+    } catch (error) {
+      console.error('Failed to update task:', error);
+      set({
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+  loadTodayTasks: async () => {
+    set({ isLoading: true });
+    try {
+      const tasks = await taskStorage.loadTasksByDate(get().today);
+      set({ todayTasks: tasks, isLoading: false });
+    } catch (error) {
+      console.error('Failed to load today tasks:', error);
+      set({
+        isLoading: false,
+      });
     }
   },
 
-  getTodoById: async (id: string) => {
-    set({ editLoading: true });
+  loadPendingTodayTasks: async () => {
+    set({ isLoading: true });
     try {
-      const todo = await todoStorage.getTodoById(id);
-      set({ todo, editLoading: false });
-      return todo;
-    } catch (error: any) {
-      set({ editLoading: false, error: error.message });
-      return null;
+      const tasks = await taskStorage.loadTasksByDate(get().today, TaskStatus.PENDING);
+      set({ pendingTodayTasks: tasks, isLoading: false });
+    } catch (error) {
+      console.error('Failed to load today tasks:', error);
+      set({
+        isLoading: false,
+      });
     }
   },
 
-  loadTodos: async (date: string, filterNotCompleted?: boolean, filterNotCanceled?: boolean) => {
-    set({ loading: true, error: null });
+  loadComplitedTasks: async () => {
+    set({ isLoading: true });
     try {
-      const todos = await todoStorage.getTodos(date, filterNotCompleted, filterNotCanceled);
-      set({ todos, loading: false });
-    } catch (error: any) {
-      set({ loading: false, error: error.message });
+      const tasks = await taskStorage.loadTasksByDate(get().today, TaskStatus.COMPLETED);
+      set({ complitedTasks: tasks, isLoading: false });
+    } catch (error) {
+      console.error('Failed to load today tasks:', error);
+      set({
+        isLoading: false,
+      });
     }
   },
 
-  loadTodayInprogressTodos: async (filterNotCompleted?: boolean, filterNotCanceled?: boolean) => {
-    set({ loading: true, error: null });
-    try {
-      const todos = await todoStorage.getTodos(get().selectedDate, filterNotCompleted, filterNotCanceled);
-      set({ todayInprogressTodos: todos, loading: false });
-    } catch (error: any) {
-      set({ loading: false, error: error.message });
-    }
-  },
+  getCompletionPercentage: () => {
+    const tasks = get().tasks;
+    const validTasks = tasks.filter((task) => task.status !== TaskStatus.CANCELLED);
 
-  addTodo: async (todo: Todo) => {
-    set({ editLoading: true, error: null });
-    try {
-      await todoStorage.addTodo(todo);
-      set({ editLoading: false });
-    } catch (error: any) {
-      set({ editLoading: false, error: error.message });
-    }
-  },
+    if (validTasks.length === 0) return 0;
 
-  updateTodo: async (todo: Todo) => {
-    set({ loading: true, error: null });
-    try {
-      await todoStorage.updateTodo(todo).finally(() => set({ loading: false }));
-    } catch (error: any) {
-      set({ loading: false, error: error.message });
-    }
-  },
+    const completedTasks = validTasks.filter((task) => task.status === TaskStatus.COMPLETED);
 
-  removeTodo: async (id: string) => {
-    set({ loading: true, error: null });
-    try {
-      await todoStorage.deleteTodo(id);
-      const { selectedDate } = get();
-      const updatedTodos = await todoStorage.getTodos(selectedDate);
-      set({ todos: updatedTodos, loading: false });
-    } catch (error: any) {
-      set({ loading: false, error: error.message });
-    }
-  },
-
-  clearTodos: async () => {
-    set({ loading: true, error: null });
-    try {
-      const { selectedDate } = get();
-      await todoStorage.clearTodos(selectedDate);
-      set({ todos: [], loading: false });
-    } catch (error: any) {
-      set({ loading: false, error: error.message });
-    }
+    return Math.round((completedTasks.length / validTasks.length) * 100);
   },
 }));
-
-export const useTodoStoreWithInitialLoad = () => {
-  const store = useTodoStore();
-  useEffect(() => {
-    store.loadTodos(store.selectedDate);
-  }, []);
-
-  return store;
-};

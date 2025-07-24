@@ -5,7 +5,7 @@ module.exports = {
   plugins: ['react-hooks', 'import', 'react-native'],
   rules: {
     'react-hooks/exhaustive-deps': 'off',
-    'no-console': ['error', { allow: ['error'] }],
+    'no-console': ['error', { allow: ['warn', 'error'] }],
     'import/no-unresolved': 'off',
     'import/namespace': 'off',
     'react/display-name': 'off',

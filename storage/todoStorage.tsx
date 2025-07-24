@@ -1,220 +1,203 @@
+import { TaskStatus } from '@/constants/TaskEnum';
 import * as SQLite from 'expo-sqlite';
 
-export interface Todo {
+export interface Task {
   id: string;
   title: string;
-  tags: string[];
-  start_time: string;
-  end_time: string;
+  description?: string;
+  tags?: string[];
+  startTime: string;
+  endTime: string;
   date: string;
-  isCompleted: boolean;
+  status: TaskStatus;
+  reminderDays?: string[];
+  categoryId?: string;
+  goalId?: string;
   createdAt: string;
-  description: string;
-  isCancel: boolean;
+  updatedAt: string;
 }
 
-export class TodoStorage {
+export class TaskStorage {
+  private static instance: TaskStorage;
   private db: SQLite.SQLiteDatabase;
+  private isInitialized = false;
+  private initializationPromise: Promise<void> | null = null;
 
-  constructor() {
-    this.db = SQLite.openDatabaseSync('todos.zindDB');
-    this.initDB();
+  private constructor() {
+    this.db = SQLite.openDatabaseSync('tasks.taskdb');
   }
 
-  private async initDB() {
-    try {
-      await this.db.runAsync(`
-        CREATE TABLE IF NOT EXISTS todos (
-          id TEXT PRIMARY KEY,
-          title TEXT NOT NULL,
-          tags TEXT NOT NULL,
-          start_time TEXT NOT NULL,
-          end_time TEXT NOT NULL,
-          date TEXT NOT NULL,
-          description TEXT,
-          completed INTEGER NOT NULL DEFAULT 0,
-          createdAt TEXT NOT NULL,
-          is_cancel INTEGER NOT NULL DEFAULT 0
-        );
-        CREATE INDEX IF NOT EXISTS idx_todos_date ON todos (date);
-        CREATE INDEX IF NOT EXISTS idx_todos_id ON todos (id);
-        CREATE INDEX IF NOT EXISTS idx_todos_completed_cancel ON todos (completed, is_cancel);
+  public static getInstance(): TaskStorage {
+    if (!TaskStorage.instance) {
+      TaskStorage.instance = new TaskStorage();
+    }
+    return TaskStorage.instance;
+  }
+
+  public async initialize(): Promise<void> {
+    if (this.isInitialized) return;
+    if (this.initializationPromise) return this.initializationPromise;
+
+    this.initializationPromise = (async () => {
+      try {
+        const result = await this.db.getAllAsync(`
+        SELECT name FROM sqlite_master WHERE type='table' AND name='tasks';
       `);
-    } catch (error: any) {
-      console.error('خطا در مقداردهی پایگاه داده:', error);
-      throw new Error(`ناتوانی در مقداردهی پایگاه داده: ${error.message}`);
+
+        if (result.length === 0) {
+          await this.db.runAsync(`
+          CREATE TABLE tasks (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            description TEXT DEFAULT '',
+            tags TEXT NOT NULL DEFAULT '[]',
+            start_time TEXT NOT NULL,
+            end_time TEXT NOT NULL,
+            date TEXT NOT NULL,
+            status TEXT NOT NULL DEFAULT 'PENDING',
+            reminder_days TEXT NOT NULL DEFAULT '[]',
+            category_id TEXT DEFAULT NULL,
+            goal_id TEXT DEFAULT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+
+            CHECK (date LIKE '____-__-__'),
+            CHECK (start_time LIKE '__:__'),
+            CHECK (end_time LIKE '__:__'),
+            CHECK (status IN ('PENDING', 'COMPLETED', 'CANCELLED'))
+          );
+        `);
+          console.warn('[Database] Tasks table created for the first time.');
+        } else {
+          console.warn('[Database] Tasks table already exists.');
+        }
+
+        this.isInitialized = true;
+        this.initializationPromise = null;
+      } catch (error) {
+        this.initializationPromise = null;
+        console.error('Database initialization failed:', error);
+        throw new Error(`Failed to initialize database: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    })();
+
+    return this.initializationPromise;
+  }
+
+  private async ensureInitialized(): Promise<void> {
+    if (!this.isInitialized) {
+      await this.initialize();
     }
   }
 
-  private validateDateFormat(date: string): void {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-      throw new Error(`فرمت تاریخ نامعتبر است: ${date}. فرمت مورد انتظار: YYYY-MM-DD`);
-    }
+  private validateTask(task: Partial<Task>): void {
+    if (!task.id?.trim()) throw new Error('Task ID is required');
+    if (!task.title?.trim()) throw new Error('Task title is required');
+    if (!task.date?.match(/^\d{4}-\d{2}-\d{2}$/)) throw new Error('Invalid date format. Expected: YYYY-MM-DD');
+    if (!task.startTime?.match(/^\d{2}:\d{2}$/)) throw new Error('Invalid start time format. Expected: HH:MM');
+    if (!task.endTime?.match(/^\d{2}:\d{2}$/)) throw new Error('Invalid end time format. Expected: HH:MM');
+    if (!['PENDING', 'CANCELLED', 'COMPLETED'].includes(task.status ?? '')) throw new Error('Invalid status value');
   }
 
-  private todoToRow(todo: Todo) {
+  private TaskToRow(task: Task) {
     return {
-      id: todo.id,
-      title: todo.title,
-      tags: JSON.stringify(todo.tags || []),
-      start_time: todo.start_time,
-      end_time: todo.end_time,
-      date: todo.date,
-      completed: todo.isCompleted ? 1 : 0,
-      createdAt: todo.createdAt,
-      description: todo.description,
-      is_cancel: todo.isCancel ? 1 : 0,
+      id: task.id,
+      title: task.title.trim(),
+      description: task.description?.trim() || '',
+      tags: JSON.stringify(task.tags || []),
+      start_time: task.startTime,
+      end_time: task.endTime,
+      date: task.date,
+      status: task.status,
+      category_id: task.categoryId ?? null,
+      reminder_days: JSON.stringify(task.reminderDays || []),
+      goal_id: task.goalId ?? null,
+      created_at: task.createdAt,
+      updated_at: task.updatedAt,
     };
   }
 
-  private rowToTodo(row: any): Todo {
+  private rowToTask(row: any): Task {
+    return {
+      id: row.id,
+      title: row.title,
+      description: row.description,
+      tags: JSON.parse(row.tags ?? '[]'),
+      startTime: row.start_time,
+      endTime: row.end_time,
+      date: row.date,
+      status: row.status as TaskStatus,
+      reminderDays: JSON.parse(row.reminder_days ?? '[]'),
+      categoryId: row.category_id ?? undefined,
+      goalId: row.goal_id ?? undefined,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    };
+  }
+
+  public async createTask(task: Task): Promise<void> {
+    await this.ensureInitialized();
+    this.validateTask(task);
+
     try {
-      return {
-        id: row.id,
-        title: row.title,
-        tags: row.tags ? JSON.parse(row.tags) : [],
-        start_time: row.start_time,
-        end_time: row.end_time,
-        date: row.date,
-        description: row.description,
-        isCompleted: !!row.completed,
-        createdAt: row.createdAt,
-        isCancel: !!row.is_cancel,
-      };
-    } catch (error: any) {
-      console.error(`خطا در تبدیل ردیف به Todo برای id ${row.id}:`, error);
-      throw new Error(`ناتوانی در تبدیل ردیف به Todo: ${error.message}`);
+      const row = this.TaskToRow(task);
+      await this.db.runAsync(
+        `INSERT INTO tasks (
+            id, title, description, tags, start_time, end_time,
+            date, status, category_id, goal_id, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [row.id, row.title, row.description, row.tags, row.start_time, row.end_time, row.date, row.status, row.category_id, row.goal_id, row.created_at, row.updated_at],
+      );
+    } catch (error) {
+      console.error(`Failed to create task with ID ${task.id}:`, error);
+      throw new Error(`Failed to create task: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
-  async saveTodos(todos: Todo[], date: string): Promise<void> {
-    this.validateDateFormat(date);
+  public async updateTask(task: Task): Promise<void> {
+    await this.ensureInitialized();
+    this.validateTask(task);
+
     try {
-      await this.db.runAsync('BEGIN TRANSACTION;');
-      await this.db.runAsync('DELETE FROM todos WHERE date = ?', [date]);
-      for (const todo of todos) {
-        const row = this.todoToRow(todo);
-        await this.db.runAsync(
-          `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt, is_cancel) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel],
-        );
+      const row = this.TaskToRow(task);
+      const result = await this.db.runAsync(
+        `UPDATE tasks SET
+            title = ?, description = ?, tags = ?, start_time = ?, end_time = ?,
+            date = ?, status = ?, category_id = ?, goal_id = ?, updated_at = ?
+          WHERE id = ?`,
+        [row.title, row.description, row.tags, row.start_time, row.end_time, row.date, row.status, row.category_id, row.goal_id, new Date().toISOString(), row.id],
+      );
+
+      if (result.changes === 0) {
+        throw new Error(`Task with ID ${task.id} not found`);
       }
-      await this.db.runAsync('COMMIT;');
-    } catch (error: any) {
-      await this.db.runAsync('ROLLBACK;');
-      console.error(`خطا در ذخیره تسک‌ها برای تاریخ ${date}:`, error);
-      throw new Error(`ناتوانی در ذخیره تسک‌ها: ${error.message}`);
+    } catch (error) {
+      console.error(`Failed to update task with ID ${task.id}:`, error);
+      throw new Error(`Failed to update task: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
-  async getTodoById(id: string): Promise<Todo | null> {
-    try {
-      const result = await this.db.getFirstAsync('SELECT * FROM todos WHERE id = ?', [id]);
-      if (!result) return null;
-      return this.rowToTodo(result);
-    } catch (error: any) {
-      console.error(`خطا در دریافت تسک با شناسه ${id}:`, error);
-      throw new Error(`ناتوانی در دریافت تسک: ${error.message}`);
+  public async loadTasksByDate(date: string, status?: TaskStatus): Promise<Task[]> {
+    await this.ensureInitialized();
+    if (!date?.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      throw new Error('Invalid date format. Expected: YYYY-MM-DD');
     }
-  }
 
-  async getTodos(date: string, filterNotCompleted: boolean = false, filterNotCanceled: boolean = false): Promise<Todo[]> {
-    this.validateDateFormat(date);
     try {
-      let query = 'SELECT * FROM todos WHERE date = ?';
-      const params = [date];
+      let query = 'SELECT * FROM tasks WHERE date = ?';
+      let params: any[] = [date];
 
-      if (filterNotCompleted || filterNotCanceled) {
-        const conditions = [];
-        if (filterNotCompleted) conditions.push('completed = 0');
-        if (filterNotCanceled) conditions.push('is_cancel = 0'); // اصلاح: غیرلغوشده
-        query += ` AND ${conditions.join(' AND ')}`;
+      if (status) {
+        query += ' AND status = ?';
+        params.push(status);
       }
-
-      query += ' ORDER BY createdAt DESC';
       const results = await this.db.getAllAsync(query, params);
-      return (results as any[]).map((row) => this.rowToTodo(row));
-    } catch (error: any) {
-      console.error(`خطا در دریافت تسک‌ها برای تاریخ ${date}:`, error);
-      throw new Error(`ناتوانی در دریافت تسک‌ها: ${error.message}`);
-    }
-  }
-
-  async addTodo(todo: Todo): Promise<void> {
-    if (!todo.id || !todo.title || !todo.date) {
-      throw new Error('شناسه، عنوان یا تاریخ تسک نمی‌تواند خالی باشد.');
-    }
-    try {
-      const row = this.todoToRow(todo);
-      await this.db.runAsync(
-        `INSERT INTO todos (id, title, tags, start_time, end_time, date, completed, createdAt, is_cancel) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [row.id, row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel],
-      );
-    } catch (error: any) {
-      console.error(`خطا در افزودن تسک با شناسه ${todo.id}:`, error);
-      throw new Error(`ناتوانی در افزودن تسک: ${error.message}`);
-    }
-  }
-
-  async updateTodo(todo: Todo): Promise<void> {
-    if (!todo.id || !todo.title || !todo.date) {
-      throw new Error('شناسه، عنوان یا تاریخ تسک نمی‌تواند خالی باشد.');
-    }
-    try {
-      const row = this.todoToRow(todo);
-      await this.db.runAsync(
-        `UPDATE todos SET title = ?, tags = ?, start_time = ?, end_time = ?, 
-         date = ?, completed = ?, createdAt = ?, is_cancel = ? WHERE id = ?`,
-        [row.title, row.tags, row.start_time, row.end_time, row.date, row.completed, row.createdAt, row.is_cancel, row.id],
-      );
-    } catch (error: any) {
-      console.error(`خطا در به‌روزرسانی تسک با شناسه ${todo.id}:`, error);
-      throw new Error(`ناتوانی در به‌روزرسانی تسک: ${error.message}`);
-    }
-  }
-
-  async deleteTodo(id: string): Promise<void> {
-    if (!id) throw new Error('شناسه تسک نمی‌تواند خالی باشد.');
-    try {
-      await this.db.runAsync('DELETE FROM todos WHERE id = ?', [id]);
-    } catch (error: any) {
-      console.error(`خطا در حذف تسک با شناسه ${id}:`, error);
-      throw new Error(`ناتوانی در حذف تسک: ${error.message}`);
-    }
-  }
-
-  async clearTodos(date: string): Promise<void> {
-    this.validateDateFormat(date);
-    try {
-      await this.db.runAsync('DELETE FROM todos WHERE date = ?', [date]);
-    } catch (error: any) {
-      console.error(`خطا در پاک کردن تسک‌ها برای تاریخ ${date}:`, error);
-      throw new Error(`ناتوانی در پاک کردن تسک‌ها: ${error.message}`);
-    }
-  }
-
-  async clearAllTodos(): Promise<void> {
-    try {
-      await this.db.runAsync('DELETE FROM todos');
-    } catch (error: any) {
-      console.error('خطا در پاک کردن همه تسک‌ها:', error);
-      throw new Error(`ناتوانی در پاک کردن همه تسک‌ها: ${error.message}`);
-    }
-  }
-
-  async getAllDates(): Promise<string[]> {
-    try {
-      const results = await this.db.getAllAsync('SELECT DISTINCT date FROM todos ORDER BY date DESC');
-      return (results as any[]).map((row) => row.date);
-    } catch (error: any) {
-      console.error('خطا در دریافت تاریخ‌ها:', error);
-      throw new Error(`ناتوانی در دریافت تاریخ‌ها: ${error.message}`);
+      return results.map((row: any) => this.rowToTask(row));
+    } catch (error) {
+      console.error(`Failed to get tasks for date ${date}:`, error);
+      throw new Error(`Failed to get tasks: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 }
 
-const todoStorage = new TodoStorage();
-
-export default todoStorage;
+export const taskStorage = TaskStorage.getInstance();

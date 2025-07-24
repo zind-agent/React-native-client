@@ -11,11 +11,10 @@ import { t } from 'i18next';
 import { useTodoForm } from '@/hooks/useTodoForm';
 import { TodoBasicFields } from '../todoBaseField';
 import { TodoAdvancedFields } from '../todoAdvancedField';
-import Loading from '@/components/common/Loading';
 
 const AddTodoInTime = memo(() => {
   const { addInTimeTodoDrawer, setAddInTimeTodoDrawer } = useAppStore();
-  const { editLoading, selectedDate } = useTodoStore();
+  const { selectedDate } = useTodoStore();
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const { form, onSubmit } = useTodoForm(selectedDate);
@@ -26,12 +25,8 @@ const AddTodoInTime = memo(() => {
     watch,
   } = form;
 
-  const startTime = watch('start_time');
-  const endTime = watch('end_time');
-
-  if (editLoading) {
-    return <Loading />;
-  }
+  const startTime = watch('startTime');
+  const endTime = watch('endTime');
 
   return (
     <Drawer isOpen={addInTimeTodoDrawer} onClose={() => setAddInTimeTodoDrawer(false)} size="lg" anchor="bottom" className="bg-black/50">
@@ -60,7 +55,6 @@ const AddTodoInTime = memo(() => {
             </Accordion>
 
             <Button onPress={handleSubmit(onSubmit)} className="w-full h-16 rounded-lg" style={{ backgroundColor: Colors.main.primary }}>
-              {editLoading && <Loading />}
               <ButtonText className="text-xl" style={{ color: Colors.main.background, fontWeight: '800' }}>
                 {t('submit')}
               </ButtonText>
