@@ -17,13 +17,13 @@ module.exports = function (api) {
         'module-resolver',
         {
           root: ['./'],
-
           alias: {
             '@': './',
             'tailwind.config': './tailwind.config.js',
           },
         },
       ],
+      'react-native-reanimated/plugin', // ✅ اضافه شود و همیشه آخرین پلاگین باشد
     ],
   };
 };

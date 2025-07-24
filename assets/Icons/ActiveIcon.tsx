@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { Svg, Path } from 'react-native-svg';
-import { Animated, Easing } from 'react-native';
-import { useEffect, useRef } from 'react';
+import { Animated } from 'react-native';
+import { getAnimatedColors, useIconAnimation } from '@/hooks/animationIcons';
 
 interface ActiveIconProps {
   focused: boolean;
@@ -10,26 +10,10 @@ interface ActiveIconProps {
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const ActiveIcon = ({ focused }: ActiveIconProps) => {
-  const animation = useRef(new Animated.Value(focused ? 1 : 0)).current;
+  const animation = useIconAnimation(focused);
 
-  useEffect(() => {
-    Animated.timing(animation, {
-      toValue: focused ? 1 : 0,
-      duration: 100,
-      easing: Easing.inOut(Easing.ease),
-      useNativeDriver: false,
-    }).start();
-  }, [focused]);
-
-  const fillColor = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [Colors.light.primary, Colors.light.surface],
-  });
-
-  const strokeColor = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['transparent', Colors.light.light],
-  });
+  const fillColor = getAnimatedColors(animation, Colors.main.primary, 'transparent');
+  const strokeColor = getAnimatedColors(animation, 'transparent', Colors.main.primaryLight);
 
   return (
     <Svg width="27" height="27" viewBox="0 0 24 24" fill="none">
@@ -43,17 +27,11 @@ const ActiveIcon = ({ focused }: ActiveIconProps) => {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <Path
-        d="M6.14697 14.0231L9.30353 9.92155L12.9041 12.748L15.9932 8.76144"
-        stroke={Colors.light.light}
-        strokeWidth="1.58197"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <Path d="M6.14697 14.0231L9.30353 9.92155L12.9041 12.748L15.9932 8.76144" stroke={Colors.main.primaryLight} strokeWidth="1.58197" strokeLinecap="round" strokeLinejoin="round" />
 
       <Path
         d="M19.5938 0.834955C20.7138 0.834955 21.6208 1.74195 21.6208 2.86199C21.6208 3.98097 20.7138 4.88902 19.5938 4.88902C18.4738 4.88902 17.5668 3.98097 17.5668 2.86199C17.5668 1.74195 18.4738 0.834955 19.5938 0.834955Z"
-        stroke={Colors.light.light}
+        stroke={focused ? Colors.main.primaryLight : Colors.main.primary}
         strokeWidth="1.58197"
         strokeLinecap="round"
         strokeLinejoin="round"

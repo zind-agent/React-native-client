@@ -18,7 +18,7 @@ module.exports = {
         success: {
           DEFAULT: '#A5D8FF',
         },
-        surface: {
+        background: {
           DEFAULT: '#F7F9FB',
         },
         text: {
@@ -28,7 +28,6 @@ module.exports = {
         black: '#121212',
       },
       fontFamily: {
-        ibmpLight: 'IBMPLight',
         ibmpRegular: 'IBMPRegular',
         ibmpBold: 'IBMPLexSansThaiLooped-Bold',
         heading: ['DanaBold'],

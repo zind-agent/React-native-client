@@ -1,17 +1,22 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import 'react-native-reanimated';
 import 'react-native-gesture-handler';
+import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { Slot } from 'expo-router';
 import '../i18n';
-
 import '../global.css';
-import Loading from '@/components/shared/Loading';
 import { LanguageGate } from '@/constants/LanguageGate';
 import { ToastProvider } from '@gluestack-ui/toast';
+import Loading from '@/components/common/Loading';
+
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
+});
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -19,10 +24,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    IBMPLight: require('../assets/fonts/IBMPlexSansThaiLooped-Light.ttf'),
     IBMPRegular: require('../assets/fonts/IBMPlexSansThaiLooped-Regular.ttf'),
     IBMPBold: require('../assets/fonts/IBMPlexSansThaiLooped-Bold.ttf'),
-    DanaMedium: require('../assets/fonts/medium.ttf'),
     DanaBold: require('../assets/fonts/bold.ttf'),
     DanaReguler: require('../assets/fonts/regular.ttf'),
     ...FontAwesome.font,
@@ -44,12 +47,12 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <LanguageGate>
-      <GluestackUIProvider>
-        <ToastProvider>
+    <GluestackUIProvider>
+      <ToastProvider>
+        <LanguageGate>
           <Slot />
-        </ToastProvider>
-      </GluestackUIProvider>
-    </LanguageGate>
+        </LanguageGate>
+      </ToastProvider>
+    </GluestackUIProvider>
   );
 }

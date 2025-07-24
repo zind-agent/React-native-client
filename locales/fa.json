@@ -1,5 +1,5 @@
 {
-  "welcome_to_home": "به خانه خوش آمدید",
+  "welcome_to_zind": "خوش آمدید به زیند",
   "hi": "سلام",
   "mobile_placeholder": "شماره مبایل خود را وارد کنید",
   "clear_storage": "پاک کردن ذخیره‌سازی",
@@ -133,6 +133,38 @@
     "pending": "در جریان",
     "cancel": "لغو شده",
     "today_task": "امروز برنامه ها",
-    "view_all": "بیشتر"
-  }
+    "view_all": "بیشتر",
+    "today_progress_summery": "امروز برنامه های کار شده",
+    "no_task": "هیچ برنامه فعالی نداری از دکمه ایجاد میتونی ماموریت اضافه کنید",
+    "add_task": "افزودن برنامه"
+  },
+  "todos": {
+    "todo_list": "لیست کار",
+    "day_of_week": "روز در هفته",
+    "confirm": "انتخاب",
+    "today": "امروز",
+    "any_schedule": "هیچ برنامه فعالی نداری از دکمه ایجاد میتونی ماموریت اضافه کنید",
+    "add_todo_in_time": "افزودن برنامه در زمان فعالیت",
+    "append_title_required": "عنوان ماموریت الزامی است",
+    "append_time_required": "زمان الزامی است",
+    "min": "دقیقه",
+    "hour": "ساعت",
+    "untile": "تا",
+    "is_completed": "کار تکمیل شده است؟",
+    "start_time": "شروع زمان",
+    "end_time": "پایان زمان",
+    "add_by_ai": "افزودن با هوش مصنوعی",
+    "is_cancel": "لغو شده است؟",
+    "date": "تاریخ",
+    "edit_event": "ویرایش برنامه",
+    "write_description_todo": "نوشتن توضیحات برای این برنامه"
+  },
+
+  "select_reminder_days": "انتخاب رویداد های مهم",
+  "create_event": "ایجاد رویداد",
+  "add": "افزودن",
+  "title": "عنوان",
+  "tags": "برچسب ها",
+  "submit": "ثبت",
+  "options": "پیشرفته"
 }

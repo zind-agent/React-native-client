@@ -7,7 +7,8 @@
     "orientation": "portrait",
     "icon": "./assets/logo.png",
     "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
+    "jsEngine": "hermes",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
@@ -35,7 +36,8 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true
@@ -45,7 +47,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "4c944ca2-1431-4c38-9baa-f90f2f93af92"
+        "projectId": "b28be585-668b-4a49-94b8-47d8d7250814"
       }
     }
   }

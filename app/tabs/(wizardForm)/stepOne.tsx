@@ -1,7 +1,5 @@
-import SelectStepGender from '@/components/shared/form/selectStepGender';
-import { StepForm } from '@/components/shared/form/stepForm';
-import HeaderTitle from '@/components/shared/headerTitle';
-import WizardStepper from '@/components/shared/wizardSteper';
+import SelectStepGender from '@/components/shared/forms/selectStepGender';
+import { StepForm } from '@/components/shared/forms/auth/stepForm';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { HStack } from '@/components/ui/hstack';
@@ -17,6 +15,8 @@ import { t } from 'i18next';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import WizardStepper from '@/components/common/wizardSteper';
+import HeaderTitle from '@/components/common/headerTitle';
 
 const stepOneSchema = z.object({
   firstname: z.string().min(1),
@@ -107,15 +107,15 @@ const StepOne = () => {
           name="description"
           render={({ field, fieldState }) => (
             <VStack>
-              <Text style={{ color: Colors.light.darkBlue }} className="mt-5">
+              <Text style={{ color: Colors.main.textPrimary }} className="mt-5">
                 {t('description')}
               </Text>
               <Textarea
                 className="my-1 w-full rounded-xl px-4 h-[150px]"
                 style={{
-                  backgroundColor: Colors.light.surface,
+                  backgroundColor: Colors.main.background,
                   borderWidth: 1,
-                  borderColor: Colors.light.light,
+                  borderColor: Colors.main.primaryLight,
                 }}
                 size="sm"
                 isReadOnly={false}
@@ -128,7 +128,7 @@ const StepOne = () => {
                   placeholder={t('write_description_placeholder')}
                   className="h-10 items-start"
                   style={{ textAlignVertical: 'top' }}
-                  placeholderTextColor={Colors.light.light}
+                  placeholderTextColor={Colors.main.primaryLight}
                 />
               </Textarea>
             </VStack>
@@ -138,9 +138,9 @@ const StepOne = () => {
       <Button
         className="rounded-xl h-[50px] mt-3"
         style={{
-          backgroundColor: Colors.light.primary,
+          backgroundColor: Colors.main.primary,
           borderWidth: 1,
-          borderColor: Colors.light.light,
+          borderColor: Colors.main.primaryLight,
         }}
         onPress={handleSubmit(onSubmit)}
       >

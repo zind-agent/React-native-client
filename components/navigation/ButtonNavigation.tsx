@@ -2,80 +2,122 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable } from '../ui/pressable';
 import { Colors } from '@/constants/Colors';
-import React, { useEffect, useRef } from 'react';
-import { Animated, Platform } from 'react-native';
-import { useAppStore } from '@/store/appState';
+import React, { useCallback, useMemo } from 'react';
+import { View, Dimensions } from 'react-native';
+import { MotiView, motify } from 'moti';
+import { interpolateColor, useSharedValue, withTiming } from 'react-native-reanimated';
+import AddButton from '../common/addButton';
+
+interface TabBarIconProps {
+  focused: boolean;
+  color: string;
+  size: number;
+}
+
+type TabBarIcon = React.ComponentType<TabBarIconProps>;
+
+const MotiPressable = motify(Pressable)();
+
+const BUTTON_SIZE = 64;
+const ANIMATION_DURATION = 150;
+const TAB_HEIGHT = 57;
+const HORIZONTAL_MARGIN = 16;
+
+const TabButton = React.memo<{
+  route: any;
+  index: number;
+  isFocused: boolean;
+  onPress: () => void;
+  IconComponent?: TabBarIcon;
+}>(({ route, isFocused, onPress, IconComponent }) => {
+  const animatedValue = useSharedValue(isFocused ? 1 : 0);
+
+  React.useEffect(() => {
+    animatedValue.value = withTiming(isFocused ? 1 : 0, {
+      duration: ANIMATION_DURATION,
+    });
+  }, [isFocused, animatedValue]);
+
+  const animatedStyle = useMemo(
+    () => ({
+      color: interpolateColor(animatedValue.value, [0, 1], [Colors.main.primaryLight, Colors.main.primary]),
+    }),
+    [animatedValue],
+  );
+
+  return (
+    <MotiPressable key={route.key} onPress={onPress} style={styles.tabButton} animate={{ scale: isFocused ? 1.1 : 1 }} transition={{ type: 'timing', duration: ANIMATION_DURATION }}>
+      {IconComponent && <IconComponent focused={isFocused} color={animatedStyle.color} size={24} />}
+    </MotiPressable>
+  );
+});
+
+TabButton.displayName = 'TabButton';
 
 export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   const insets = useSafeAreaInsets();
-  const { hideTabBar } = useAppStore();
+  const screenWidth = useMemo(() => Dimensions.get('window').width, []);
+  const visibleRoutes = useMemo(() => state.routes.filter((route) => route.name !== 'addTodoAi' && route.name !== 'addTodo'), [state.routes]);
 
-  const animatedTranslate = useRef(new Animated.Value(0)).current;
+  const handleTabPress = useCallback(
+    (routeName: string, isFocused: boolean) => {
+      if (!isFocused) {
+        navigation.navigate(routeName);
+      }
+    },
+    [navigation],
+  );
 
-  useEffect(() => {
-    Animated.timing(animatedTranslate, {
-      toValue: hideTabBar ? 100 : 0,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
-  }, [hideTabBar]);
+  const addButtonPosition = useMemo(
+    () => ({
+      position: 'absolute' as const,
+      top: -BUTTON_SIZE / 1.5,
+      left: screenWidth - BUTTON_SIZE - 45,
+      zIndex: 10,
+    }),
+    [screenWidth],
+  );
 
-  const animatedValues = useRef(state.routes.map((_, i) => new Animated.Value(state.index === i ? 1 : 0))).current;
-
-  useEffect(() => {
-    animatedValues.forEach((val, i) => {
-      Animated.timing(val, {
-        toValue: state.index === i ? 1 : 0,
-        duration: 450,
-        useNativeDriver: false,
-      }).start();
-    });
-  }, [state.index]);
+  const containerStyle = useMemo(
+    () => ({
+      bottom: insets.bottom,
+      backgroundColor: Colors.main.border,
+    }),
+    [insets.bottom],
+  );
 
   return (
-    <Animated.View
-      className="absolute flex-row justify-between mb-3 rounded-xl h-[77px] left-0 right-0 mx-4"
-      style={{
-        bottom: insets.bottom + 0,
-        backgroundColor: Colors.light.card,
-        transform: [{ translateY: animatedTranslate }],
+    <MotiView style={[styles.container, containerStyle]} animate={{ translateY: 0 }} from={{ translateY: 100 }} transition={{ type: 'timing', duration: 300 }}>
+      <View style={addButtonPosition}>
+        <AddButton />
+      </View>
 
-        ...Platform.select({
-          ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.2,
-            shadowRadius: 4,
-          },
-          android: { elevation: 1 },
-        }),
-      }}
-    >
-      {state.routes.map((route, index) => {
+      {visibleRoutes.map((route, index) => {
         const { options } = descriptors[route.key];
-        const isFocused = state.index === index;
-
-        const onPress = () => {
-          if (!isFocused) navigation.navigate(route.name);
-        };
-
+        const isFocused = state.index === state.routes.indexOf(route);
         const IconComponent = options.tabBarIcon;
 
-        const animatedColor = animatedValues[index].interpolate({
-          inputRange: [0, 1],
-          outputRange: [Colors.light.light, Colors.light.primary],
-        });
-
-        return (
-          <Pressable key={route.key} onPress={onPress} style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-            {IconComponent?.({
-              focused: isFocused,
-              color: animatedColor as any,
-              size: 24,
-            })}
-          </Pressable>
-        );
+        return <TabButton key={route.key} route={route} index={index} isFocused={isFocused} onPress={() => handleTabPress(route.name, isFocused)} IconComponent={IconComponent} />;
       })}
-    </Animated.View>
+    </MotiView>
   );
+};
+
+const styles = {
+  container: {
+    position: 'absolute' as const,
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    marginBottom: 12,
+    borderRadius: 14,
+    height: TAB_HEIGHT,
+    left: 0,
+    right: 0,
+    marginHorizontal: HORIZONTAL_MARGIN,
+  },
+  tabButton: {
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    flex: 1,
+  },
 };

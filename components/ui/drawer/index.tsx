@@ -57,7 +57,7 @@ const drawerBackdropStyle = tva({
 });
 
 const drawerContentStyle = tva({
-  base: 'bg-background-0 overflow-scroll border-outline-100 p-6 absolute',
+  base: 'overflow-scroll p-6 absolute',
   parentVariants: {
     size: {
       sm: 'w-1/4',
@@ -167,10 +167,10 @@ const DrawerBackdrop = React.forwardRef<React.ElementRef<typeof UIDrawer.Backdro
       transition={{
         type: 'spring',
         damping: 18,
-        stiffness: 250,
+        stiffness: 450,
         opacity: {
           type: 'timing',
-          duration: 250,
+          duration: 150,
         },
       }}
       {...props}
@@ -186,15 +186,10 @@ const DrawerContent = React.forwardRef<React.ElementRef<typeof UIDrawer.Content>
 
   const drawerHeight = screenHeight * (sizes[parentSize] || sizes.md);
   const drawerWidth = screenWidth * (sizes[parentSize] || sizes.md);
-
   const isHorizontal = parentAnchor === 'left' || parentAnchor === 'right';
-
   const initialObj = isHorizontal ? { x: parentAnchor === 'left' ? -drawerWidth : drawerWidth } : { y: parentAnchor === 'top' ? -drawerHeight : drawerHeight };
-
   const animateObj = isHorizontal ? { x: 0 } : { y: 0 };
-
   const exitObj = isHorizontal ? { x: parentAnchor === 'left' ? -drawerWidth : drawerWidth } : { y: parentAnchor === 'top' ? -drawerHeight : drawerHeight };
-
   const customClass = isHorizontal ? `top-0 ${parentAnchor === 'left' ? 'left-0' : 'right-0'}` : `left-0 ${parentAnchor === 'top' ? 'top-0' : 'bottom-0'}`;
 
   return (
@@ -205,7 +200,7 @@ const DrawerContent = React.forwardRef<React.ElementRef<typeof UIDrawer.Content>
       exit={exitObj}
       transition={{
         type: 'timing',
-        duration: 300,
+        duration: 200,
       }}
       {...props}
       className={drawerContentStyle({

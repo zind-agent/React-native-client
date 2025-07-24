@@ -1,25 +1,31 @@
 export const Colors = {
-  light: {
-    surface: '#F7F9FB',
+  main: {
+    background: '#121212',
+    cardBackground: '#1E1E1E',
+    border: '#2C2C2E',
+
     primary: '#5C6BC0',
+    primaryLight: '#9FA8DA',
+    primaryDark: '#3949AB',
+
     accent: '#FF6B6B',
-    success: '#A5D8FF',
-    text: '#1C1C1E',
-    subtext: '#8E9EAB',
-    button: '#536DFE',
-    card: '#F9FAFD',
-    border: '#E0E0E0',
-    light: '#C6CEDD',
-    darkBlue: '#10275A',
-    warning: '#ff9800',
-    info: '#2196f3',
+    success: '#64B5F6',
+    warning: '#FFA726',
+    info: '#42A5F5',
+
+    textPrimary: '#FFFFFF',
+    textSecondary: '#B0B0B0',
+
+    button: '#5C6BC0',
+
+    lightBlue: '#1A237E',
 
     tag: {
       office: 'rgba(179, 157, 219, 0.5)',
+      home: '#F48FB1',
       homeOpacity: 'rgba(244, 143, 177, 0.5)',
       urgent: 'rgba(255, 138, 101, 0.5)',
       work: 'rgba(129, 199, 132, 0.5)',
-      home: '#F48FB1',
     },
   },
 

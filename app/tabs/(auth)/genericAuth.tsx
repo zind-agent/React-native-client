@@ -1,5 +1,5 @@
 import BackIcon from '@/assets/Icons/Back';
-import { AuthForm } from '@/components/shared/form/authForm';
+import { AuthForm } from '@/components/shared/forms/auth/authForm';
 import { Text } from '@/components/Themed';
 import { Box } from '@/components/ui/box';
 import { Button, ButtonIcon, ButtonText } from '@/components/ui/button';
@@ -8,7 +8,6 @@ import { Colors } from '@/constants/Colors';
 import { useAppStore } from '@/store/appState';
 import { router } from 'expo-router';
 import React, { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Platform } from 'react-native';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,10 +17,10 @@ import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import GoogleIcon from '@/assets/Icons/Google';
 import MailIcon from '@/assets/Icons/Mail';
-import Loading from '@/components/shared/Loading';
-import { CodeForm } from '@/components/shared/form/codeForm';
-import { useShowToast } from '@/components/shared/customToast';
 import { t } from 'i18next';
+import { useShowToast } from '@/components/common/customToast';
+import { CodeForm } from '@/components/shared/forms/auth/codeForm';
+import Loading from '@/components/common/Loading';
 
 const emailSchema = z.object({
   identifier: z.string().min(1, { message: 'email required' }).email({ message: 'email invalid' }),
@@ -67,23 +66,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
     },
   } as const;
 
-  if (!authType) {
-    return (
-      <VStack className="flex-1 justify-center items-center">
-        <Text>Error: authType not provided</Text>
-      </VStack>
-    );
-  }
-
   const identifierSchema = schemas[authType];
-  if (!identifierSchema) {
-    console.error(`Schema not found for authType: ${authType}`);
-    return (
-      <VStack className="flex-1 justify-center items-center">
-        <Text>Error: Invalid authType: {authType}</Text>
-      </VStack>
-    );
-  }
 
   const config = authConfigs[authType];
   const combinedSchema = identifierSchema.merge(codeSchema);
@@ -176,7 +159,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
       <Box
         className="h-max rounded-b-[40] pb-10"
         style={{
-          backgroundColor: Colors.light.primary,
+          backgroundColor: Colors.main.primary,
           ...Platform.select({
             ios: {
               shadowColor: '#000',
@@ -191,10 +174,10 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         <Button
           className="w-[40px] h-[40px] rounded-xl shadow-button mt-10 mx-10"
           style={{
-            backgroundColor: Colors.light.surface,
+            backgroundColor: Colors.main.background,
             transform: language === 'fa' ? [{ rotate: '180deg' }] : [],
           }}
-          onPress={() => router.push('/tabs/profile')}
+          onPress={() => router.push('/tabs/(tabs)')}
         >
           <BackIcon />
         </Button>
@@ -203,7 +186,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
           <Heading size="2xl" className="text-white">
             {t(config.title)}
           </Heading>
-          <Text style={{ color: Colors.light.surface }}>{t('Your privacy and security are our top priorities')}</Text>
+          <Text style={{ color: Colors.main.background }}>{t('Your privacy and security are our top priorities')}</Text>
 
           <Controller
             name="identifier"
@@ -249,7 +232,7 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         <Button
           isDisabled={!canSubmit}
           style={{
-            backgroundColor: canSubmit ? Colors.light.primary : Colors.light.light,
+            backgroundColor: canSubmit ? Colors.main.primary : Colors.main.primaryLight,
             opacity: canSubmit ? 1 : 0.8,
           }}
           className="h-16 rounded-xl mt-3"
@@ -266,22 +249,22 @@ const GenericAuth: React.FC<GenericAuthProps> = ({ authType }) => {
         </Button>
 
         <HStack className="justify-center items-center gap-5 my-5 px-5">
-          <Box style={{ flex: 1, height: 1, backgroundColor: Colors.light.light }} />
+          <Box style={{ flex: 1, height: 1, backgroundColor: Colors.main.primaryLight }} />
           <Text className="text-primary">{t('or')}</Text>
-          <Box style={{ flex: 1, height: 1, backgroundColor: Colors.light.light }} />
+          <Box style={{ flex: 1, height: 1, backgroundColor: Colors.main.primaryLight }} />
         </HStack>
 
         <VStack className="gap-3">
-          <Button style={{ backgroundColor: Colors.light.light }} className="h-16 rounded-xl flex justify-center">
+          <Button style={{ backgroundColor: Colors.main.primaryLight }} className="h-16 rounded-xl flex justify-center">
             <ButtonIcon as={GoogleIcon} />
-            <ButtonText style={{ color: Colors.light.darkBlue }} className="font-heading">
+            <ButtonText style={{ color: Colors.main.textPrimary }} className="font-heading">
               {t('continue with google')}
             </ButtonText>
           </Button>
 
-          <Button style={{ backgroundColor: Colors.light.light }} className="h-16 rounded-xl flex justify-center" onPress={handleNavigateToAlternative}>
-            <MailIcon color={Colors.light.darkBlue} />
-            <ButtonText style={{ color: Colors.light.darkBlue }} className="font-heading">
+          <Button style={{ backgroundColor: Colors.main.primaryLight }} className="h-16 rounded-xl flex justify-center" onPress={handleNavigateToAlternative}>
+            <MailIcon color={Colors.main.textPrimary} />
+            <ButtonText style={{ color: Colors.main.textPrimary }} className="font-heading">
               {t(config.alternativeText)}
             </ButtonText>
           </Button>

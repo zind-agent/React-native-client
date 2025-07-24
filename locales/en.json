@@ -1,5 +1,5 @@
 {
-  "welcome_to_home": "Welcome to Home",
+  "welcome_to_zind": "Welcome to Zind",
   "hi": "Hi",
   "clear_storage": "Clear Storage",
   "login_mobile_number": "Login with Mobile Number",
@@ -132,6 +132,37 @@
     "pending": "Pending",
     "cancel": "Canceled",
     "today_task": "Today Task",
-    "view_all": "View All"
-  }
+    "view_all": "View All",
+    "today_progress_summery": "Today's completed tasks",
+    "no_task": "No task is available to today task. Please create a task from the button below"
+  },
+  "todos": {
+    "todo_list": "Todo List",
+    "day_of_week": "Day of week",
+    "confirm": "Confirm",
+    "today": "Today",
+    "any_schedule": "You don't have any schedule",
+    "add_todo_in_time": "Add Task",
+    "append_title_required": "Title is required",
+    "append_time_required": "Time is required",
+    "min": "Min",
+    "hour": "Hour",
+    "untile": "Until",
+    "is_completed": "Your task is completed?",
+    "start_time": "Start Time",
+    "end_time": "End Time",
+    "add_task": "Add Task",
+    "add_by_ai": "Add By AI",
+    "is_cancel": "Is Cancel?",
+    "date": "Date",
+    "edit_event": "Edit Task",
+    "write_description_todo": "Write a short description about this task"
+  },
+  "select_reminder_days": "Select Reminder Days",
+  "create_event": "Create Event",
+  "add": "Add",
+  "title": "Title",
+  "tags": "Tags",
+  "submit": "Submit",
+  "options": "Options"
 }

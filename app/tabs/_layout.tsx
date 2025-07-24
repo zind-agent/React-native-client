@@ -1,10 +1,8 @@
+import { Stack } from 'expo-router';
 export { ErrorBoundary } from 'expo-router';
-
 export const unstable_settings = {
   initialRouteName: '(tabs)',
 };
-
-import { Stack } from 'expo-router';
 
 export default function AppLayout() {
   return (

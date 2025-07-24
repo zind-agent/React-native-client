@@ -7,7 +7,6 @@ import { withStyleContext, useStyleContext } from '@gluestack-ui/nativewind-util
 import { cssInterop } from 'nativewind';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { PrimitiveIcon, UIIcon } from '@gluestack-ui/icon';
-import { useAppStore } from '@/store/appState';
 import { useDynamicFont } from '@/hooks/useDynamicFont';
 
 const SCOPE = 'FORM_CONTROL';

@@ -3,16 +3,16 @@ import { Box } from '@/components/ui/box';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Text } from '@/components/Themed';
-import HeaderTitle from '@/components/shared/headerTitle';
-import WizardStepper from '@/components/shared/wizardSteper';
 import { VStack } from '@/components/ui/vstack';
 import { Colors } from '@/constants/Colors';
 import { GoalEnumItems } from '@/constants/GoalEnumItems';
 import { useWizardStore } from '@/store/wizardFormState';
 import { t } from 'i18next';
 import { Pressable, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { ZindCheckbox } from '@/components/shared/checkBox';
 import { router } from 'expo-router';
+import WizardStepper from '@/components/common/wizardSteper';
+import HeaderTitle from '@/components/common/headerTitle';
+import { Checkbox } from '@/components/common/checkBox';
 
 const StepTwo = () => {
   const { setStep } = useWizardStore();
@@ -57,10 +57,10 @@ const StepTwo = () => {
         <Box>
           <WizardStepper />
           <HeaderTitle title={t('your_goal')} path={'../(wizardForm)/stepThree'} />
-          <Heading size="xl" className="px-3 mt-4" style={{ color: Colors.light.darkBlue }}>
+          <Heading size="xl" className="px-3 mt-4" style={{ color: Colors.main.textPrimary }}>
             {t('what_do_you_want_from_zind')}
           </Heading>
-          <Text className="px-3" style={{ color: Colors.light.subtext }}>
+          <Text className="px-3" style={{ color: Colors.main.textPrimary }}>
             {t('main_goal_guidance_text')}
           </Text>
 
@@ -76,11 +76,11 @@ const StepTwo = () => {
                   paddingVertical: 8,
                   paddingHorizontal: 12,
                   borderRadius: 12,
-                  backgroundColor: selectedGoals.includes(item.key) ? Colors.light.primary + '20' : Colors.light.surface,
+                  backgroundColor: selectedGoals.includes(item.key) ? Colors.main.primary + '20' : Colors.main.background,
                 }}
               >
-                <ZindCheckbox checked={selectedGoals.includes(item.key)} onPress={isCheckHandler.bind(null, item.key)} />
-                <Text style={{ fontSize: 14, color: Colors.light.text }}>{t(item.label)}</Text>
+                <Checkbox checked={selectedGoals.includes(item.key)} onPress={isCheckHandler.bind(null, item.key)} />
+                <Text style={{ fontSize: 14, color: Colors.main.textPrimary }}>{t(item.label)}</Text>
               </Pressable>
             ))}
           </VStack>
@@ -91,9 +91,9 @@ const StepTwo = () => {
         <Button
           className="rounded-xl h-[50px]"
           style={{
-            backgroundColor: isButtonDisabled ? Colors.light.light : Colors.light.primary,
+            backgroundColor: isButtonDisabled ? Colors.main.primaryLight : Colors.main.primary,
             borderWidth: 1,
-            borderColor: Colors.light.light,
+            borderColor: Colors.main.primaryLight,
           }}
           onPress={onSubmit}
           disabled={isButtonDisabled}
