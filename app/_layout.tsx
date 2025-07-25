@@ -11,7 +11,7 @@ import '../i18n';
 import '../global.css';
 import { LanguageGate } from '@/constants/LanguageGate';
 import { ToastProvider } from '@gluestack-ui/toast';
-import Loading from '@/components/common/Loading';
+import { ImageLoading } from '@/components/common/Loading';
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -40,7 +40,7 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
-  if (!loaded) return <Loading />;
+  if (!loaded) return <ImageLoading />;
 
   return <RootLayoutNav />;
 }

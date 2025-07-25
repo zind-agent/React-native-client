@@ -2,7 +2,7 @@ import { FormControl, FormControlError, FormControlErrorText } from '@/component
 import { Input, InputField } from '@/components/ui/input';
 import { Colors } from '@/constants/Colors';
 import React from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 interface AddTodoFormProps {
   value: string;
@@ -15,16 +15,15 @@ interface AddTodoFormProps {
 
 export const AddTodoForm = ({ value, onChange, error, placeholder, style, autoFocus }: AddTodoFormProps) => {
   return (
-    <FormControl isInvalid={!!error} isRequired size="lg" className="mt-8">
-      <Input className="rounded-xl px-4" style={[{ backgroundColor: Colors.main.background, borderWidth: 0, borderBottomWidth: 1 }, style]}>
+    <FormControl isInvalid={!!error} isRequired size="lg" className="mt-8" style={styles.container}>
+      <Input style={[styles.inputContainer, style]}>
         <InputField
           type="text"
           placeholder={placeholder}
           value={value}
           onChangeText={onChange}
-          className="text-xl"
+          className="text-xl text-slate-50"
           autoFocus={autoFocus}
-          style={{ color: Colors.main.textPrimary }}
           placeholderTextColor={Colors.main.textSecondary}
         />
       </Input>
@@ -39,3 +38,23 @@ export const AddTodoForm = ({ value, onChange, error, placeholder, style, autoFo
     </FormControl>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.main.cardBackground,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  inputContainer: {
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    borderBottomColor: Colors.main.primaryLight,
+    borderBottomWidth: 1,
+  },
+});

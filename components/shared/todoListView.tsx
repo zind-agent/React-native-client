@@ -4,13 +4,13 @@ import { FlatList } from 'react-native';
 import { useGroupedTodos } from '@/hooks/useGroupedTodos';
 import ScheduleCard from './scheduleCard';
 import { Colors } from '@/constants/Colors';
-import { useEditTaskDrawer } from '@/hooks/useEditTaskDrawer';
 import HiddenItem from '../common/hiddenItem';
 import HourlyRow from '../common/hourlyRow';
-import Loading from '../common/Loading';
 import { useTodoStore } from '@/store/todoState';
 import { Task } from '@/storage/todoStorage';
 import { TaskStatus } from '@/constants/TaskEnum';
+import { router } from 'expo-router';
+import { Loading } from '../common/Loading';
 
 interface TodoListViewProps {
   mode: 'flat' | 'grouped';
@@ -20,7 +20,6 @@ interface TodoListViewProps {
 
 const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) => {
   const { tasks, isLoading, updateTask, pendingTodayTasks } = useTodoStore();
-  const { openEditDrawer } = useEditTaskDrawer();
   const groupedTodos = useGroupedTodos(mode === 'grouped' ? tasks : []);
   const [swipedRows, setSwipedRows] = useState<Set<string>>(new Set());
 
@@ -60,7 +59,7 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
     ({ item }: { item: Task }) => (
       <ScheduleCard
         task={item}
-        onPress={() => item.id && openEditDrawer(item.id)}
+        onPress={() => router.push(`/tabs/(tabs)/${item.id}`)}
         style={{
           opacity: item.status === TaskStatus.COMPLETED || item.status === TaskStatus.CANCELLED ? 0.6 : 1,
           backgroundColor: Colors.main.cardBackground,
@@ -70,7 +69,7 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
         }}
       />
     ),
-    [openEditDrawer],
+    [],
   );
 
   const handleRowOpen = useCallback((rowKey: string) => {
@@ -87,15 +86,8 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
   );
 
   const renderGroupedItem = useCallback(
-    ({ item }: { item: any }) => (
-      <HourlyRow
-        hour={item.hour}
-        tasks={item.tasks}
-        onEditTask={(task: Task) => task.id && openEditDrawer(task.id)}
-        isCurrentHour={item.hour.split(':')[0] === new Date().getHours().toString().padStart(2, '0')}
-      />
-    ),
-    [openEditDrawer],
+    ({ item }: { item: any }) => <HourlyRow hour={item.hour} tasks={item.tasks} isCurrentHour={item.hour.split(':')[0] === new Date().getHours().toString().padStart(2, '0')} />,
+    [],
   );
 
   if (isLoading) {
@@ -116,7 +108,7 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
         disableLeftSwipe={!enableSwipeActions}
         disableRightSwipe={!enableSwipeActions}
         closeOnRowBeginSwipe={true}
-        closeOnRowPress={true}
+        closeOnRowPress={false}
         closeOnScroll={true}
         recalculateHiddenLayout={false}
         initialNumToRender={10}

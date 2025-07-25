@@ -4,8 +4,6 @@ import { Box } from '../ui/box';
 import { Colors } from '@/constants/Colors';
 import { Icon } from '../ui/icon';
 import { ClockIcon } from '@/assets/Icons/Clock';
-import { useDrawerStore } from '@/store/drawerState';
-import DetailTaskTodo from './forms/detailTodo';
 import { Task } from '@/storage/todoStorage';
 
 interface ScheduleCardProps {
@@ -14,28 +12,10 @@ interface ScheduleCardProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const styles = StyleSheet.create({
-  textContainer: {
-    borderColor: Colors.main.textSecondary,
-    borderLeftWidth: 3,
-  },
-  textContainerIsCompleted: {
-    borderColor: Colors.main.primary,
-    borderLeftWidth: 3,
-  },
-  textContainerIsCancel: {
-    borderColor: Colors.main.accent,
-    borderLeftWidth: 3,
-  },
-});
-
 const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
-  const { setDetailDrawer, detailDrawer } = useDrawerStore();
-
   const handlePress = () => {
     if (onPress && task.id != null) {
       onPress(task);
-      setDetailDrawer();
     }
   };
 
@@ -51,10 +31,14 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
   const CardContent = () => (
     <Box className="min-w-56 min-h-[70px] w-max h-max mx-1 my-1 p-4  justify-between" style={[style, styleBorderHandler()]}>
       <Box className="px-2 mb-3" style={styleBorderHandler()}>
-        <Text className="text-md interviewed mb-1" style={{ color: Colors.main.textSecondary }}>
+        <Text className="text-md mb-1" style={styles.titleStyle}>
           {task.title}
         </Text>
-        {task.description && task.description !== '' && <Text className="text-sm font-semibold mb-1">{task.description}</Text>}
+        {task.description && task.description !== '' && (
+          <Text className="text-sm mb-1" style={styles.descriptionStyle}>
+            {task.description}
+          </Text>
+        )}
       </Box>
       <HStack className="flex-wrap items-center gap-4" style={{ gap: 4 }}>
         <Icon as={ClockIcon} />
@@ -66,20 +50,37 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
   );
 
   return (
-    <>
-      <Pressable
-        onPress={handlePress}
-        style={({ pressed }) => ({
-          opacity: pressed ? 0.7 : 1,
-          transform: [{ scale: pressed ? 0.98 : 1 }],
-        })}
-      >
-        <CardContent />
-      </Pressable>
-
-      {detailDrawer && task.id != null && <DetailTaskTodo id={Number(task.id)} />}
-    </>
+    <Pressable
+      onPress={handlePress}
+      style={({ pressed }) => ({
+        opacity: pressed ? 0.7 : 1,
+        transform: [{ scale: pressed ? 0.8 : 1 }],
+      })}
+    >
+      <CardContent />
+    </Pressable>
   );
 };
 
 export default ScheduleCard;
+
+const styles = StyleSheet.create({
+  textContainer: {
+    borderColor: Colors.main.textPrimary,
+    borderLeftWidth: 3,
+  },
+  textContainerIsCompleted: {
+    borderColor: Colors.main.primary,
+    borderLeftWidth: 3,
+  },
+  textContainerIsCancel: {
+    borderColor: Colors.main.accent,
+    borderLeftWidth: 3,
+  },
+  titleStyle: {
+    color: Colors.main.textPrimary,
+  },
+  descriptionStyle: {
+    color: Colors.main.textSecondary,
+  },
+});

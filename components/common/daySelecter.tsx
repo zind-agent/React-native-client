@@ -4,6 +4,7 @@ import { VStack } from '../ui/vstack';
 import { Text } from '../Themed';
 import { HStack } from '../ui/hstack';
 import { Button, ButtonText } from '../ui/button';
+import { StyleSheet } from 'react-native';
 
 interface DaySelectorProps {
   field: {
@@ -23,9 +24,9 @@ const DaySelector = ({ field }: DaySelectorProps) => {
   };
 
   return (
-    <VStack className="gap-2 mb-5 mt-2">
-      <Text style={{ color: Colors.main.textPrimary, fontSize: 15 }}>{t('select_reminder_days')}</Text>
-      <HStack className="flex-wrap gap-2 justify-between">
+    <VStack style={styles.container}>
+      <Text style={styles.titleStyle}>{t('event.select_reminder_days')}</Text>
+      <HStack className="flex-wrap gap-1 justify-between">
         {daysOfWeek.map((day) => {
           const isSelected = value.includes(day);
           return (
@@ -35,11 +36,11 @@ const DaySelector = ({ field }: DaySelectorProps) => {
               size="sm"
               className="rounded-full px-3"
               style={{
-                backgroundColor: isSelected ? Colors.main.primary : Colors.main.cardBackground,
+                backgroundColor: isSelected ? Colors.main.primary : Colors.main.background,
               }}
             >
               <ButtonText style={{ color: isSelected ? Colors.main.background : Colors.main.textPrimary }} className="text-sm">
-                {t(day.toLowerCase())}
+                {t(day.toUpperCase())}
               </ButtonText>
             </Button>
           );
@@ -50,3 +51,15 @@ const DaySelector = ({ field }: DaySelectorProps) => {
 };
 
 export default DaySelector;
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.main.cardBackground,
+    borderRadius: 16,
+    padding: 16,
+    shadowRadius: 2,
+    elevation: 3,
+    marginBottom: 20,
+  },
+  titleStyle: { color: Colors.main.textPrimary, fontSize: 16, marginBottom: 8 },
+});

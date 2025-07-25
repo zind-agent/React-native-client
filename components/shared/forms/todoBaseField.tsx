@@ -3,13 +3,15 @@ import { Controller, Control } from 'react-hook-form';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Box } from '@/components/ui/box';
-import { AddTodoForm } from './addTodo/addTodoTitle';
-import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { AddTodoSchemaType } from '@/components/schema/addTodoSchema';
 import DatePicker from '@/components/common/datePicker';
 import { TimePicker } from '@/components/common/timePicker';
 import TimeDeffrence from '@/components/common/timeDeffrence';
+import { AddTodoForm } from './addTodo/todoForm';
+import { Colors } from '@/constants/Colors';
+import { StyleSheet } from 'react-native';
+import DaySelector from '@/components/common/daySelecter';
 
 interface TodoBasicFieldsProps {
   control: Control<AddTodoSchemaType>;
@@ -26,19 +28,10 @@ export const TodoBasicFields: React.FC<TodoBasicFieldsProps> = ({ control, error
       <Controller
         name="title"
         control={control}
-        render={({ field }) => (
-          <AddTodoForm
-            autoFocus
-            style={{ height: 40, borderColor: Colors.main.primaryLight, marginBottom: 10, backgroundColor: 'transparent' }}
-            value={field.value}
-            placeholder={t('title')}
-            onChange={field.onChange}
-            error={errors.title?.message}
-          />
-        )}
+        render={({ field }) => <AddTodoForm autoFocus style={{ height: 40 }} value={field.value} placeholder={t('event.title')} onChange={field.onChange} error={errors.title?.message} />}
       />
 
-      <VStack className="gap-4 p-1">
+      <VStack style={styles.fieldsContainer}>
         <Controller name="date" control={control} render={({ field }) => <DatePicker field={field} setShowDatePicker={setShowDatePicker} showDatePicker={showDatePicker} />} />
 
         <HStack className="justify-center items-center gap-2 w-full">
@@ -53,6 +46,20 @@ export const TodoBasicFields: React.FC<TodoBasicFieldsProps> = ({ control, error
 
         {startTime && endTime && <TimeDeffrence startTime={startTime} endTime={endTime} />}
       </VStack>
+
+      <Controller name="reminderDays" control={control} render={({ field }) => <DaySelector field={field} />} />
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  fieldsContainer: {
+    marginVertical: 10,
+    backgroundColor: Colors.main.cardBackground,
+    borderRadius: 16,
+    padding: 16,
+    shadowRadius: 2,
+    gap: 20,
+    elevation: 2,
+  },
+});

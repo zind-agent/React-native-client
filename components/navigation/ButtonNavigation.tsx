@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable } from '../ui/pressable';
 import { Colors } from '@/constants/Colors';
 import React, { useCallback, useMemo } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, StyleSheet } from 'react-native';
 import { MotiView, motify } from 'moti';
 import { interpolateColor, useSharedValue, withTiming } from 'react-native-reanimated';
 import AddButton from '../common/addButton';
@@ -57,7 +57,14 @@ TabButton.displayName = 'TabButton';
 export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   const insets = useSafeAreaInsets();
   const screenWidth = useMemo(() => Dimensions.get('window').width, []);
-  const visibleRoutes = useMemo(() => state.routes.filter((route) => route.name !== 'addTodoAi' && route.name !== 'addTodo'), [state.routes]);
+  const visibleRoutes = useMemo(
+    () => state.routes.filter((route) => route.name !== 'addTodoAi' && route.name !== 'createTask' && route.name !== '[taskId]' && route.name !== 'edit/[editTaskId]'),
+    [state.routes],
+  );
+  const hideTabBar = useMemo(
+    () => state.routes[state.index].name === '[taskId]' || state.routes[state.index].name === 'createTask' || state.routes[state.index].name === 'edit/[editTaskId]',
+    [state.routes, state.index],
+  );
 
   const handleTabPress = useCallback(
     (routeName: string, isFocused: boolean) => {
@@ -87,7 +94,12 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
   );
 
   return (
-    <MotiView style={[styles.container, containerStyle]} animate={{ translateY: 0 }} from={{ translateY: 100 }} transition={{ type: 'timing', duration: 300 }}>
+    <MotiView
+      style={[styles.container, containerStyle, { display: hideTabBar ? 'none' : 'flex' }]}
+      animate={{ translateY: 0 }}
+      from={{ translateY: 100 }}
+      transition={{ type: 'timing', duration: 300 }}
+    >
       <View style={addButtonPosition}>
         <AddButton />
       </View>
@@ -103,11 +115,11 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
   );
 };
 
-const styles = {
+const styles = StyleSheet.create({
   container: {
-    position: 'absolute' as const,
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
+    position: 'absolute',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 12,
     borderRadius: 14,
     height: TAB_HEIGHT,
@@ -120,4 +132,4 @@ const styles = {
     justifyContent: 'center' as const,
     flex: 1,
   },
-};
+});

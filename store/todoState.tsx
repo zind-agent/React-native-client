@@ -4,6 +4,7 @@ import { create } from 'zustand';
 
 export interface TodoState {
   // Data
+  task: Task | null;
   tasks: Task[];
   todayTasks: Task[];
   pendingTodayTasks: Task[];
@@ -27,11 +28,13 @@ export interface TodoState {
   createTask: (task: Task) => Promise<void>;
   updateTask: (task: Task) => Promise<void>;
   getCompletionPercentage: () => number;
+  getTaskById: (id: string) => Promise<Task | null>;
 }
 
 const getCurrentDate = (): string => new Date().toISOString().split('T')[0];
 
 export const useTodoStore = create<TodoState>((set, get) => ({
+  task: null,
   tasks: [],
   todayTasks: [],
   pendingTodayTasks: [],
@@ -98,6 +101,7 @@ export const useTodoStore = create<TodoState>((set, get) => ({
       throw error;
     }
   },
+
   updateTask: async (task: Task) => {
     set({ isLoading: true });
     try {
@@ -117,6 +121,7 @@ export const useTodoStore = create<TodoState>((set, get) => ({
       throw error;
     }
   },
+
   loadTodayTasks: async () => {
     set({ isLoading: true });
     try {
@@ -165,5 +170,18 @@ export const useTodoStore = create<TodoState>((set, get) => ({
     const completedTasks = validTasks.filter((task) => task.status === TaskStatus.COMPLETED);
 
     return Math.round((completedTasks.length / validTasks.length) * 100);
+  },
+
+  getTaskById: async (id: string) => {
+    set({ isLoading: true });
+    try {
+      const task = await taskStorage.getTaskById(id);
+      set({ task, isLoading: false });
+      return task;
+    } catch (error) {
+      console.error('Failed to get task by id:', error);
+      set({ isLoading: false });
+      return null;
+    }
   },
 }));

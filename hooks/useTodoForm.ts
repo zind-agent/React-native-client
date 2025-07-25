@@ -3,14 +3,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect } from 'react';
 import { useTodoStore } from '@/store/todoState';
 import { addTodoSchema, AddTodoSchemaType } from '@/components/schema/addTodoSchema';
-import { useAppStore } from '@/store/appState';
 import { TaskStatus } from '@/constants/TaskEnum';
-import { uniqueId } from 'lodash';
+import { router } from 'expo-router';
 
 export const useTodoForm = (selectedDate: string) => {
   const { createTask } = useTodoStore();
-  const { setAddInTimeTodoDrawer } = useAppStore();
-  const newId = uniqueId();
 
   const form = useForm<AddTodoSchemaType>({
     resolver: zodResolver(addTodoSchema),
@@ -59,7 +56,7 @@ export const useTodoForm = (selectedDate: string) => {
     async (data: AddTodoSchemaType) => {
       try {
         const todoData = {
-          id: newId,
+          id: Date.now().toString(),
           title: data.title.trim(),
           description: data.description?.trim() || '',
           tags: data.tags || [],
@@ -76,7 +73,7 @@ export const useTodoForm = (selectedDate: string) => {
 
         await createTask(todoData).then(() => {
           reset();
-          setAddInTimeTodoDrawer(false);
+          router.push('/tabs/(tabs)/todos');
         });
       } catch (error) {
         console.error('Error adding todo:', error);

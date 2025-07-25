@@ -4,7 +4,6 @@ import { Platform, Pressable, Text, View, StyleSheet, ViewStyle, TextStyle } fro
 import { LinearGradient } from 'expo-linear-gradient';
 import { Icon, AddIcon, GlobeIcon } from '@/components/ui/icon';
 import { usePathname, useRouter } from 'expo-router';
-import { useAppStore } from '@/store/appState';
 import { t } from 'i18next';
 import { Colors } from '@/constants/Colors';
 import React from 'react';
@@ -74,13 +73,14 @@ const styles = StyleSheet.create<Styles>({
   },
   menuItem: {
     position: 'absolute',
-    width: 120,
-    padding: 10,
+    width: 150,
+    padding: 15,
     backgroundColor: Colors.main.background,
     borderRadius: 8,
     zIndex: 1002,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   menuItemPressable: {
     flexDirection: 'row',
@@ -115,7 +115,6 @@ const MenuItem: React.FC<MenuItemProps> = memo(({ onPress, icon, text, animation
 MenuItem.displayName = 'MenuItem';
 
 const AddButton: React.FC = memo(() => {
-  const { setAddInTimeTodoDrawer } = useAppStore();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const path = usePathname();
@@ -132,17 +131,17 @@ const AddButton: React.FC = memo(() => {
 
   const firstMenuAnimation = {
     from: { opacity: 0, translateY: -40, translateX: -90 },
-    animate: { opacity: 1, translateY: -50, translateX: -100 },
+    animate: { opacity: 1, translateY: -60, translateX: -130 },
     transition: { type: 'spring', damping: 20, stiffness: 200 } as const,
   };
 
   const secondMenuAnimation = {
     from: { opacity: 0, translateX: -100, translateY: 0 },
-    animate: { opacity: 1, translateY: 10, translateX: -140 },
+    animate: { opacity: 1, translateY: 8, translateX: -165 },
     transition: { type: 'spring', damping: 30, stiffness: 200 } as const,
   };
 
-  const addTaskText = useMemo(() => t('todos.add_task'), []);
+  const addTaskText = useMemo(() => t('button.add_task'), []);
   const addByAiText = useMemo(() => t('todos.add_by_ai'), []);
 
   const handleClose = useCallback(() => {
@@ -154,9 +153,9 @@ const AddButton: React.FC = memo(() => {
   }, []);
 
   const handleAddTask = useCallback(() => {
-    setAddInTimeTodoDrawer(true);
     handleClose();
-  }, [setAddInTimeTodoDrawer, handleClose]);
+    router.push('/tabs/(tabs)/createTask');
+  }, [handleClose]);
 
   const handleAddByAi = useCallback(() => {
     router.push('/tabs/(tabs)/addTodoAi');
@@ -184,7 +183,6 @@ const AddButton: React.FC = memo(() => {
       {isOpen && (
         <>
           <MenuItem onPress={handleAddTask} icon={AddIcon} text={addTaskText} animationProps={firstMenuAnimation} />
-
           <MenuItem onPress={handleAddByAi} icon={GlobeIcon} text={addByAiText} animationProps={secondMenuAnimation} style={{ justifyContent: 'center' }} />
         </>
       )}

@@ -20,7 +20,7 @@ import MailIcon from '@/assets/Icons/Mail';
 import { t } from 'i18next';
 import { useShowToast } from '@/components/common/customToast';
 import { CodeForm } from '@/components/shared/forms/auth/codeForm';
-import Loading from '@/components/common/Loading';
+import { Loading } from '@/components/common/Loading';
 
 const emailSchema = z.object({
   identifier: z.string().min(1, { message: 'email required' }).email({ message: 'email invalid' }),

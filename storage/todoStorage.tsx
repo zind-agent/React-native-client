@@ -198,6 +198,24 @@ export class TaskStorage {
       throw new Error(`Failed to get tasks: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
+
+  public async getTaskById(id: string): Promise<Task> {
+    await this.ensureInitialized();
+    if (!id) {
+      throw new Error('Task ID is required');
+    }
+
+    try {
+      let query = 'SELECT * FROM tasks WHERE id = ?';
+      let params: any[] = [id];
+
+      const results = await this.db.getFirstAsync(query, params);
+      return this.rowToTask(results);
+    } catch (error) {
+      console.error(`Failed to get tasks for date ${id}:`, error);
+      throw new Error(`Failed to get tasks: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
 }
 
 export const taskStorage = TaskStorage.getInstance();

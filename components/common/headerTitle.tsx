@@ -38,10 +38,10 @@ const HeaderTitle = ({ title, path, isLight = false }: { title: string; path: Re
             transform: [{ rotate: language === 'fa' ? '180deg' : '0deg' }],
           }}
         >
-          <BackIcon color={Colors.main.background} />
+          <BackIcon color={Colors.main.textPrimary} />
         </Box>
       </Button>
-      <Heading style={{ color: isLight ? Colors.main.background : Colors.main.textPrimary }} className="font-ibmpBold" size="3xl">
+      <Heading style={{ color: isLight ? Colors.main.background : Colors.main.textPrimary }} className="font-ibmpBold" size="2xl">
         {title}
       </Heading>
     </HStack>

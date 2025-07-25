@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useAppStore } from '@/store/appState';
-import Loading from '@/components/common/Loading';
+import { Loading } from '@/components/common/Loading';
 
 export const LanguageGate = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);

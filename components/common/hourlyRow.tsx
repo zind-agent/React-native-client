@@ -1,16 +1,16 @@
 import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
-import { StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
-import { ScrollView } from 'react-native';
+import { FlatList, StyleSheet, Text, TextStyle, ViewStyle } from 'react-native';
 import { Colors } from '@/constants/Colors';
-import { Todo } from '@/storage/todoStorage';
 import ScheduleCard from '../shared/scheduleCard';
+import { Task } from '@/storage/todoStorage';
+import { router } from 'expo-router';
 
 interface HourlyRowProps {
   hour: string;
   tasks: any[];
   isCurrentHour?: boolean;
-  onEditTask?: (task: Todo) => void;
+  onEditTask?: (task: Task) => void;
 }
 
 interface StyleType {
@@ -19,7 +19,43 @@ interface StyleType {
   scrollView: ViewStyle;
   textStyle: TextStyle;
   isCurrentHourText: TextStyle;
+  cardStyle: ViewStyle;
 }
+
+const HourlyRow = ({ hour, tasks, isCurrentHour = false }: HourlyRowProps) => {
+  return (
+    <VStack className="py-3 px-4" style={isCurrentHour ? style.isCurrentHourContainer : style.contariner}>
+      <HStack className="items-start space-x-4">
+        <Text className="w-14 text-left" style={isCurrentHour ? style.isCurrentHourText : style.textStyle}>
+          {hour}
+        </Text>
+
+        <VStack className="flex-1">
+          {
+            <FlatList
+              data={tasks}
+              horizontal
+              keyExtractor={(item) => item.id}
+              style={style.scrollView}
+              renderItem={({ item }) => <ScheduleCard task={item} onPress={() => router.push(`/tabs/(tabs)/${item.id}`)} style={style.cardStyle} />}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 12, alignItems: 'center' }}
+              initialNumToRender={6}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              removeClippedSubviews
+              decelerationRate="fast"
+              snapToAlignment="start"
+              snapToInterval={150}
+            />
+          }
+        </VStack>
+      </HStack>
+    </VStack>
+  );
+};
+
+export default HourlyRow;
 
 const style = StyleSheet.create<StyleType>({
   contariner: {
@@ -38,6 +74,11 @@ const style = StyleSheet.create<StyleType>({
   scrollView: {
     paddingRight: 16,
   },
+  cardStyle: {
+    borderRadius: 10,
+    backgroundColor: Colors.main.cardBackground,
+    marginHorizontal: 6,
+  },
   textStyle: {
     color: Colors.main.textPrimary,
     fontWeight: 600,
@@ -47,33 +88,3 @@ const style = StyleSheet.create<StyleType>({
     fontWeight: 700,
   },
 });
-
-const HourlyRow = ({ hour, tasks, isCurrentHour = false, onEditTask }: HourlyRowProps) => {
-  const handleEditTask = (task: Todo) => {
-    onEditTask?.(task);
-  };
-
-  return (
-    <VStack className="py-3 px-4" style={isCurrentHour ? style.isCurrentHourContainer : style.contariner}>
-      <HStack className="items-start space-x-4">
-        <Text className="w-14 text-left" style={isCurrentHour ? style.isCurrentHourText : style.textStyle}>
-          {hour}
-        </Text>
-
-        <VStack className="flex-1">
-          {
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={style.scrollView}>
-              <HStack className="space-x-3 items-center">
-                {tasks.map((task, idx) => (
-                  <ScheduleCard key={idx} task={task} onPress={handleEditTask} style={{ borderRadius: 10, backgroundColor: Colors.main.cardBackground }} />
-                ))}
-              </HStack>
-            </ScrollView>
-          }
-        </VStack>
-      </HStack>
-    </VStack>
-  );
-};
-
-export default HourlyRow;

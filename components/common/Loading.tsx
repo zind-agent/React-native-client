@@ -1,7 +1,9 @@
 import { Spinner } from '../ui/spinner';
 
-const Loading = () => {
+export const Loading = () => {
   return <Spinner />;
 };
 
-export default Loading;
+export const ImageLoading = () => {
+  return <Spinner />;
+};
