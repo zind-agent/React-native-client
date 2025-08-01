@@ -8,15 +8,23 @@
     "icon": "./assets/logo.png",
     "scheme": "myapp",
     "jsEngine": "hermes",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
+    "androidStatusBar": {
+      "backgroundColor": "#121212"
+    },
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#121212"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.alirg1999.zindapp"
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#121212"
       },
       "package": "com.alirg1999.zindapp"
     },
@@ -33,7 +41,7 @@
           "image": "./assets/logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#121212"
         }
       ],
       "expo-localization",

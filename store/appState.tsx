@@ -6,7 +6,7 @@ import { sendMassageAction, sendOtpAction } from '@/api/authApi';
 
 export const useAppStore = create<AuthStateType>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       isLogin: false,
       isLoading: false,
       language: null,
@@ -16,13 +16,46 @@ export const useAppStore = create<AuthStateType>()(
       addInTimeTodoDrawer: false,
       isSendCode: false,
       calender: 'jalali',
+
       setIsSendCode: (isSendCode) => set({ isSendCode }),
       setHideTabBar: (bool) => set({ hideTabBar: bool }),
       setCalender: (calender) => set({ calender }),
       setAddInTimeTodoDrawer: (bool) => set({ addInTimeTodoDrawer: bool }),
 
-      setLanguage: (lang) => set({ language: lang }),
-      logout: () => set({ user: null, isLogin: false }),
+      setLanguage: (lang) => {
+        const state = get();
+        if (state.user) {
+          set({
+            language: lang,
+            user: { ...state.user, language: lang },
+          });
+        } else {
+          set({ language: lang });
+        }
+      },
+
+      setUserAndLanguage: (username, lang) => {
+        const state = get();
+        if (state.user) {
+          set({
+            user: { ...state.user, id: Date.now(), username, language: lang },
+            language: lang,
+          });
+        } else {
+          set({
+            user: { id: 0, username, language: lang },
+            language: lang,
+          });
+        }
+      },
+
+      logout: () =>
+        set({
+          user: null,
+          token: null,
+          isLogin: false,
+          isSendCode: false,
+        }),
 
       sendMassage: async (identifier: string): Promise<AuthResult> => {
         set({ isLoading: true });
@@ -37,18 +70,27 @@ export const useAppStore = create<AuthStateType>()(
       sendOtp: async (identifier: string, code: string): Promise<AuthResult> => {
         set({ isLoading: true });
         const result = await sendOtpAction(identifier, code);
-        if (result.success) {
-          set({ isLogin: true, user: result.user, token: result.token });
+        if (result.success && result.user && result.token) {
+          set({
+            isLogin: true,
+            user: result.user,
+            token: result.token,
+          });
         }
         set({ isLoading: false });
         return result;
       },
     }),
-
     {
       name: 'app-store',
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({ user: state.user, language: state.language, isLogin: state.isLogin }),
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
+        isLogin: state.isLogin,
+        language: state.language,
+        calender: state.calender,
+      }),
     },
   ),
 );

@@ -58,13 +58,19 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
   const insets = useSafeAreaInsets();
   const screenWidth = useMemo(() => Dimensions.get('window').width, []);
   const visibleRoutes = useMemo(
-    () => state.routes.filter((route) => route.name !== 'addTodoAi' && route.name !== 'createTask' && route.name !== '[taskId]' && route.name !== 'edit/[editTaskId]'),
+    () => state.routes.filter((route) => route.name !== 'addTodoAi' && route.name !== 'createTask' && route.name !== '[taskId]' && route.name !== 'edit/[editTaskId]' && route.name !== 'createTopics'),
     [state.routes],
   );
   const hideTabBar = useMemo(
-    () => state.routes[state.index].name === '[taskId]' || state.routes[state.index].name === 'createTask' || state.routes[state.index].name === 'edit/[editTaskId]',
+    () =>
+      state.routes[state.index].name === '[taskId]' ||
+      state.routes[state.index].name === 'createTask' ||
+      state.routes[state.index].name === 'edit/[editTaskId]' ||
+      state.routes[state.index].name === 'createTopics',
     [state.routes, state.index],
   );
+
+  const hideAddButton = useMemo(() => state.routes[state.index].name === 'activity', [state.routes, state.index]);
 
   const handleTabPress = useCallback(
     (routeName: string, isFocused: boolean) => {
@@ -100,7 +106,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
       from={{ translateY: 100 }}
       transition={{ type: 'timing', duration: 300 }}
     >
-      <View style={addButtonPosition}>
+      <View style={[{ display: hideAddButton ? 'none' : 'flex' }, addButtonPosition]}>
         <AddButton />
       </View>
 

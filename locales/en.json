@@ -159,7 +159,6 @@
     "today": "Today",
     "any_schedule": "You don't have any schedule",
     "add_todo_in_time": "Add Task",
-    "append_title_required": "Title is required",
     "append_time_required": "Time is required",
     "min": "Min",
     "hour": "Hour",
@@ -194,7 +193,6 @@
     "no_category": "No Category Choosen",
     "goal": "Goal",
     "no_goal": "No Goal Choosen",
-    "tags": "Tags",
     "no_tags": "No Tags Choosen",
     "start_date": "Start Date",
     "need_edit": "Your Task Needs to be Edited ?",
@@ -204,14 +202,36 @@
   "event": {
     "select_reminder_days": "Select Reminder Days",
     "title": "Title",
-    "tags": "Tags",
+    "tags": "Tags (optional)",
     "options": "Options",
-    "clear_storage": "Clear Storage"
+    "clear_storage": "Clear Storage",
+    "add_topic": "Add Topic",
+    "is_public": "All Users Can See This Topic?",
+    "append_title_required": "Title is required"
   },
 
   "status_enum": {
     "pending": "Pending",
     "completed": "Completed",
     "canceled": "Canceled"
+  },
+  "activity": {
+    "title": "Topics",
+    "add_topic": "Add Topic",
+    "create_topics": "Create Topic",
+    "write_description_topic": "Write a short description about this topic"
+  },
+  "category": {
+    "select_category": "Select Category",
+    "search_categories": "Search Categories",
+    "add_category": "Add Category",
+    "add_new_category": "Add New Category",
+    "category_name": "Category Name",
+    "category_name_required": "Category name is required",
+    "category_already_exists": "Category already exists",
+    "no_categories_available": "No categories available",
+    "no_categories_found": "No categories found",
+    "cancel": "Cancel",
+    "add": "Add"
   }
 }

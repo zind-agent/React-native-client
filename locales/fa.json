@@ -155,7 +155,6 @@
     "today": "امروز",
     "any_schedule": "برنامه‌ای نداری",
     "add_todo_in_time": "اضافه کردن کار",
-    "append_title_required": "عنوان لازم است",
     "append_time_required": "زمان لازم است",
     "min": "دقیقه",
     "hour": "ساعت",
@@ -190,7 +189,6 @@
     "no_category": "بدون دسته بندی",
     "goal": "هدف",
     "no_goal": "هدفی انتخاب نشده",
-    "tags": "برچسب‌ها",
     "no_tags": "بدون برچسب‌ها",
     "start_date": "تاریخ شروع",
     "need_edit": "نیاز به ویرایش کردن؟",
@@ -201,11 +199,33 @@
     "title": "عنوان",
     "tags": "برچسب‌ها",
     "options": "گزینه‌ها",
-    "clear_storage": "پاک کردن حافظه"
+    "clear_storage": "پاک کردن حافظه",
+    "add_topic": "افزودن دسته بندی",
+    "is_public": "عمومی نمایش باشد؟",
+    "append_title_required": "عنوان لازم است"
   },
   "status_enum": {
     "pending": "در انتظار",
     "completed": "انجام شده",
     "canceled": "لغو شده"
+  },
+  "activity": {
+    "title": "دسته بندی فعالیت ها",
+    "add_topic": "اضافه کردن دسته بندی",
+    "create_topics": "ایجاد دسته بندی",
+    "write_description_topic": "یه توضیح کوتاه دربار این دسته بندی بنویس"
+  },
+  "category": {
+    "select_category": "انتخاب دسته‌بندی",
+    "search_categories": "جستجوی دسته‌بندی‌ها",
+    "add_category": "افزودن دسته‌بندی",
+    "add_new_category": "افزودن دسته‌بندی جدید",
+    "category_name": "نام دسته‌بندی",
+    "category_name_required": "نام دسته‌بندی الزامی است",
+    "category_already_exists": "این دسته‌بندی قبلاً وجود دارد",
+    "no_categories_available": "هیچ دسته‌بندی‌ای در دسترس نیست",
+    "no_categories_found": "هیچ دسته‌بندی‌ای یافت نشد",
+    "cancel": "لغو",
+    "add": "افزودن"
   }
 }

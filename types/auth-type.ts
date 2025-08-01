@@ -1,39 +1,43 @@
-export interface User {
+export type User = {
   id: number;
-  email: string;
-  phone_number: string | null;
-  is_verified: boolean;
-  language: string;
-  level: string;
-  role: string;
-  created_at: string;
-  updated_at: string;
-}
+  username: string;
+  email?: string;
+  phone_number?: string | null;
+  is_verified?: boolean;
+  level?: string;
+  role?: string;
+  language: 'fa' | 'en';
+  created_at?: string;
+  updated_at?: string;
+};
 
-export interface AuthResult {
+export type AuthResult = {
   success: boolean;
   message: string;
-  user?: User;
-  status?: number;
   token?: string;
-}
+  status?: number;
+  user?: User;
+};
 
-export interface AuthStateType {
+export type AuthStateType = {
   isLogin: boolean;
   isLoading: boolean;
   isSendCode: boolean;
-  language: 'fa' | 'en' | null;
-  token: string | null;
   user: User | null;
+  token: string | null;
+  language: 'fa' | 'en' | null;
   calender: 'jalali' | 'gregorian';
-  addInTimeTodoDrawer: boolean;
-  setLanguage: (lang: 'fa' | 'en') => void;
-  logout: () => void;
   hideTabBar: boolean;
-  setHideTabBar: (bool: boolean) => void;
+  addInTimeTodoDrawer: boolean;
+
+  setIsSendCode: (val: boolean) => void;
+  setHideTabBar: (val: boolean) => void;
+  setCalender: (val: 'jalali' | 'gregorian') => void;
+  setAddInTimeTodoDrawer: (val: boolean) => void;
+  setLanguage: (lang: 'fa' | 'en') => void;
+  setUserAndLanguage: (username: string, lang: 'fa' | 'en') => void;
+  logout: () => void;
+
   sendMassage: (identifier: string) => Promise<AuthResult>;
   sendOtp: (identifier: string, code: string) => Promise<AuthResult>;
-  setIsSendCode: (bool: boolean) => void;
-  setCalender: (calender: 'jalali' | 'gregorian') => void;
-  setAddInTimeTodoDrawer: (bool: boolean) => void;
-}
+};

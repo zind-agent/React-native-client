@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   text: {
     color: Colors.main.textPrimary,
     fontSize: 16,
-    fontWeight: '800',
   },
   tags: {
     display: 'flex',
