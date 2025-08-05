@@ -3,7 +3,6 @@ import { t } from 'i18next';
 
 export const addTodoSchema = z.object({
   title: z.string().min(1, { message: t('append_title_required') }),
-  tags: z.array(z.string()),
   startTime: z.string().min(1, { message: t('append_time_required') }),
   endTime: z.string().min(1, { message: t('append_time_required') }),
   status: z.string().optional(),

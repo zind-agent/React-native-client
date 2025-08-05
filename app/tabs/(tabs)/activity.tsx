@@ -13,15 +13,13 @@ import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 
 const Activity = () => {
-  const { loadUserTopics, loadPublicTopics, topics, userTopics } = useTopicStore();
+  const { loadUserTopics, loadPublicTopics, userTopics } = useTopicStore();
   const { user } = useAppStore();
   useEffect(() => {
-    if (user?.id) {
-      const userIdStr: string = user.id.toString();
-      loadUserTopics(userIdStr);
-      loadPublicTopics();
-    }
-  }, [loadUserTopics]);
+    const userIdStr: string = user.id.toString();
+    loadUserTopics(userIdStr);
+    loadPublicTopics();
+  }, [loadUserTopics, loadPublicTopics]);
 
   return (
     <Box style={styles.container}>

@@ -7,7 +7,6 @@ export interface Topic {
   description: string;
   category?: string;
   isPublic: boolean;
-  tags: string[];
   status?: string;
   createdAt: string;
   updatedAt: string;
@@ -47,7 +46,6 @@ export class TopicStorage {
               id TEXT PRIMARY KEY,
               title TEXT NOT NULL,
               user_id TEXT NOT NULL,
-              tags TEXT NOT NULL DEFAULT '[]',
               status TEXT DEFAULT NULL,
               category TEXT DEFAULT NULL,
               description TEXT DEFAULT '',
@@ -87,7 +85,6 @@ export class TopicStorage {
       category: topic.category ?? null,
       status: topic.status ?? null,
       is_public: topic.isPublic ? 1 : 0,
-      tags: JSON.stringify(topic.tags),
       created_at: topic.createdAt,
       updated_at: topic.updatedAt,
       likes: topic.likes ?? 0,
@@ -103,7 +100,6 @@ export class TopicStorage {
       category: row.category ?? undefined,
       status: row.status ?? undefined,
       isPublic: !!row.is_public,
-      tags: JSON.parse(row.tags),
       createdAt: row.created_at,
       updatedAt: row.updated_at,
       likes: row.likes ?? 0,
@@ -115,10 +111,9 @@ export class TopicStorage {
     const row = this.topicToRow(topic);
     await this.db.runAsync(
       `INSERT INTO topics (
-        id, title, user_id, description, category, status, is_public, tags,
-        created_at, updated_at, likes
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [row.id, row.title, row.user_id, row.description, row.category, row.status, row.is_public, row.tags, row.created_at, row.updated_at, row.likes],
+    id, title, user_id, status, category, description, created_at, updated_at, likes, is_public
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [row.id, row.title, row.user_id, row.status, row.category, row.description, row.created_at, row.updated_at, row.likes, row.is_public],
     );
   }
 
@@ -145,9 +140,9 @@ export class TopicStorage {
     const row = this.topicToRow(topic);
     await this.db.runAsync(
       `UPDATE topics SET
-        title = ?, description = ?, category = ?, status = ?, is_public = ?, tags = ?, likes = ?, updated_at = ?
+        title = ?, description = ?, category = ?, status = ?, is_public = ?,  likes = ?, updated_at = ?
        WHERE id = ?`,
-      [row.title, row.description, row.category, row.status, row.is_public, row.tags, row.likes, new Date().toISOString(), row.id],
+      [row.title, row.description, row.category, row.status, row.is_public, row.likes, new Date().toISOString(), row.id],
     );
   }
 }

@@ -4,6 +4,7 @@ import { Input, InputField } from '../ui/input';
 import { StyleSheet } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { SearchIcons } from '@/assets/Icons/SearchIcon';
+import { t } from 'i18next';
 
 const Search: React.FC = () => {
   const [search, onChange] = useState<string>('');
@@ -13,7 +14,7 @@ const Search: React.FC = () => {
         <Box className="h-7 w-7">
           <SearchIcons />
         </Box>
-        <InputField type="text" placeholder={'Search your topics ...'} value={search} onChangeText={onChange} className="text-lg" placeholderTextColor={Colors.main.textSecondary} />
+        <InputField type="text" placeholder={t('event.search')} value={search} onChangeText={onChange} className="text-lg" placeholderTextColor={Colors.main.textSecondary} />
       </Input>
     </Box>
   );

@@ -13,7 +13,6 @@ export const useTodoForm = (selectedDate: string) => {
     resolver: zodResolver(addTodoSchema),
     defaultValues: {
       title: '',
-      tags: [],
       startTime: '',
       endTime: '',
       description: '',
@@ -40,7 +39,6 @@ export const useTodoForm = (selectedDate: string) => {
 
     reset({
       title: '',
-      tags: [],
       startTime: formatTime(now),
       endTime: formatTime(endTime),
       description: '',
@@ -59,7 +57,6 @@ export const useTodoForm = (selectedDate: string) => {
           id: Date.now().toString(),
           title: data.title.trim(),
           description: data.description?.trim() || '',
-          tags: data.tags || [],
           startTime: data.startTime,
           endTime: data.endTime,
           date: data.date,

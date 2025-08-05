@@ -40,7 +40,6 @@ const EditTask = () => {
           startTime: initialTask.startTime || '',
           endTime: initialTask.endTime || '',
           reminderDays: initialTask.reminderDays || [],
-          tags: initialTask.tags || [],
           description: initialTask.description || '',
         }
       : undefined,

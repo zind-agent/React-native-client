@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.main.textPrimary,
-    fontWeight: '800',
     fontSize: 17,
   },
 });

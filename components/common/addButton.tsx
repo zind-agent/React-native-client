@@ -73,7 +73,7 @@ const styles = StyleSheet.create<Styles>({
   },
   menuItem: {
     position: 'absolute',
-    width: 150,
+    minWidth: 150,
     padding: 15,
     backgroundColor: Colors.main.background,
     borderRadius: 8,
@@ -142,7 +142,7 @@ const AddButton: React.FC = memo(() => {
   };
 
   const addTaskText = useMemo(() => t('button.add_task'), []);
-  const addByAiText = useMemo(() => t('todos.add_by_ai'), []);
+  const addByAiText = useMemo(() => t('button.add_by_ai'), []);
 
   const handleClose = useCallback(() => {
     setIsOpen(false);

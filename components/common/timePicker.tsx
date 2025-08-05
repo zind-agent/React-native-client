@@ -44,7 +44,7 @@ export const TimePicker = memo(({ field, placeholder = '00:00', label, onTimeCha
   return (
     <>
       {label && (
-        <Text className="text-start w-full px-8 text-sm mb-2" style={{ color: Colors.main.textSecondary, fontWeight: '800' }}>
+        <Text className="text-start w-full px-8 text-sm mb-2" style={{ color: Colors.main.textSecondary }}>
           {label}
         </Text>
       )}

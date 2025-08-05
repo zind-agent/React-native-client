@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItem, StyleSheet } from 'react-native';
-import { Text } from '@/components/Themed';
 import { Box } from '@/components/ui/box';
 import { Heading } from '@/components/ui/heading';
 import { HStack } from '@/components/ui/hstack';
@@ -15,6 +14,7 @@ import AddTodoInTime from '@/components/shared/forms/addTodo/addTodoInTime';
 import { Center } from '@/components/ui/center';
 import { Progress, ProgressFilledTrack } from '@/components/ui/progress';
 import UserHeaderTitle from '@/components/common/userHeaderTitle';
+import { Text } from '@/components/Themed';
 
 interface HomeSection {
   id: string;
@@ -58,8 +58,8 @@ const Home: React.FC = () => {
 
       case 'progress':
         return (
-          <Center style={styles.progressContainer}>
-            <Text style={styles.progressText}>{t('home.today_progress_summery')}</Text>
+          <Center style={styles.progressContainer} className="p-10 rounded-xl mt-6 gap-3">
+            <Heading style={styles.progressText}>{t('home.today_progress_summery')}</Heading>
             <HStack style={styles.progressStats}>
               <Text style={styles.statText}>
                 {t('home.task')} {pendingTodayTasks.length}
@@ -140,17 +140,15 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   progressContainer: {
-    marginTop: 12,
-    height: 120,
+    height: 130,
     width: '100%',
-    borderRadius: 8,
-    paddingHorizontal: 40,
-    gap: 16,
-    backgroundColor: Colors.main.primaryDark,
+    backgroundColor: Colors.main.cardBackground + 80,
+    borderColor: Colors.main.textPrimary,
+    borderWidth: 1,
   },
   progressText: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 14,
     color: Colors.main.textPrimary,
   },
   progressStats: {
@@ -163,7 +161,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   progressBar: {
-    backgroundColor: Colors.main.background,
+    backgroundColor: Colors.main.textPrimary + 40,
   },
   progressFilled: {
     backgroundColor: Colors.main.primary,

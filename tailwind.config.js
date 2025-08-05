@@ -31,7 +31,6 @@ module.exports = {
         ibmpRegular: 'IBMPRegular',
         ibmpBold: 'IBMPLexSansThaiLooped-Bold',
         heading: ['DanaBold'],
-        danaMedium: ['DanaMedium'],
         danaRegular: ['DanaRegular'],
       },
       fontSize: {

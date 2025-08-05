@@ -15,7 +15,6 @@ import { PanGestureHandler, State, PanGestureHandlerGestureEvent, GestureHandler
 import { MotiView, useAnimationState } from 'moti';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
-import uniq from 'lodash/uniq';
 import { TaskStatus } from '@/constants/TaskEnum';
 import { ArrowRightIcon } from '@/assets/Icons/ArrowRight';
 import { Button } from '@/components/ui/button';
@@ -136,7 +135,6 @@ const TaskDetail = () => {
     );
   };
 
-  const uniqueTags = uniq(get(task, 'tags', []));
   const taskStatus = get(task, 'status', 'PENDING');
 
   const buttonBackgroundColor =
@@ -146,7 +144,6 @@ const TaskDetail = () => {
       PENDING: Colors.main.primary,
     }[taskStatus] || Colors.main.primary;
 
-  // Determine swipe button labels and actions based on current task status
   const getSwipeOptions = () => {
     switch (taskStatus) {
       case TaskStatus.COMPLETED:
@@ -181,10 +178,8 @@ const TaskDetail = () => {
             </Button>
           </HStack>
 
-          {/* Main Info Card */}
           <Box style={styles.mainCard}>
             <VStack space="lg">
-              {/* Status */}
               <HStack className="justify-between items-center">
                 <Text style={styles.sectionTitle}>{t('task_detail.status')}</Text>
                 {StatusBadge(taskStatus)}
@@ -192,7 +187,6 @@ const TaskDetail = () => {
 
               <Box style={styles.divider} />
 
-              {/* Category & Goal */}
               <VStack space="md">
                 <HStack className="justify-between items-center">
                   <Text style={styles.label}>{t('task_detail.category')}</Text>
@@ -207,23 +201,6 @@ const TaskDetail = () => {
             </VStack>
           </Box>
 
-          {/* Tags Card */}
-          <Box style={styles.card}>
-            <Text style={styles.sectionTitle}>{t('task_detail.tags')}</Text>
-            <HStack style={styles.tagsContainer}>
-              {uniqueTags.length > 0 ? (
-                uniqueTags.map((tag) => (
-                  <Box key={tag} style={styles.tagChip}>
-                    <Text style={styles.tagText}>#{tag}</Text>
-                  </Box>
-                ))
-              ) : (
-                <Text style={styles.emptyText}>{t('task_detail.no_tags')}</Text>
-              )}
-            </HStack>
-          </Box>
-
-          {/* Time Information */}
           <HStack className="justify-between gap-2">
             <Box style={[styles.timeCard, { flex: 1 }]}>
               <Text style={styles.timeLabel}>{t('task_detail.start_date')}</Text>
@@ -241,7 +218,6 @@ const TaskDetail = () => {
             </Box>
           </HStack>
 
-          {/* Description Card */}
           <Box style={styles.descriptionCard}>
             <Text style={styles.sectionTitle}>{t('task_detail.description')}</Text>
             <Box style={styles.descriptionContent}>
@@ -317,16 +293,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
-  card: {
-    backgroundColor: Colors.main.cardBackground,
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 6,
-    elevation: 3,
-  },
   timeCard: {
     backgroundColor: Colors.main.cardBackground,
     borderRadius: 12,
@@ -365,12 +331,6 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     maxWidth: '60%',
   },
-  emptyText: {
-    fontSize: 13,
-    color: Colors.main.textSecondary,
-    fontStyle: 'italic',
-    opacity: 0.7,
-  },
   statusBadge: {
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -382,25 +342,6 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 13,
     fontWeight: '700',
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 12,
-  },
-  tagChip: {
-    backgroundColor: Colors.main.primary + '20',
-    borderColor: Colors.main.primary + '40',
-    borderWidth: 1,
-    borderRadius: 16,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-  },
-  tagText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: Colors.main.primary,
   },
   timeLabel: {
     fontSize: 11,

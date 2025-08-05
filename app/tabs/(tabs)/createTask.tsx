@@ -38,7 +38,7 @@ const CreateTask = () => {
 
           <Button style={styles.accordionHeader} onPress={() => setIsAccordionOpen(!isAccordionOpen)}>
             <Box style={styles.accordionHeaderContent}>
-              <Text style={styles.accordionTitle}>{t('options')}</Text>
+              <Text style={styles.accordionTitle}>{t('event.options')}</Text>
               <Icon as={isAccordionOpen ? ChevronUpIcon : ChevronDownIcon} size="lg" color={Colors.main.textPrimary} />
             </Box>
           </Button>
@@ -64,7 +64,7 @@ const CreateTask = () => {
 
         <Box style={styles.buttonContainer}>
           <Button onPress={handleSubmit(onSubmit)} style={styles.buttonStyle}>
-            <ButtonText style={styles.buttonText}>{t('submit')}</ButtonText>
+            <ButtonText style={styles.buttonText}>{t('button.submit')}</ButtonText>
           </Button>
         </Box>
       </View>
@@ -109,8 +109,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.main.textPrimary,
-    fontWeight: '800',
-    fontSize: 17,
+    fontSize: 20,
   },
   accordionHeader: {
     backgroundColor: Colors.main.cardBackground,

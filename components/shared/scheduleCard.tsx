@@ -5,6 +5,7 @@ import { Colors } from '@/constants/Colors';
 import { Icon } from '../ui/icon';
 import { ClockIcon } from '@/assets/Icons/Clock';
 import { Task } from '@/storage/todoStorage';
+import { useAppStore } from '@/store/appState';
 
 interface ScheduleCardProps {
   task: Task;
@@ -13,6 +14,7 @@ interface ScheduleCardProps {
 }
 
 const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
+  const { language } = useAppStore();
   const handlePress = () => {
     if (onPress && task.id != null) {
       onPress(task);
@@ -25,7 +27,7 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
     } else if (task.status === 'CANCELLED') {
       return styles.textContainerIsCancel;
     }
-    return styles.textContainer;
+    return language === 'fa' ? styles.textRightContainer : styles.textLeftContainer;
   };
 
   const CardContent = () => (
@@ -65,9 +67,13 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
 export default ScheduleCard;
 
 const styles = StyleSheet.create({
-  textContainer: {
+  textLeftContainer: {
     borderColor: Colors.main.textPrimary,
     borderLeftWidth: 3,
+  },
+  textRightContainer: {
+    borderColor: Colors.main.textPrimary,
+    borderRightWidth: 3,
   },
   textContainerIsCompleted: {
     borderColor: Colors.main.primary,

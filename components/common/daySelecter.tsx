@@ -5,6 +5,8 @@ import { Text } from '../Themed';
 import { HStack } from '../ui/hstack';
 import { Button, ButtonText } from '../ui/button';
 import { StyleSheet } from 'react-native';
+import { weekdays } from '@/constants/WeekEnum';
+import { useAppStore } from '@/store/appState';
 
 interface DaySelectorProps {
   field: {
@@ -14,8 +16,8 @@ interface DaySelectorProps {
 }
 
 const DaySelector = ({ field }: DaySelectorProps) => {
-  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const value = field.value ?? [];
+  const { language } = useAppStore();
 
   const handleDayChange = (day: string) => {
     const isSelected = value.includes(day);
@@ -25,14 +27,14 @@ const DaySelector = ({ field }: DaySelectorProps) => {
 
   return (
     <VStack style={styles.container}>
-      <Text style={styles.titleStyle}>{t('event.select_reminder_days')}</Text>
-      <HStack className="flex-wrap gap-1 justify-between">
-        {daysOfWeek.map((day) => {
-          const isSelected = value.includes(day);
+      <Text style={[styles.titleStyle, { textAlign: language === 'fa' ? 'right' : 'left' }]}>{t('event.select_reminder_days')}</Text>
+      <HStack className="flex-wrap gap-1">
+        {weekdays.map((day) => {
+          const isSelected = value.includes(day.en);
           return (
             <Button
-              key={day}
-              onPress={() => handleDayChange(day)}
+              key={day.id}
+              onPress={() => handleDayChange(day.en)}
               size="sm"
               className="rounded-full px-3"
               style={{
@@ -40,7 +42,7 @@ const DaySelector = ({ field }: DaySelectorProps) => {
               }}
             >
               <ButtonText style={{ color: isSelected ? Colors.main.background : Colors.main.textPrimary }} className="text-sm">
-                {t(day.toUpperCase())}
+                {language === 'fa' ? day.fa : day.en}
               </ButtonText>
             </Button>
           );

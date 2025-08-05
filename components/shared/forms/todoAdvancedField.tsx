@@ -6,7 +6,6 @@ import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { AddTodoSchemaType } from '@/components/schema/addTodoSchema';
-import SelectedTags from '@/components/common/selectedTags';
 
 interface TodoAdvancedFieldsProps {
   control: Control<AddTodoSchemaType>;
@@ -45,8 +44,6 @@ export const TodoAdvancedFields: React.FC<TodoAdvancedFieldsProps> = ({ control 
           </VStack>
         )}
       />
-
-      <Controller control={control} name="tags" render={({ field }) => <SelectedTags field={field} />} />
     </VStack>
   );
 };

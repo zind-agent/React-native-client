@@ -58,15 +58,28 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
   const insets = useSafeAreaInsets();
   const screenWidth = useMemo(() => Dimensions.get('window').width, []);
   const visibleRoutes = useMemo(
-    () => state.routes.filter((route) => route.name !== 'addTodoAi' && route.name !== 'createTask' && route.name !== '[taskId]' && route.name !== 'edit/[editTaskId]' && route.name !== 'createTopics'),
+    () =>
+      state.routes.filter(
+        (route) =>
+          route.name !== 'addTodoAi' &&
+          route.name !== 'createTask' &&
+          route.name !== '[taskId]' &&
+          route.name !== 'edit/[editTaskId]' &&
+          route.name !== 'createTopics' &&
+          route.name !== 'topics/edit/[id]' &&
+          route.name !== 'topics/detail/[id]',
+      ),
     [state.routes],
   );
   const hideTabBar = useMemo(
     () =>
       state.routes[state.index].name === '[taskId]' ||
+      state.routes[state.index].name === 'topics/[Id]' ||
       state.routes[state.index].name === 'createTask' ||
       state.routes[state.index].name === 'edit/[editTaskId]' ||
-      state.routes[state.index].name === 'createTopics',
+      state.routes[state.index].name === 'createTopics' ||
+      state.routes[state.index].name === 'topics/detail/[id]' ||
+      state.routes[state.index].name === 'topics/edit/[id]',
     [state.routes, state.index],
   );
 

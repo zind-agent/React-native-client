@@ -5,7 +5,6 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
-  tags?: string[];
   startTime: string;
   endTime: string;
   date: string;
@@ -50,7 +49,6 @@ export class TaskStorage {
             id TEXT PRIMARY KEY,
             title TEXT NOT NULL,
             description TEXT DEFAULT '',
-            tags TEXT NOT NULL DEFAULT '[]',
             start_time TEXT NOT NULL,
             end_time TEXT NOT NULL,
             date TEXT NOT NULL,
@@ -104,7 +102,6 @@ export class TaskStorage {
       id: task.id,
       title: task.title.trim(),
       description: task.description?.trim() || '',
-      tags: JSON.stringify(task.tags || []),
       start_time: task.startTime,
       end_time: task.endTime,
       date: task.date,
@@ -122,7 +119,6 @@ export class TaskStorage {
       id: row.id,
       title: row.title,
       description: row.description,
-      tags: JSON.parse(row.tags ?? '[]'),
       startTime: row.start_time,
       endTime: row.end_time,
       date: row.date,
@@ -143,10 +139,10 @@ export class TaskStorage {
       const row = this.TaskToRow(task);
       await this.db.runAsync(
         `INSERT INTO tasks (
-            id, title, description, tags, start_time, end_time,
-            date, status, category_id, goal_id, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [row.id, row.title, row.description, row.tags, row.start_time, row.end_time, row.date, row.status, row.category_id, row.goal_id, row.created_at, row.updated_at],
+    id, title, description, start_time, end_time,
+    date, status, category_id, goal_id, created_at, updated_at, reminder_days
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [row.id, row.title, row.description, row.start_time, row.end_time, row.date, row.status, row.category_id, row.goal_id, row.created_at, row.updated_at, row.reminder_days],
       );
     } catch (error) {
       console.error(`Failed to create task with ID ${task.id}:`, error);
@@ -162,10 +158,10 @@ export class TaskStorage {
       const row = this.TaskToRow(task);
       const result = await this.db.runAsync(
         `UPDATE tasks SET
-            title = ?, description = ?, tags = ?, start_time = ?, end_time = ?,
+            title = ?, description = ?, start_time = ?, end_time = ?,
             date = ?, status = ?, category_id = ?, goal_id = ?, updated_at = ?
           WHERE id = ?`,
-        [row.title, row.description, row.tags, row.start_time, row.end_time, row.date, row.status, row.category_id, row.goal_id, new Date().toISOString(), row.id],
+        [row.title, row.description, row.start_time, row.end_time, row.date, row.status, row.category_id, row.goal_id, new Date().toISOString(), row.id],
       );
 
       if (result.changes === 0) {

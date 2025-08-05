@@ -41,7 +41,7 @@ const AddTodoInTime = memo(() => {
                   <AccordionTrigger className="border-b-[1px] h-12 rounded-md" style={{ borderColor: Colors.main.primary, backgroundColor: Colors.main.background + 50 }}>
                     {({ isExpanded }) => (
                       <>
-                        <AccordionTitleText style={{ color: Colors.main.textPrimary }}>{t('options')}</AccordionTitleText>
+                        <AccordionTitleText style={{ color: Colors.main.textPrimary }}>{t('event.options')}</AccordionTitleText>
                         {isExpanded ? <AccordionIcon as={ChevronUpIcon} className="ml-3 text-white" /> : <AccordionIcon as={ChevronDownIcon} className="ml-3 text-white" />}
                       </>
                     )}
@@ -56,7 +56,7 @@ const AddTodoInTime = memo(() => {
 
             <Button onPress={handleSubmit(onSubmit)} className="w-full h-16 rounded-lg" style={{ backgroundColor: Colors.main.primary }}>
               <ButtonText className="text-xl" style={{ color: Colors.main.background, fontWeight: '800' }}>
-                {t('submit')}
+                {t('button.submit')}
               </ButtonText>
             </Button>
           </KeyboardAvoidingView>

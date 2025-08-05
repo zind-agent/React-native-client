@@ -7,7 +7,6 @@ import { Box } from '@/components/ui/box';
 import { useAppStore } from '@/store/appState';
 import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
-import { Pressable } from '@/components/ui/pressable';
 import CalenderIcon from '@/assets/Icons/CalenderIcon';
 import { Text } from 'react-native';
 import jalaliMoment from 'jalali-moment';
@@ -96,20 +95,19 @@ const SelectYearWithMonth = ({
         <DrawerContent style={{ backgroundColor: Colors.main.background }} className="h-max">
           <DrawerHeader className="justify-center py-1">
             <HStack className="items-center gap-10 mb-4">
-              <Pressable onPress={handleDecrease} className="rounded-lg p-3" style={{ backgroundColor: Colors.main.primary }}>
-                <LeftIcon height={23} width={23} />
-              </Pressable>
+              <Button onPress={handleDecrease} className={`rounded-lg ${language === 'fa' ? 'rotate-180' : 'rotate-0'}`} style={{ backgroundColor: Colors.main.border, height: 40 }}>
+                <LeftIcon height={23} width={23} color={Colors.main.textPrimary} />
+              </Button>
 
               <Text style={{ fontSize: 24, color: Colors.main.textPrimary }}>{displayYear}</Text>
 
-              <Pressable onPress={handleIncrease} className="rounded-lg p-3 rotate-180" style={{ backgroundColor: Colors.main.primary }}>
-                <LeftIcon height={23} width={23} />
-              </Pressable>
+              <Button onPress={handleIncrease} className={`rounded-lg ${language === 'fa' ? 'rotate-0' : 'rotate-180'}`} style={{ backgroundColor: Colors.main.border, height: 40 }}>
+                <LeftIcon height={23} width={23} color={Colors.main.textPrimary} />
+              </Button>
             </HStack>
           </DrawerHeader>
           <DrawerBody>
             <VStack className="items-center space-y-6">
-              {/* Month Selector */}
               <Box
                 style={{
                   flexDirection: 'row',
@@ -125,9 +123,8 @@ const SelectYearWithMonth = ({
                     variant={selectedMonth === option.value ? 'solid' : 'outline'}
                     className="h-12 rounded-xl mb-2"
                     style={{
-                      backgroundColor: selectedMonth === option.value ? Colors.main.primary : Colors.main.background,
-                      borderWidth: 1,
-                      borderColor: Colors.main.primaryLight,
+                      backgroundColor: selectedMonth === option.value ? Colors.main.primary : Colors.main.cardBackground,
+                      borderWidth: 0,
                       flexBasis: '32%',
                     }}
                   >
@@ -145,7 +142,7 @@ const SelectYearWithMonth = ({
               </Box>
 
               <Button onPress={() => setShowDrawer(false)} className="mt-4 h-14 rounded-xl w-full" style={{ backgroundColor: Colors.main.primary }}>
-                <ButtonText className="text-white text-lg">{t('confirm')}</ButtonText>
+                <ButtonText className="text-white text-lg">{t('button.confirm')}</ButtonText>
               </Button>
             </VStack>
           </DrawerBody>

@@ -15,7 +15,6 @@ export const useTopicsFrom = (selectedDate: string) => {
     resolver: zodResolver(addTopicSchema),
     defaultValues: {
       title: '',
-      tags: [],
       description: '',
       category: '',
       createdAt: '',
@@ -33,7 +32,6 @@ export const useTopicsFrom = (selectedDate: string) => {
 
     reset({
       title: '',
-      tags: [],
       description: '',
       category: '',
       createdAt: now.toISOString(),
@@ -50,7 +48,6 @@ export const useTopicsFrom = (selectedDate: string) => {
           userId: user?.id || 0,
           title: data.title.trim(),
           description: data.description?.trim() || '',
-          tags: data.tags || [],
           status: TaskStatus.PENDING,
           category: data.category ?? '',
           createdAt: data.createdAt,

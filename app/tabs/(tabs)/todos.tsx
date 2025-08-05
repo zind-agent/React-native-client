@@ -25,12 +25,15 @@ const Todos = () => {
   }, [loadTasks, selectedDate]);
 
   const today = jalaliMoment();
-  const todayDate = calender === 'jalali' ? today.format('jYYYY-jMM-jDD') : today.format('YYYY-MM-DD');
+  const todayDate = today.format('YYYY-MM-DD');
+
   const todayYear = calender === 'jalali' ? today.jYear().toString() : today.year().toString();
   const todayMonth = calender === 'jalali' ? (today.jMonth() + 1).toString() : (today.month() + 1).toString();
-  const selectedWeekStart = selectedDate ? (calender === 'jalali' ? jalaliMoment(selectedDate, 'jYYYY-jMM-jDD').startOf('week') : jalaliMoment(selectedDate, 'YYYY-MM-DD').startOf('week')) : null;
-  const todayWeekStart = calender === 'jalali' ? jalaliMoment().startOf('week') : jalaliMoment().startOf('week');
+
+  const selectedWeekStart = selectedDate ? jalaliMoment(selectedDate, 'YYYY-MM-DD').startOf('week') : null;
+  const todayWeekStart = jalaliMoment().startOf('week');
   const isCurrentWeek = selectedWeekStart && selectedWeekStart.isSame(todayWeekStart, 'day');
+
   const isCurrentMonth = selectedYear === todayYear && selectedMonth === todayMonth;
   const isToday = selectedDate === todayDate;
 
@@ -41,6 +44,12 @@ const Todos = () => {
   };
 
   const shouldShowTodayButton = !isCurrentWeek || !isCurrentMonth || !isToday;
+
+  const getDisplayDate = (gregorianDate: string) => {
+    if (!gregorianDate) return '-';
+    const moment = jalaliMoment(gregorianDate, 'YYYY-MM-DD');
+    return calender === 'jalali' ? moment.format('jYYYY/jMM/jDD') : moment.format('YYYY/MM/DD');
+  };
 
   return (
     <Box style={{ flex: 1, backgroundColor: Colors.main.background }}>
@@ -70,7 +79,16 @@ const Todos = () => {
             <SelectYearWithMonth selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
           </HStack>
 
-          <WeeklyDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} year={selectedYear ?? undefined} month={selectedMonth ?? undefined} />
+          <WeeklyDatePicker
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            year={selectedYear ?? undefined}
+            month={selectedMonth ?? undefined}
+            onMonthChange={(newYear, newMonth) => {
+              setSelectedYear(newYear);
+              setSelectedMonth(newMonth);
+            }}
+          />
 
           {shouldShowTodayButton && (
             <Box className="items-center mt-3">
@@ -90,7 +108,7 @@ const Todos = () => {
           >
             {isToday ? t('todos.today') : t('todos.selected_date')}
           </Heading>
-          <Heading style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{selectedDate ?? '-'}</Heading>
+          <Heading style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{getDisplayDate(selectedDate)}</Heading>
         </HStack>
       </Box>
       <VStack>

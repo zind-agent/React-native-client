@@ -17,7 +17,7 @@
     "continue_with_email": "Continue with Email",
     "continue_with_mobile": "Continue with Mobile Number",
     "privity_security_message": "Your privacy and security are our top priorities",
-    "privacy_security_message": "By entering Zind, you agree to our terms and conditions. Your information is only used to provide a better experience and more effective interaction.",
+    "privacy_security_message": "By entering Cocheck, you agree to our terms and conditions. Your information is only used to provide a better experience and more effective interaction.",
     "code_must_be_4_digits": "Code must be 4 digits",
     "code_must_contain_only_numbers": "Code must contain only numbers",
     "failed_to_send_code": "Failed to send code",
@@ -34,7 +34,7 @@
   },
   "onboarding": {
     "getting_started": "Getting Started",
-    "start_your_journey_with_zind": "Start Your Journey with Zind",
+    "start_your_journey_with_cocheck": "Start Your Journey with Cocheck",
     "intro_question_message": "We’re here to help you build a healthy lifestyle that truly fits your body and mind. To give you accurate and personalized plans, we’ll ask a few quick questions.",
     "takes_less_than_a_minute": "✅ It takes less than a minute.",
     "our_goal": "🎯 Our goal? A plan that really works for you.",
@@ -70,7 +70,7 @@
   },
   "goal": {
     "your_goal": "Your Goal",
-    "what_do_you_want_from_zind": "What do you want from Zind?",
+    "what_do_you_want_from_cocheck": "What do you want from Cocheck?",
     "main_goal_guidance_text": "We’d like to know your main goal so we can guide you the right way.",
     "goals": {
       "lose_weight": "Lose Weight",
@@ -88,7 +88,7 @@
     "ass_questions": "Please answer all the questions",
     "your_current_lifestyle": "Your Current Lifestyle",
     "quick_snapshot_subtitle": "A quick snapshot of where you're at",
-    "tell_us_about_current_state": "To make sure Zind starts where you are, tell us a bit about your current state:",
+    "tell_us_about_current_state": "To make sure Cocheck starts where you are, tell us a bit about your current state:",
     "question_one": {
       "main": "How often do you exercise per week?",
       "one": "Not at all",
@@ -130,7 +130,7 @@
   },
 
   "button": {
-    "zind_will_start_from_here": "Zind will start from here",
+    "cocheck_will_start_from_here": "Cocheck will start from here",
     "add_task": "Add Task",
     "add": "Add",
     "submit": "Submit",
@@ -170,7 +170,8 @@
     "add_by_ai": "Add By AI",
     "date": "Date",
     "edit_event": "Edit Task",
-    "write_description_todo": "Write a short description about this task"
+    "write_description_todo": "Write a short description about this task",
+    "todos.select_date": "Select Date"
   },
   "create_task": {
     "create_task": "Create Task"
@@ -193,7 +194,6 @@
     "no_category": "No Category Choosen",
     "goal": "Goal",
     "no_goal": "No Goal Choosen",
-    "no_tags": "No Tags Choosen",
     "start_date": "Start Date",
     "need_edit": "Your Task Needs to be Edited ?",
     "no_description_todo": "No Description for this Task"
@@ -202,12 +202,12 @@
   "event": {
     "select_reminder_days": "Select Reminder Days",
     "title": "Title",
-    "tags": "Tags (optional)",
     "options": "Options",
     "clear_storage": "Clear Storage",
     "add_topic": "Add Topic",
     "is_public": "All Users Can See This Topic?",
-    "append_title_required": "Title is required"
+    "append_title_required": "Title is required",
+    "search": "Search your topics ..."
   },
 
   "status_enum": {
@@ -219,7 +219,10 @@
     "title": "Topics",
     "add_topic": "Add Topic",
     "create_topics": "Create Topic",
-    "write_description_topic": "Write a short description about this topic"
+    "write_description_topic": "Write a short description about this topic",
+    "is_public": "Is Public",
+    "yes": "Yes",
+    "no": "No"
   },
   "category": {
     "select_category": "Select Category",

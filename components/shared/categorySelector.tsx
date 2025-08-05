@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet, Platform, I18nManager } from 'react-native';
+import { View, TouchableOpacity, Modal, FlatList, StyleSheet, Platform, I18nManager } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { Box } from '../ui/box';
 import { HStack } from '../ui/hstack';
+import { Text } from '../Themed';
+import { Button } from '../ui/button';
+import { useAppStore } from '@/store/appState';
 
 export interface Category {
   id: string;
   name: string;
+  fa: string;
   color?: string;
   icon?: string;
 }
@@ -23,6 +27,7 @@ export interface CategoryPickerProps {
 
 const CategoryPicker: React.FC<CategoryPickerProps> = ({ selectedCategory, onCategorySelect, categories, placeholder, style }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { language } = useAppStore();
   const categboryItems = categories.find((category) => category.id === selectedCategory);
 
   const handleCategorySelect = (category: string) => {
@@ -31,23 +36,26 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ selectedCategory, onCat
   };
 
   const renderCategoryItem = ({ item }: { item: Category }) => (
-    <TouchableOpacity style={[styles.categoryItem, item.id === selectedCategory && styles.selectedCategoryItem]} onPress={() => handleCategorySelect(item.id)}>
-      <HStack className="items-center">
+    <Button
+      style={[styles.categoryItem, item.id === selectedCategory && styles.selectedCategoryItem, { flexDirection: language === 'fa' ? 'row' : 'row-reverse' }]}
+      onPress={() => handleCategorySelect(item.id)}
+    >
+      <HStack className="items-center gap-3">
         {item.color && <View style={[styles.categoryColorIndicator, { backgroundColor: item.color }]} />}
-        <Text style={[styles.categoryText, item.id === selectedCategory && styles.selectedCategoryText]}>{item.name}</Text>
+        <Text style={[styles.categoryText, item.id === selectedCategory && styles.selectedCategoryText]}>{language === 'fa' ? item.fa : item.name}</Text>
       </HStack>
       {item.icon && <Text style={styles.categoryIcon}>{item.icon}</Text>}
-    </TouchableOpacity>
+    </Button>
   );
 
   return (
     <View style={style}>
-      <TouchableOpacity style={styles.pickerButton} onPress={() => setIsModalVisible(true)}>
+      <TouchableOpacity style={[styles.pickerButton, { flexDirection: language === 'fa' ? 'row-reverse' : 'row' }]} onPress={() => setIsModalVisible(true)}>
         <View>
           {categboryItems ? (
             <HStack style={styles.selectedCategoryDisplay}>
               {categboryItems.color && <View style={[styles.categoryColorIndicator, { backgroundColor: categboryItems.color }]} />}
-              <Text style={styles.categoryText}>{categboryItems.name}</Text>
+              <Text style={styles.categoryText}>{language === 'fa' ? categboryItems.fa : categboryItems.name}</Text>
             </HStack>
           ) : (
             <Text style={styles.placeholderText}>{placeholder}</Text>
@@ -122,17 +130,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.main.border || '#E0E0E0',
+    borderBottomColor: Colors.main.border,
     paddingTop: Platform.OS === 'ios' ? 50 : 12,
+    marginBottom: 10,
   },
   cancelButton: {
     fontSize: 16,
-    color: Colors.main.primary || '#007AFF',
+    color: Colors.main.primary,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: Colors.main.textPrimary || '#000000',
+    color: Colors.main.textPrimary,
   },
   placeholder: {
     width: 50,
@@ -141,13 +150,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   categoryItem: {
-    flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+    backgroundColor: Colors.main.cardBackground,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 12,
     paddingHorizontal: 12,
     borderRadius: 8,
     marginVertical: 2,
+    height: 50,
   },
   selectedCategoryItem: {
     backgroundColor: 'transparent',
