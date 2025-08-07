@@ -1,16 +1,18 @@
 import React from 'react';
 import { MotiView } from 'moti';
 import { Colors } from '@/constants/Colors';
-import { Todo } from '@/storage/todoStorage';
 import { useAppStore } from '@/store/appState';
 import { HStack } from '../ui/hstack';
-import { Button, ButtonText } from '../ui/button';
+import { Button } from '../ui/button';
+import { TaskStatus } from '@/constants/TaskEnum';
+import { Text } from '../Themed';
+import { Task } from '@/storage/todoStorage';
 
 interface HiddenItemProps {
-  item: Todo;
+  item: Task;
   swipedRows: Set<string>;
-  onCompleteTask: (item: Todo) => void;
-  onCancelTask: (item: Todo) => void;
+  onCompleteTask: (item: Task) => void;
+  onCancelTask: (item: Task) => void;
 }
 
 const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask }: HiddenItemProps) => {
@@ -22,7 +24,7 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
   }
 
   return (
-    <HStack className="w-full h-full items-center justify-center gap-1">
+    <HStack className="w-full h-full items-center justify-center gap-1" style={{ flexDirection: language === 'fa' ? 'row-reverse' : 'row' }}>
       <MotiView
         className="w-1/2 h-[90%]"
         style={{
@@ -45,25 +47,24 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
       >
         <Button
           onPress={() => onCompleteTask(item)}
-          disabled={item.isCompleted || item.isCancel}
+          disabled={item.status === TaskStatus.COMPLETED}
           className="h-full w-full"
           style={{
-            backgroundColor: Colors.main.success,
+            backgroundColor: item.status === TaskStatus.COMPLETED ? Colors.main.border : Colors.main.primary,
             justifyContent: language === 'fa' ? 'flex-end' : 'flex-start',
             borderRadius: 10,
           }}
         >
-          <ButtonText
+          <Text
             style={{
-              color: Colors.main.cardBackground,
-              fontWeight: 'bold',
+              color: Colors.main.textPrimary,
               fontSize: 12,
-              textAlign: language === 'fa' ? 'right' : 'left',
+              textAlign: language === 'fa' ? 'left' : 'right',
               paddingHorizontal: 10,
             }}
           >
             ✔ {language === 'fa' ? 'تکمیل' : 'Done'}
-          </ButtonText>
+          </Text>
         </Button>
       </MotiView>
 
@@ -89,25 +90,24 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
       >
         <Button
           onPress={() => onCancelTask(item)}
-          disabled={item.isCompleted || item.isCancel}
+          disabled={item.status === TaskStatus.CANCELLED}
           className="h-full w-full"
           style={{
-            backgroundColor: Colors.main.accent,
+            backgroundColor: item.status === TaskStatus.CANCELLED ? Colors.main.border : Colors.main.accent,
             justifyContent: language === 'fa' ? 'flex-start' : 'flex-end',
             borderRadius: 10,
           }}
         >
-          <ButtonText
+          <Text
             style={{
-              color: Colors.main.cardBackground,
-              fontWeight: 'bold',
+              color: Colors.main.textPrimary,
               fontSize: 12,
-              textAlign: language === 'fa' ? 'left' : 'right',
+              textAlign: language === 'fa' ? 'right' : 'left',
               paddingHorizontal: 10,
             }}
           >
-            ✖ {language === 'fa' ? 'لغو' : 'Cancel'}
-          </ButtonText>
+            ✖ {language === 'fa' ? 'لغو' : 'Canceled'}
+          </Text>
         </Button>
       </MotiView>
     </HStack>

@@ -11,6 +11,9 @@ import { Task } from '@/storage/todoStorage';
 import { TaskStatus } from '@/constants/TaskEnum';
 import { router } from 'expo-router';
 import { Loading } from '../common/Loading';
+import { Center } from '../ui/center';
+import { Text } from '../Themed';
+import { t } from 'i18next';
 
 interface TodoListViewProps {
   mode: 'flat' | 'grouped';
@@ -19,14 +22,14 @@ interface TodoListViewProps {
 }
 
 const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) => {
-  const { tasks, isLoading, updateTask, pendingTodayTasks } = useTodoStore();
+  const { tasks, isLoading, updateTask, loadTasks } = useTodoStore();
   const groupedTodos = useGroupedTodos(mode === 'grouped' ? tasks : []);
   const [swipedRows, setSwipedRows] = useState<Set<string>>(new Set());
 
   const handleCompleteTask = useCallback(
     async (task: Task) => {
       try {
-        await updateTask({ ...task, status: TaskStatus.COMPLETED });
+        await updateTask({ ...task, status: TaskStatus.COMPLETED }).then(() => loadTasks(task.date));
         setSwipedRows((prev) => {
           const newSet = new Set(prev);
           newSet.delete(task.id);
@@ -42,7 +45,7 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
   const handleCancelTask = useCallback(
     async (task: Task) => {
       try {
-        await updateTask({ ...task, status: TaskStatus.CANCELLED });
+        await updateTask({ ...task, status: TaskStatus.CANCELLED }).then(() => loadTasks(task.date));
         setSwipedRows((prev) => {
           const newSet = new Set(prev);
           newSet.delete(task.id);
@@ -61,7 +64,6 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
         task={item}
         onPress={() => router.push(`/tabs/(tabs)/${item.id}`)}
         style={{
-          opacity: item.status === TaskStatus.COMPLETED || item.status === TaskStatus.CANCELLED ? 0.6 : 1,
           backgroundColor: Colors.main.cardBackground,
           marginVertical: 2,
           borderRadius: 10,
@@ -95,9 +97,16 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
   }
 
   if (mode === 'flat') {
+    if (tasks.length === 0) {
+      return (
+        <Center style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontSize: 16, color: Colors.main.textSecondary }}>{t('home.no_tasks_today')}</Text>
+        </Center>
+      );
+    }
     return (
       <SwipeListView
-        data={pendingTodayTasks}
+        data={tasks}
         renderItem={renderItem}
         renderHiddenItem={enableSwipeActions ? renderHiddenItemWrapper : undefined}
         leftOpenValue={100}

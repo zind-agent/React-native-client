@@ -16,7 +16,7 @@ const Activity = () => {
   const { loadUserTopics, loadPublicTopics, userTopics } = useTopicStore();
   const { user } = useAppStore();
   useEffect(() => {
-    const userIdStr: string = user.id.toString();
+    const userIdStr: string = user!.id.toString();
     loadUserTopics(userIdStr);
     loadPublicTopics();
   }, [loadUserTopics, loadPublicTopics]);

@@ -23,9 +23,9 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
 
   const styleBorderHandler = () => {
     if (task.status === 'COMPLETED') {
-      return styles.textContainerIsCompleted;
+      return language === 'fa' ? styles.textContainerIsCompletedRight : styles.textContainerIsCompleted;
     } else if (task.status === 'CANCELLED') {
-      return styles.textContainerIsCancel;
+      return language === 'fa' ? styles.textContainerIsCancelRight : styles.textContainerIsCancel;
     }
     return language === 'fa' ? styles.textRightContainer : styles.textLeftContainer;
   };
@@ -78,6 +78,14 @@ const styles = StyleSheet.create({
   textContainerIsCompleted: {
     borderColor: Colors.main.primary,
     borderLeftWidth: 3,
+  },
+  textContainerIsCompletedRight: {
+    borderColor: Colors.main.primary,
+    borderRightWidth: 3,
+  },
+  textContainerIsCancelRight: {
+    borderColor: Colors.main.accent,
+    borderRightWidth: 3,
   },
   textContainerIsCancel: {
     borderColor: Colors.main.accent,

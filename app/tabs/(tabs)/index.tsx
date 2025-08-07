@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useCallback, useMemo } from 'react';
+import React, { memo, useEffect, useCallback, useMemo, useState } from 'react';
 import { FlatList, Image, ListRenderItem, StyleSheet } from 'react-native';
 import { Box } from '@/components/ui/box';
 import { Heading } from '@/components/ui/heading';
@@ -7,7 +7,6 @@ import { VStack } from '@/components/ui/vstack';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { Button, ButtonText } from '@/components/ui/button';
-import { router } from 'expo-router';
 import { useTodoStore } from '@/store/todoState';
 import TodoListView from '@/components/shared/todoListView';
 import AddTodoInTime from '@/components/shared/forms/addTodo/addTodoInTime';
@@ -16,31 +15,50 @@ import { Progress, ProgressFilledTrack } from '@/components/ui/progress';
 import UserHeaderTitle from '@/components/common/userHeaderTitle';
 import { Text } from '@/components/Themed';
 import emptyTask from '@/assets/images/emptyHome.png';
+import { TaskStatus } from '@/constants/TaskEnum';
 
 interface HomeSection {
   id: string;
   type: 'header' | 'addTodo' | 'progress' | 'todosHeader' | 'todoList' | 'emptyState';
-  data?: any;
 }
 
 const ITEM_HEIGHTS = {
   header: 60,
   addTodo: 80,
   progress: 120,
-  todosHeader: 50,
+  todosHeader: 80,
   todoList: 300,
   emptyState: 500,
 };
 
-const Home: React.FC = () => {
-  const { loadPendingTodayTasks, pendingTodayTasks, getCompletionPercentage } = useTodoStore();
-  const percentage = useMemo(() => getCompletionPercentage(), [getCompletionPercentage]);
+const TABS = [
+  { status: TaskStatus.ALL, label: t('home.all_task') },
+  { status: TaskStatus.PENDING, label: t('home.in_progress') },
+  { status: TaskStatus.COMPLETED, label: t('home.completed') },
+];
 
-  const hasTasks = useMemo(() => pendingTodayTasks && pendingTodayTasks.length > 0, [pendingTodayTasks]);
+const Home: React.FC = () => {
+  const { getCompletionPercentage, loadTasks, today, allTasks, getTodayAllTask } = useTodoStore();
+  const [percentage, setPercentage] = useState(0);
+
+  const [activeTab, setActiveTab] = useState<TaskStatus>(TaskStatus.ALL);
+  const hasTasks = useMemo(() => allTasks.length > 0, [allTasks]);
 
   useEffect(() => {
-    loadPendingTodayTasks();
-  }, [loadPendingTodayTasks]);
+    getTodayAllTask();
+  }, []);
+
+  useEffect(() => {
+    loadTasks(today, activeTab === TaskStatus.ALL ? undefined : activeTab);
+  }, [activeTab]);
+
+  useEffect(() => {
+    const fetchPercentage = async () => {
+      const result = await getCompletionPercentage();
+      setPercentage(result);
+    };
+    fetchPercentage();
+  }, []);
 
   const sections: HomeSection[] = useMemo(() => {
     const baseSections: HomeSection[] = [
@@ -67,9 +85,7 @@ const Home: React.FC = () => {
             <Center style={styles.progressContainer} className="p-10 rounded-xl mt-6 gap-3">
               <Heading style={styles.progressText}>{t('home.today_progress_summery')}</Heading>
               <HStack style={styles.progressStats}>
-                <Text style={styles.statText}>
-                  {t('home.task')} {pendingTodayTasks.length}
-                </Text>
+                <Text style={styles.statText}>{t('home.task')}</Text>
                 <Text style={styles.statText}>{percentage}%</Text>
               </HStack>
               <Progress style={styles.progressBar} value={percentage} size="md" orientation="horizontal">
@@ -81,13 +97,12 @@ const Home: React.FC = () => {
         case 'todosHeader':
           return (
             <VStack style={styles.todosHeader}>
-              <HStack style={styles.headerRow}>
-                <Heading style={styles.heading} size="2xl">
-                  {t('home.today_task')}
-                </Heading>
-                <Button style={styles.viewAllButton} onPress={() => router.push('/tabs/(tabs)/todos')}>
-                  <ButtonText style={styles.viewAllText}>{t('home.view_all')}</ButtonText>
-                </Button>
+              <HStack style={styles.tabContainer}>
+                {TABS.map((tab) => (
+                  <Button key={tab.status} className="p-0" style={[styles.tabButton, activeTab === tab.status && styles.activeTab]} onPress={() => setActiveTab(tab.status)}>
+                    <ButtonText style={[styles.tabText, activeTab === tab.status && styles.activeTabText]}>{tab.label}</ButtonText>
+                  </Button>
+                ))}
               </HStack>
             </VStack>
           );
@@ -99,7 +114,7 @@ const Home: React.FC = () => {
           return (
             <Center style={styles.emptyStateContainer}>
               <VStack style={styles.emptyState}>
-                <Image source={emptyTask} style={{ height: 400, width: 400, objectFit: 'contain' }} />
+                <Image source={emptyTask} style={{ height: 400, width: 400, resizeMode: 'contain' }} />
                 <Text style={styles.emptyStateText}>{t('home.no_data_message', 'هنوز هیچ تسکی برای امروز ندارید\nشروع کنید و اولین تسک خود را اضافه کنید!')}</Text>
               </VStack>
             </Center>
@@ -109,7 +124,7 @@ const Home: React.FC = () => {
           return null;
       }
     },
-    [pendingTodayTasks.length, percentage, hasTasks],
+    [percentage, activeTab],
   );
 
   const getItemLayout = useCallback(
@@ -147,7 +162,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.main.background,
   },
   listContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingBottom: 40,
   },
   listContentEmpty: {
@@ -156,7 +171,7 @@ const styles = StyleSheet.create({
   progressContainer: {
     height: 130,
     width: '100%',
-    backgroundColor: Colors.main.cardBackground + 80,
+    backgroundColor: Colors.main.cardBackground + '80',
     borderColor: Colors.main.textPrimary,
     borderWidth: 1,
   },
@@ -175,28 +190,41 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   progressBar: {
-    backgroundColor: Colors.main.textPrimary + 40,
+    backgroundColor: Colors.main.textPrimary + '40',
   },
   progressFilled: {
     backgroundColor: Colors.main.primary,
   },
   todosHeader: {
-    marginTop: 20,
+    marginTop: 15,
+    borderBottomColor: Colors.main.border,
+    borderBottomWidth: 1,
+    paddingBottom: 10,
+    marginBottom: 10,
   },
-  headerRow: {
+  tabContainer: {
+    marginTop: 10,
+    borderRadius: 12,
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 4,
+    flexDirection: 'row',
   },
-  heading: {
-    color: Colors.main.textPrimary,
-  },
-  viewAllButton: {
+  tabButton: {
+    flex: 1,
     backgroundColor: 'transparent',
+    borderRadius: 8,
   },
-  viewAllText: {
+  activeTab: {
+    borderBottomColor: Colors.main.primary,
+    borderBottomWidth: 2,
+  },
+  tabText: {
     color: Colors.main.textPrimary,
     fontSize: 14,
+    textAlign: 'center',
+  },
+  activeTabText: {
+    color: Colors.main.textPrimary,
+    fontWeight: '600',
   },
   emptyStateContainer: {
     flex: 1,

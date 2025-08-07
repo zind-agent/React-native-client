@@ -125,7 +125,7 @@ export class TopicStorage {
 
   public async getUserTopics(userId: string): Promise<Topic[]> {
     await this.ensureInitialized();
-    const rows = await this.db.getAllAsync(`SELECT * FROM topics WHERE user_id = ?`, [userId]);
+    const rows = await this.db.getAllAsync(`SELECT * FROM topics WHERE user_id = 0`, [userId]);
     return rows.map(this.rowToTopic);
   }
 

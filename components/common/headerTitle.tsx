@@ -12,7 +12,7 @@ import { Heading } from '../ui/heading';
 const HeaderTitle = ({ title, path, isLight = false }: { title: string; path: RelativePathString; isLight?: boolean }) => {
   const { language } = useAppStore();
   return (
-    <HStack className="items-center gap-4 mt-5">
+    <HStack className="items-center gap-4 mt-5 fixed top-0">
       <Button
         className="rounded-xl h-[44px] w-[44px]"
         onPress={() => router.push(path)}

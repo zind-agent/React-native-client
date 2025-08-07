@@ -144,14 +144,18 @@
     "welcome_to_cocheck": "Welcome to CoCheck",
     "lets_make_this_day_productive": "Let’s make this day productive",
     "my_task": "My Task",
-    "completed": "Completed Task",
     "task": "Task",
     "pending": "Pending",
     "cancel": "Canceled",
     "today_task": "Today Task",
     "view_all": "View All",
     "today_progress_summery": "Today's completed tasks",
-    "no_task": "No task is available for today. Please create a task from the button below."
+    "no_task": "No task is available for today. Please create a task from the button below.",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "all_task": "All",
+    "no_tasks_today": "No tasks exists"
   },
 
   "todos": {
@@ -177,7 +181,9 @@
     "title_form_todo": "Title"
   },
   "create_task": {
-    "create_task": "Create Task"
+    "create_task": "Create Task",
+    "select_topics": "Select Topics",
+    "no_topics": "You don't have any topics"
   },
   "task_detail": {
     "title": "Title",

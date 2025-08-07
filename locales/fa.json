@@ -142,14 +142,18 @@
     "welcome_to_cocheck": "به کوچک خوش اومدی",
     "lets_make_this_day_productive": "بیایم این روز رو پربار کنیم",
     "my_task": "فعالیت‌های من",
-    "completed": "فعالیت‌های انجام شده",
     "task": "فعالیت",
     "pending": "منتظر",
     "cancel": "لغو شده",
     "today_task": "فعالیت‌های امروز",
     "view_all": "نمایش همه",
     "today_progress_summery": "فعالیت‌های انجام شده امروز",
-    "no_task": "امروز فعالیتی وجود نداره. لطفا با دکمه پایین، فعالیت جدید بساز."
+    "no_task": "امروز فعالیتی وجود نداره. لطفا با دکمه پایین، فعالیت جدید بساز.",
+    "in_progress": "در جریان",
+    "completed": "تکمیل شده",
+    "cancelled": "لغو شده",
+    "all_task": "همه فعالیت‌ها",
+    "no_tasks_today": "فعالیتی موجود نیست"
   },
   "todos": {
     "todo_list": "لیست فعالیت‌ها",
@@ -174,7 +178,9 @@
     "title_form_todo": "عنوان"
   },
   "create_task": {
-    "create_task": "ایجاد فعالیت"
+    "create_task": "ایجاد فعالیت",
+    "select_topics": "انتخاب موضوعات",
+    "no_topics": "هیچ گروه بندی نداری"
   },
   "task_detail": {
     "title": "عنوان",

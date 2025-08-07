@@ -173,7 +173,7 @@ export class TaskStorage {
     }
   }
 
-  public async loadTasksByDate(date: string, status?: TaskStatus): Promise<Task[]> {
+  public async loadTasksByDateStatus(date: string, status?: TaskStatus): Promise<Task[]> {
     await this.ensureInitialized();
     if (!date?.match(/^\d{4}-\d{2}-\d{2}$/)) {
       throw new Error('Invalid date format. Expected: YYYY-MM-DD');

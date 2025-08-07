@@ -11,7 +11,6 @@ import TimeDeffrence from '@/components/common/timeDeffrence';
 import { AddTodoForm } from './addTodo/todoForm';
 import { Colors } from '@/constants/Colors';
 import { StyleSheet } from 'react-native';
-import DaySelector from '@/components/common/daySelecter';
 
 interface TodoBasicFieldsProps {
   control: Control<AddTodoSchemaType>;
@@ -46,8 +45,6 @@ export const TodoBasicFields: React.FC<TodoBasicFieldsProps> = ({ control, error
 
         {startTime && endTime && <TimeDeffrence startTime={startTime} endTime={endTime} />}
       </VStack>
-
-      <Controller name="reminderDays" control={control} render={({ field }) => <DaySelector field={field} />} />
     </>
   );
 };

@@ -38,7 +38,7 @@ const DaySelector = ({ field }: DaySelectorProps) => {
               size="sm"
               className="rounded-full px-3"
               style={{
-                backgroundColor: isSelected ? Colors.main.primary : Colors.main.background,
+                backgroundColor: isSelected ? Colors.main.primary : Colors.main.cardBackground,
               }}
             >
               <ButtonText style={{ color: isSelected ? Colors.main.background : Colors.main.textPrimary }} className="text-sm">
@@ -56,7 +56,7 @@ export default DaySelector;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.main.cardBackground,
+    backgroundColor: Colors.main.background,
     borderRadius: 16,
     padding: 16,
     shadowRadius: 2,

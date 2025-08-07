@@ -6,6 +6,7 @@ import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { Colors } from '@/constants/Colors';
 import { t } from 'i18next';
 import { AddTodoSchemaType } from '@/components/schema/addTodoSchema';
+import { Box } from '@/components/ui/box';
 
 interface TodoAdvancedFieldsProps {
   control: Control<AddTodoSchemaType>;
@@ -19,7 +20,9 @@ export const TodoAdvancedFields: React.FC<TodoAdvancedFieldsProps> = ({ control 
         name="description"
         render={({ field, fieldState }) => (
           <VStack>
-            <Text style={{ color: Colors.main.textPrimary }}>{t('profile.description')}</Text>
+            <Box>
+              <Text style={{ color: Colors.main.textPrimary }}>{t('profile.description')}</Text>
+            </Box>
             <Textarea
               className="my-1 w-full rounded-lg px-4 h-[80px]"
               style={{
