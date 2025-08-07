@@ -1,9 +1,9 @@
 export const weekdays = [
-  { id: 1, en: 'MONDAY', fa: 'دوشنبه' },
-  { id: 2, en: 'TUEDAY', fa: 'سه‌شنبه' },
-  { id: 3, en: 'WEDDAY', fa: 'چهارشنبه' },
-  { id: 4, en: 'THUDAY', fa: 'پنج‌شنبه' },
-  { id: 5, en: 'FRIDAY', fa: 'جمعه' },
-  { id: 6, en: 'SATDAY', fa: 'شنبه' },
-  { id: 7, en: 'SUNDAY', fa: 'یک‌شنبه' },
+  { id: 0, en: 'Sunday', fa: 'یک‌شنبه' },
+  { id: 1, en: 'Monday', fa: 'دوشنبه' },
+  { id: 2, en: 'Tuesday', fa: 'سه‌شنبه' },
+  { id: 3, en: 'Wednesday', fa: 'چهارشنبه' },
+  { id: 4, en: 'Thursday', fa: 'پنج‌شنبه' },
+  { id: 5, en: 'Friday', fa: 'جمعه' },
+  { id: 6, en: 'Saturday', fa: 'شنبه' },
 ];

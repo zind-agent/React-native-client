@@ -19,77 +19,109 @@ interface Props {
   month?: number | string | undefined;
 }
 
+const getJalaliMonthDays = (year: number, month: number): number => {
+  if (month <= 6) return 31;
+  if (month <= 11) return 30;
+  const isLeapYear = ((year - 979) % 33) % 4 === 1;
+  return isLeapYear ? 30 : 29;
+};
+
+const jalaliToGregorian = (jYear: number, jMonth: number, jDay: number): string => {
+  const jalaliDate = jalaliMoment(`${jYear}/${jMonth}/${jDay}`, 'jYYYY/jM/jD');
+  return jalaliDate.format('YYYY-MM-DD');
+};
+
+const getJalaliDayName = (gregorianDate: string): string => {
+  const dayIndex = jalaliMoment(gregorianDate).day();
+  return weekdays[dayIndex].fa;
+};
+
 const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: Props) => {
-  const { calender } = useAppStore();
+  const { calender, language } = useAppStore();
   const scrollViewRef = useRef<ScrollView>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const isInitialRender = useRef(true);
-
+  const [isInitialized, setIsInitialized] = useState(false);
   const today = jalaliMoment();
   const todayFormatted = today.format('YYYY-MM-DD');
   const currentMonth = calender === 'jalali' ? today.jMonth() + 1 : today.month() + 1;
   const currentYear = calender === 'jalali' ? today.jYear() : today.year();
   const isCurrentMonth = parseInt(year as string) === currentYear && parseInt(month as string) === currentMonth;
-  const monthSafe = month as string;
-  const monthStart =
-    calender === 'jalali' ? jalaliMoment(`${year}-${month}-01`, 'jYYYY-jM-jD').startOf('day') : jalaliMoment(`${year}-${monthSafe.toString().padStart(2, '0')}-01`, 'YYYY-MM-DD').startOf('day');
 
-  const monthEnd = calender === 'jalali' ? jalaliMoment(monthStart).endOf('jMonth').startOf('day') : jalaliMoment(monthStart).endOf('month').startOf('day');
-
-  const generateMonthDays = () => {
+  const generateMonthDays = useMemo(() => {
     const days = [];
-    const current = jalaliMoment(monthStart);
+    const yearNum = parseInt(year as string);
+    const monthNum = parseInt(month as string);
 
-    while (current.isSameOrBefore(monthEnd)) {
-      let date, dayName, dayNumber;
+    if (calender === 'jalali') {
+      const monthDays = getJalaliMonthDays(yearNum, monthNum);
 
-      if (calender === 'jalali') {
-        date = current.format('YYYY-MM-DD');
-        dayNumber = current.format('jD');
-        const dayIndex = current.day();
-        dayName = weekdays[dayIndex].fa;
-      } else {
-        date = current.format('YYYY-MM-DD');
-        dayName = current.format('dd');
-        dayNumber = current.format('D');
+      for (let day = 1; day <= monthDays; day++) {
+        const gregorianDate = jalaliToGregorian(yearNum, monthNum, day);
+        const dayName = getJalaliDayName(gregorianDate);
+        const dayNumber = day.toString();
+
+        const isToday = gregorianDate === todayFormatted;
+        const isSelected = selectedDate === gregorianDate;
+
+        days.push({
+          date: gregorianDate,
+          dayName,
+          dayNumber,
+          isToday,
+          isSelected,
+        });
       }
+    } else {
+      const endDate = new Date(yearNum, monthNum, 0);
+      const monthDays = endDate.getDate();
 
-      const isToday = date === todayFormatted;
-      const isSelected = selectedDate === date;
+      for (let day = 1; day <= monthDays; day++) {
+        const date = new Date(yearNum, monthNum - 1, day);
+        const gregorianDate = date.toISOString().split('T')[0];
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+        const dayNumber = day.toString();
 
-      days.push({
-        date,
-        dayName,
-        dayNumber,
-        isToday,
-        isSelected,
-      });
+        const isToday = gregorianDate === todayFormatted;
+        const isSelected = selectedDate === gregorianDate;
 
-      current.add(1, 'day');
+        days.push({
+          date: gregorianDate,
+          dayName,
+          dayNumber,
+          isToday,
+          isSelected,
+        });
+      }
     }
-    return calender === 'jalali' ? days.reverse() : days;
-  };
 
-  const monthDays = useMemo(() => generateMonthDays(), [year, month, calender, selectedDate, todayFormatted]);
+    return days;
+  }, [year, month, calender, selectedDate, todayFormatted]);
 
+  const monthDays = generateMonthDays;
   const selectedDayIndex = selectedDate ? monthDays.findIndex((day) => day.date === selectedDate) : -1;
 
-  const scrollToDay = (index: number) => {
+  const scrollToDay = (index: number, animated: boolean = true) => {
     if (scrollViewRef.current && index >= 0) {
-      const itemWidth = 60; // عرض هر آیتم
-      const scrollPosition = index * itemWidth; // حذف افست برای دقت بیشتر
-      scrollViewRef.current.scrollTo({ x: scrollPosition, animated: true });
+      const itemWidth = 60;
+      const scrollPosition = index * itemWidth;
+
+      scrollViewRef.current.scrollTo({
+        x: scrollPosition,
+        animated: animated,
+      });
     }
   };
 
   const handleDayChange = (direction: 'prev' | 'next') => {
     if (isAnimating || selectedDayIndex === -1) return;
+
     let newIndex;
     if (direction === 'next') {
-      newIndex = calender === 'jalali' ? selectedDayIndex - 1 : selectedDayIndex + 1;
+      newIndex = selectedDayIndex + 1;
     } else {
-      newIndex = calender === 'jalali' ? selectedDayIndex + 1 : selectedDayIndex - 1;
+      newIndex = selectedDayIndex - 1;
     }
+
     if (newIndex < 0 || newIndex >= monthDays.length) return;
 
     const newDay = monthDays[newIndex];
@@ -99,23 +131,21 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
     setTimeout(() => {
       scrollToDay(newIndex);
       setIsAnimating(false);
-    }, 100);
+    }, 50);
   };
 
-  const canGoPrev = () => (calender === 'jalali' ? selectedDayIndex < monthDays.length - 1 : selectedDayIndex > 0);
-  const canGoNext = () => (calender === 'jalali' ? selectedDayIndex > 0 : selectedDayIndex < monthDays.length - 1 && selectedDayIndex !== -1);
+  const canGoPrev = () => selectedDayIndex > 0;
+  const canGoNext = () => selectedDayIndex < monthDays.length - 1 && selectedDayIndex !== -1;
 
   const panResponder = useMemo(
     () =>
       PanResponder.create({
         onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dx) > 20 && !isAnimating,
         onPanResponderRelease: (_, gestureState) => {
-          if (calender === 'jalali') {
-            if (gestureState.dx > 50) handleDayChange('next');
-            else if (gestureState.dx < -50) handleDayChange('prev');
-          } else {
-            if (gestureState.dx > 50) handleDayChange('prev');
-            else if (gestureState.dx < -50) handleDayChange('next');
+          if (gestureState.dx > 50) {
+            handleDayChange(calender === 'jalali' ? 'next' : 'prev');
+          } else if (gestureState.dx < -50) {
+            handleDayChange(calender === 'jalali' ? 'prev' : 'next');
           }
         },
       }),
@@ -123,25 +153,34 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
   );
 
   useEffect(() => {
-    if (isCurrentMonth && isInitialRender.current) {
-      // در رندر اولیه، به روز جاری اسکرول کن
+    if (isCurrentMonth && !isInitialized && monthDays.length > 0) {
       const todayIndex = monthDays.findIndex((day) => day.date === todayFormatted);
+
       if (todayIndex >= 0) {
         setSelectedDate(todayFormatted);
-        setTimeout(() => scrollToDay(todayIndex), 100); // زمان کوتاه‌تر برای رندر اولیه
+        setTimeout(() => {
+          scrollToDay(todayIndex, false);
+        }, 100);
+        setIsInitialized(true);
       }
-      isInitialRender.current = false;
-    } else if (selectedDayIndex >= 0) {
-      // برای تغییرات بعدی
-      setTimeout(() => scrollToDay(selectedDayIndex), 100);
     }
-  }, [selectedDayIndex, year, month, todayFormatted, monthDays, isCurrentMonth, setSelectedDate]);
+  }, [monthDays, isCurrentMonth, todayFormatted, setSelectedDate, isInitialized]);
+  useEffect(() => {
+    if (selectedDayIndex >= 0 && isInitialized) {
+      setTimeout(() => {
+        scrollToDay(selectedDayIndex);
+      }, 50);
+    }
+  }, [selectedDayIndex, isInitialized]);
+  useEffect(() => {
+    setIsInitialized(false);
+  }, [year, month]);
 
   return (
     <Box style={{ direction: calender === 'jalali' ? 'rtl' : 'ltr' }}>
       <HStack className="items-center justify-between my-3">
         <Pressable
-          onPress={() => handleDayChange('prev')}
+          onPress={() => handleDayChange(language === 'fa' ? 'next' : 'prev')}
           disabled={isAnimating || !canGoPrev()}
           style={{
             opacity: isAnimating || !canGoPrev() ? 0.3 : 1,
@@ -158,22 +197,26 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
             ref={scrollViewRef}
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 10, flexDirection: calender === 'jalali' ? 'row-reverse' : 'row' }}
+            contentContainerStyle={{
+              paddingHorizontal: 10,
+              flexDirection: calender === 'jalali' ? 'row-reverse' : 'row',
+            }}
             decelerationRate="fast"
-            snapToInterval={60} // همگام با عرض آیتم
-            snapToAlignment="center" // تغییر به center برای هم‌ترازی بهتر
+            snapToInterval={60}
+            snapToAlignment="center"
             style={{ direction: 'ltr' }}
+            removeClippedSubviews={false}
           >
             <HStack className="gap-[1px]" space="xs" style={{ flexDirection: calender === 'jalali' ? 'row-reverse' : 'row' }}>
               {monthDays.map((day, index) => (
                 <Pressable
-                  key={day.date}
+                  key={`${day.date}-${index}`}
                   onPress={() => {
                     setSelectedDate(day.date);
-                    setTimeout(() => scrollToDay(index), 100);
+                    setTimeout(() => scrollToDay(index), 50);
                   }}
                   style={{
-                    backgroundColor: day.isSelected ? Colors.main.textPrimary : day.isToday && !isCurrentMonth ? Colors.main.primaryLight + '40' : 'transparent',
+                    backgroundColor: day.isSelected ? Colors.main.textPrimary : day.isToday && !day.isSelected ? Colors.main.primaryLight + '40' : 'transparent',
                     borderRadius: 12,
                     paddingHorizontal: 8,
                     paddingVertical: 4,
@@ -181,16 +224,16 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
                     height: 65,
                     alignItems: 'center',
                     justifyContent: 'center',
-                    borderWidth: day.isToday && isCurrentMonth && !day.isSelected ? 2 : 0,
-                    borderColor: day.isToday && isCurrentMonth && !day.isSelected ? Colors.main.primary : 'transparent',
+                    borderWidth: day.isToday && !day.isSelected ? 1 : 0,
+                    borderColor: day.isToday && !day.isSelected ? Colors.main.primary : 'transparent',
                     marginHorizontal: 1,
                   }}
                 >
-                  <MotiView animate={{ scale: day.isSelected ? 1.1 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 200 }}>
+                  <MotiView animate={{ scale: day.isSelected ? 1.1 : 0.8 }} transition={{ type: 'spring', damping: 15, stiffness: 200 }}>
                     <VStack className="items-center">
                       <Text
                         style={{
-                          color: day.isSelected ? Colors.main.background : day.isToday && !isCurrentMonth ? Colors.main.textPrimary + '60' : Colors.main.textPrimary,
+                          color: day.isSelected ? Colors.main.background : Colors.main.textPrimary,
                           fontSize: 12,
                           textAlign: 'center',
                         }}
@@ -199,7 +242,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
                       </Text>
                       <Text
                         style={{
-                          color: day.isSelected ? Colors.main.background : day.isToday && !isCurrentMonth ? Colors.main.textPrimary + '60' : Colors.main.textPrimary,
+                          color: day.isSelected ? Colors.main.background : Colors.main.textPrimary,
                           fontSize: 18,
                           textAlign: 'center',
                           fontWeight: day.isToday ? 'bold' : 'normal',
@@ -217,10 +260,10 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
         </Box>
 
         <Pressable
-          onPress={() => handleDayChange('next')}
+          onPress={() => handleDayChange(language === 'fa' ? 'prev' : 'next')}
           disabled={isAnimating || !canGoNext()}
           style={{
-            opacity: isAnimating || !canGoNext() ? 0.3 : 1,
+            opacity: isAnimating || !canGoNext() ? 0.5 : 1,
             zIndex: 2,
           }}
         >
