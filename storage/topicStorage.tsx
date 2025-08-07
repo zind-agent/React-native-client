@@ -145,6 +145,10 @@ export class TopicStorage {
       [row.title, row.description, row.category, row.status, row.is_public, row.likes, new Date().toISOString(), row.id],
     );
   }
+  public async removeTopic(id: string): Promise<void> {
+    await this.ensureInitialized();
+    await this.db.runAsync(`DELETE FROM topics WHERE id = ?`, [id]);
+  }
 }
 
 export const topicStorage = TopicStorage.getInstance();

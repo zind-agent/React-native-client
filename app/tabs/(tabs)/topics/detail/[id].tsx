@@ -20,46 +20,51 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const TopicDetail: React.FC = () => {
   const { id } = useLocalSearchParams();
   const { language } = useAppStore();
-  const { getTopicById, topic, isLoading } = useTopicStore();
+  const { getTopicById, topic, isLoading, removeTopic } = useTopicStore();
 
   useEffect(() => {
     getTopicById(id as string);
-  }, [getTopicById, id]);
+  }, [id]);
 
   if (topic === null || isLoading) return <Loading />;
   const category = Category[topic?.category as any];
+
+  const removeTopicHandler = () => {
+    removeTopic(topic.id);
+    router.push('/tabs/(tabs)/activity');
+  };
 
   return (
     <GestureHandlerRootView style={styles.screenContainer}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <VStack space="xl">
           <HStack className="w-full justify-between items-center">
-            <HeaderTitle title={topic.title} path={'../(tabs)/activity'} />
-            <Button className="flex mt-6 items-center justify-center w-12 h-12 rounded-lg bg-transparent" onPress={() => router.push('/tabs/(tabs)')}>
+            <HeaderTitle title={topic.title} path={'../../activity'} />
+            <Button className="flex mt-6 items-center justify-center w-12 h-12 rounded-lg bg-transparent" onPress={removeTopicHandler}>
               <TrashIcon size={48} />
             </Button>
           </HStack>
 
           <Box style={styles.mainCard} className="p-5 px-7">
             <Heading style={styles.headerTitle}>{t('task_detail.description')}</Heading>
-            <Text className="mt-4 text-[14px]  rounded-lg px-4 text-lg">{topic?.description || 'No description'}</Text>
+            <Text className="mt-4 text-[14px]  rounded-lg px-4">{topic?.description || t('task_detail.no_description_todo')}</Text>
           </Box>
 
           <Box style={styles.mainCard} className="p-5 px-7">
             <Heading style={styles.headerTitle}>{t('task_detail.category')}</Heading>
-            <Text className="mt-4 text-[14px] p-2 w-max text-lg rounded-lg px-5" style={{ backgroundColor: category.color + 50 }}>
+            <Text className="mt-4 text-[14px] p-2 w-max rounded-lg px-5" style={{ backgroundColor: category.color + 50 }}>
               {language === 'fa' ? category.fa : category.name}
             </Text>
           </Box>
           <HStack style={styles.mainCard} className="p-3 px-7 items-center justify-between">
             <Heading style={styles.headerTitle}>{t('activity.is_public')}</Heading>
-            <Text className="text-[14px] p-2 text-lg rounded-lg px-5">{topic?.isPublic ? t('activity.yes') : t('activity.no')}</Text>
+            <Text className="text-[14px] p-2 rounded-lg px-5">{topic?.isPublic ? t('activity.yes') : t('activity.no')}</Text>
           </HStack>
         </VStack>
       </ScrollView>
       <Box className="px-5 mb-5">
         <Button className="h-16 rounded-lg" onPress={() => router.push(`/tabs/(tabs)/topics/edit/${id}`)}>
-          <ButtonText className="text-lg">Edit</ButtonText>
+          <ButtonText className="text-lg">{t('button.edit')}</ButtonText>
         </Button>
       </Box>
     </GestureHandlerRootView>

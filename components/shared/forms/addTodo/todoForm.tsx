@@ -1,6 +1,9 @@
+import { Text } from '@/components/Themed';
+import { Box } from '@/components/ui/box';
 import { FormControl, FormControlError, FormControlErrorText } from '@/components/ui/form-control';
 import { Input, InputField } from '@/components/ui/input';
 import { Colors } from '@/constants/Colors';
+import { t } from 'i18next';
 import React from 'react';
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
@@ -15,7 +18,10 @@ interface AddTodoFormProps {
 
 export const AddTodoForm = ({ value, onChange, error, placeholder, style, autoFocus }: AddTodoFormProps) => {
   return (
-    <FormControl isInvalid={!!error} isRequired size="lg" className="mt-8" style={styles.container}>
+    <FormControl isInvalid={!!error} isRequired size="lg" className="mt-8 p-5" style={styles.container}>
+      <Box className="">
+        <Text>{t('todos.title_form_todo')}</Text>
+      </Box>
       <Input style={[styles.inputContainer, style]}>
         <InputField
           type="text"
@@ -42,8 +48,6 @@ export const AddTodoForm = ({ value, onChange, error, placeholder, style, autoFo
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.main.cardBackground,
-    paddingHorizontal: 15,
-    paddingVertical: 20,
     borderRadius: 15,
     shadowColor: '#000',
     shadowOpacity: 0.06,

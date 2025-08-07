@@ -2,7 +2,6 @@ import React from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Colors } from '@/constants/Colors';
-import { useTodoStore } from '@/store/todoState';
 import { t } from 'i18next';
 import { Box } from '@/components/ui/box';
 import HeaderTitle from '@/components/common/headerTitle';
@@ -10,16 +9,15 @@ import { Controller } from 'react-hook-form';
 import { AddTodoForm } from '@/components/shared/forms/addTodo/todoForm';
 import CategoryPicker from '@/components/shared/categorySelector';
 import { Category } from '@/constants/Category';
-import { useTopicsFrom } from '@/hooks/useTopicsFrom';
 import { TopicAdvancedFields } from '@/components/shared/forms/topciAdvancedField';
 import { VStack } from '@/components/ui/vstack';
 import { HStack } from '@/components/ui/hstack';
 import { Text } from '@/components/Themed';
 import { Switch } from '@/components/ui/switch';
+import { useTopicsForm } from '@/hooks/useTopicsForm';
 
 const CreateTopics = () => {
-  const { selectedDate } = useTodoStore();
-  const { form, onSubmit } = useTopicsFrom(selectedDate);
+  const { form, onSubmit } = useTopicsForm({ topic: null });
   const {
     control,
     handleSubmit,

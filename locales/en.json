@@ -135,7 +135,8 @@
     "add": "Add",
     "submit": "Submit",
     "create_event": "Create Event",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "edit": "Edit"
   },
 
   "home": {
@@ -171,7 +172,9 @@
     "date": "Date",
     "edit_event": "Edit Task",
     "write_description_todo": "Write a short description about this task",
-    "todos.select_date": "Select Date"
+    "select_date": "Select Date",
+    "go_to_today": "Go to Today",
+    "title_form_todo": "Title"
   },
   "create_task": {
     "create_task": "Create Task"
@@ -207,7 +210,8 @@
     "add_topic": "Add Topic",
     "is_public": "All Users Can See This Topic?",
     "append_title_required": "Title is required",
-    "search": "Search your topics ..."
+    "search": "Search your topics ...",
+    "edit_topic": "Edit Topic"
   },
 
   "status_enum": {

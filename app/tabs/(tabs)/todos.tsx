@@ -55,7 +55,7 @@ const Todos = () => {
     <Box style={{ flex: 1, backgroundColor: Colors.main.background }}>
       <Box
         style={{
-          paddingHorizontal: 20,
+          paddingHorizontal: 10,
           paddingTop: 10,
           zIndex: 1,
           elevation: 1,
@@ -79,21 +79,12 @@ const Todos = () => {
             <SelectYearWithMonth selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
           </HStack>
 
-          <WeeklyDatePicker
-            selectedDate={selectedDate}
-            setSelectedDate={setSelectedDate}
-            year={selectedYear ?? undefined}
-            month={selectedMonth ?? undefined}
-            onMonthChange={(newYear, newMonth) => {
-              setSelectedYear(newYear);
-              setSelectedMonth(newMonth);
-            }}
-          />
+          <WeeklyDatePicker selectedDate={selectedDate} setSelectedDate={setSelectedDate} year={selectedYear ?? undefined} month={selectedMonth ?? undefined} />
 
           {shouldShowTodayButton && (
             <Box className="items-center mt-3">
               <Button variant="link" onPress={goToToday}>
-                <ButtonText style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{t('todos.today')}</ButtonText>
+                <ButtonText style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{t('todos.go_to_today')}</ButtonText>
               </Button>
             </Box>
           )}

@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useCallback, useMemo } from 'react';
-import { FlatList, ListRenderItem, StyleSheet } from 'react-native';
+import { FlatList, Image, ListRenderItem, StyleSheet } from 'react-native';
 import { Box } from '@/components/ui/box';
 import { Heading } from '@/components/ui/heading';
 import { HStack } from '@/components/ui/hstack';
@@ -15,6 +15,7 @@ import { Center } from '@/components/ui/center';
 import { Progress, ProgressFilledTrack } from '@/components/ui/progress';
 import UserHeaderTitle from '@/components/common/userHeaderTitle';
 import { Text } from '@/components/Themed';
+import emptyTask from '@/assets/images/emptyHome.png';
 
 interface HomeSection {
   id: string;
@@ -28,78 +29,88 @@ const ITEM_HEIGHTS = {
   progress: 120,
   todosHeader: 50,
   todoList: 300,
-  emptyState: 200,
+  emptyState: 500,
 };
 
 const Home: React.FC = () => {
   const { loadPendingTodayTasks, pendingTodayTasks, getCompletionPercentage } = useTodoStore();
   const percentage = useMemo(() => getCompletionPercentage(), [getCompletionPercentage]);
 
+  const hasTasks = useMemo(() => pendingTodayTasks && pendingTodayTasks.length > 0, [pendingTodayTasks]);
+
   useEffect(() => {
     loadPendingTodayTasks();
   }, [loadPendingTodayTasks]);
 
   const sections: HomeSection[] = useMemo(() => {
-    const base: HomeSection[] = [
+    const baseSections: HomeSection[] = [
       { id: 'header', type: 'header' },
       { id: 'addTodo', type: 'addTodo' },
-      { id: 'progress', type: 'progress' },
     ];
-    return [...base, { id: 'todosHeader', type: 'todosHeader' }, { id: 'todoList', type: 'todoList' }];
-  }, []);
 
-  const renderItem: ListRenderItem<HomeSection> = useCallback(({ item }) => {
-    switch (item.type) {
-      case 'header':
-        return <UserHeaderTitle />;
-
-      case 'addTodo':
-        return <AddTodoInTime />;
-
-      case 'progress':
-        return (
-          <Center style={styles.progressContainer} className="p-10 rounded-xl mt-6 gap-3">
-            <Heading style={styles.progressText}>{t('home.today_progress_summery')}</Heading>
-            <HStack style={styles.progressStats}>
-              <Text style={styles.statText}>
-                {t('home.task')} {pendingTodayTasks.length}
-              </Text>
-              <Text style={styles.statText}>{percentage}%</Text>
-            </HStack>
-            <Progress style={styles.progressBar} value={percentage} size="md" orientation="horizontal">
-              <ProgressFilledTrack style={styles.progressFilled} />
-            </Progress>
-          </Center>
-        );
-
-      case 'todosHeader':
-        return (
-          <VStack style={styles.todosHeader}>
-            <HStack style={styles.headerRow}>
-              <Heading style={styles.heading} size="2xl">
-                {t('home.today_task')}
-              </Heading>
-              <Button style={styles.viewAllButton} onPress={() => router.push('/tabs/(tabs)/todos')}>
-                <ButtonText style={styles.viewAllText}>{t('home.view_all')}</ButtonText>
-              </Button>
-            </HStack>
-          </VStack>
-        );
-
-      case 'todoList':
-        return <TodoListView mode="flat" enableSwipeActions={true} />;
-
-      case 'emptyState':
-        return (
-          <VStack style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>{t('home.no_task')}</Text>
-          </VStack>
-        );
-
-      default:
-        return null;
+    if (hasTasks) {
+      return [...baseSections, { id: 'progress', type: 'progress' }, { id: 'todosHeader', type: 'todosHeader' }, { id: 'todoList', type: 'todoList' }];
+    } else {
+      return [...baseSections, { id: 'emptyState', type: 'emptyState' }];
     }
-  }, []);
+  }, [hasTasks]);
+
+  const renderItem: ListRenderItem<HomeSection> = useCallback(
+    ({ item }) => {
+      switch (item.type) {
+        case 'header':
+          return <UserHeaderTitle />;
+        case 'addTodo':
+          return <AddTodoInTime />;
+        case 'progress':
+          return (
+            <Center style={styles.progressContainer} className="p-10 rounded-xl mt-6 gap-3">
+              <Heading style={styles.progressText}>{t('home.today_progress_summery')}</Heading>
+              <HStack style={styles.progressStats}>
+                <Text style={styles.statText}>
+                  {t('home.task')} {pendingTodayTasks.length}
+                </Text>
+                <Text style={styles.statText}>{percentage}%</Text>
+              </HStack>
+              <Progress style={styles.progressBar} value={percentage} size="md" orientation="horizontal">
+                <ProgressFilledTrack style={styles.progressFilled} />
+              </Progress>
+            </Center>
+          );
+
+        case 'todosHeader':
+          return (
+            <VStack style={styles.todosHeader}>
+              <HStack style={styles.headerRow}>
+                <Heading style={styles.heading} size="2xl">
+                  {t('home.today_task')}
+                </Heading>
+                <Button style={styles.viewAllButton} onPress={() => router.push('/tabs/(tabs)/todos')}>
+                  <ButtonText style={styles.viewAllText}>{t('home.view_all')}</ButtonText>
+                </Button>
+              </HStack>
+            </VStack>
+          );
+
+        case 'todoList':
+          return <TodoListView mode="flat" enableSwipeActions={true} />;
+
+        case 'emptyState':
+          return (
+            <Center style={styles.emptyStateContainer}>
+              <VStack style={styles.emptyState}>
+                <Image source={emptyTask} style={{ height: 400, width: 400, objectFit: 'contain' }} />
+                <Text style={styles.emptyStateText}>{t('home.no_data_message', 'هنوز هیچ تسکی برای امروز ندارید\nشروع کنید و اولین تسک خود را اضافه کنید!')}</Text>
+              </VStack>
+            </Center>
+          );
+
+        default:
+          return null;
+      }
+    },
+    [pendingTodayTasks.length, percentage, hasTasks],
+  );
 
   const getItemLayout = useCallback(
     (_: any, index: number) => ({
@@ -118,7 +129,7 @@ const Home: React.FC = () => {
         keyExtractor={(item) => item.id}
         getItemLayout={getItemLayout}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, !hasTasks && styles.listContentEmpty]}
         removeClippedSubviews={true}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
@@ -138,6 +149,9 @@ const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: 20,
     paddingBottom: 40,
+  },
+  listContentEmpty: {
+    flexGrow: 1,
   },
   progressContainer: {
     height: 130,
@@ -184,16 +198,22 @@ const styles = StyleSheet.create({
     color: Colors.main.textPrimary,
     fontSize: 14,
   },
-  emptyState: {
-    marginTop: 20,
-    height: '100%',
+  emptyStateContainer: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+    gap: 16,
   },
   emptyStateText: {
     textAlign: 'center',
-    marginTop: 40,
-    paddingHorizontal: 40,
-    fontSize: 18,
+    fontSize: 16,
+    lineHeight: 24,
     color: Colors.main.textSecondary,
+    marginBottom: 24,
   },
 });

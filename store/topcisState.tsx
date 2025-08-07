@@ -19,6 +19,7 @@ export interface TopicState {
   createTopic: (topic: Topic) => Promise<void>;
   updateTopic: (topic: Topic) => Promise<void>;
   getTopicById: (id: string) => Promise<Topic | null>;
+  removeTopic: (id: string) => Promise<void>;
 }
 
 export const useTopicStore = create<TopicState>((set, get) => ({
@@ -97,7 +98,7 @@ export const useTopicStore = create<TopicState>((set, get) => ({
   },
 
   getTopicById: async (id: string) => {
-    set({ isLoading: true });
+    set({ isLoading: true, topic: null });
     try {
       const topic = await topicStorage.getTopicById(id);
       set({ topic, isLoading: false });
@@ -106,6 +107,20 @@ export const useTopicStore = create<TopicState>((set, get) => ({
       console.error('Failed to get topic by id:', error);
       set({ isLoading: false });
       return null;
+    }
+  },
+  removeTopic: async (id: string) => {
+    set({ isLoading: true });
+    try {
+      await topicStorage.removeTopic(id);
+      await get().loadUserTopics(get().topic?.userId as string);
+      if (get().topic?.isPublic) {
+        await get().loadPublicTopics();
+      }
+      set({ isLoading: false });
+    } catch (error) {
+      console.error('Failed to remove topic:', error);
+      set({ isLoading: false });
     }
   },
 }));
