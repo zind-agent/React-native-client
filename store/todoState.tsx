@@ -72,9 +72,7 @@ export const useTodoStore = create<TodoState>((set, get) => ({
     try {
       await taskStorage.createTask(task);
       const state = get();
-      if (task.date === state.selectedDate) {
-        await state.loadTasks(state.selectedDate);
-      }
+      await state.loadTasks(task.date);
       set({ isLoading: false });
     } catch (error) {
       console.error('Failed to create task:', error);
@@ -88,9 +86,7 @@ export const useTodoStore = create<TodoState>((set, get) => ({
     try {
       await taskStorage.updateTask(task);
       const state = get();
-      if (task.date === state.selectedDate) {
-        await state.loadTasks(state.selectedDate);
-      }
+      await state.loadTasks(task.date);
       set({ isLoading: false });
     } catch (error) {
       console.error('Failed to update task:', error);

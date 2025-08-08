@@ -3,7 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Pressable } from '../ui/pressable';
 import { Colors } from '@/constants/Colors';
 import React, { useCallback, useMemo } from 'react';
-import { View, Dimensions, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { MotiView, motify } from 'moti';
 import { interpolateColor, useSharedValue, withTiming } from 'react-native-reanimated';
 import AddButton from '../common/addButton';
@@ -47,7 +47,7 @@ const TabButton = React.memo<{
 
   return (
     <MotiPressable key={route.key} onPress={onPress} style={styles.tabButton} animate={{ scale: isFocused ? 1.1 : 1 }} transition={{ type: 'timing', duration: ANIMATION_DURATION }}>
-      {IconComponent && <IconComponent focused={isFocused} color={animatedStyle.color} size={24} />}
+      {IconComponent && <IconComponent focused={isFocused} color={animatedStyle.color} size={28} />}
     </MotiPressable>
   );
 });
@@ -56,7 +56,6 @@ TabButton.displayName = 'TabButton';
 
 export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
   const insets = useSafeAreaInsets();
-  const screenWidth = useMemo(() => Dimensions.get('window').width, []);
   const visibleRoutes = useMemo(
     () =>
       state.routes.filter(
@@ -98,16 +97,16 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, 
     () => ({
       position: 'absolute' as const,
       top: -BUTTON_SIZE / 1.5,
-      left: screenWidth - BUTTON_SIZE - 45,
+      right: 20,
       zIndex: 10,
     }),
-    [screenWidth],
+    [],
   );
 
   const containerStyle = useMemo(
     () => ({
       bottom: insets.bottom,
-      backgroundColor: Colors.main.border,
+      backgroundColor: Colors.main.cardBackground,
     }),
     [insets.bottom],
   );
@@ -139,16 +138,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
     borderRadius: 14,
     height: TAB_HEIGHT,
+    marginBottom: 12,
     left: 0,
     right: 0,
     marginHorizontal: HORIZONTAL_MARGIN,
   },
   tabButton: {
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
   },
 });

@@ -16,7 +16,7 @@ const HomeIcon = ({ focused }: HomeIconProps) => {
   const strokeColor = getAnimatedColors(animation, 'transparent', Colors.main.primaryLight);
 
   return (
-    <Svg width="27" height="27" viewBox="0 0 24 24" fill="none">
+    <Svg width="30" height="30" viewBox="0 0 24 24" fill="none">
       <AnimatedPath
         fillRule="evenodd"
         clipRule="evenodd"

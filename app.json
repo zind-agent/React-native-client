@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "zind",
-    "slug": "zind-app",
+    "name": "cocheck",
+    "slug": "cocheck-app",
     "owner": "alirg1999",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
-    "scheme": "myapp",
+    "scheme": "cocheck",
     "jsEngine": "hermes",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
@@ -20,13 +20,13 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.alirg1999.zindapp"
+      "bundleIdentifier": "com.alirg1999.cocheck"
     },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#121212"
       },
-      "package": "com.alirg1999.zindapp"
+      "package": "com.alirg1999.cocheck"
     },
     "web": {
       "bundler": "metro",

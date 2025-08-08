@@ -115,7 +115,7 @@ const Home: React.FC = () => {
             <Center style={styles.emptyStateContainer}>
               <VStack style={styles.emptyState}>
                 <Image source={emptyTask} style={{ height: 400, width: 400, resizeMode: 'contain' }} />
-                <Text style={styles.emptyStateText}>{t('home.no_data_message', 'هنوز هیچ تسکی برای امروز ندارید\nشروع کنید و اولین تسک خود را اضافه کنید!')}</Text>
+                <Text style={styles.emptyStateText}>{t('home.no_data_message')}</Text>
               </VStack>
             </Center>
           );

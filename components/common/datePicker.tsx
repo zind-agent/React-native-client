@@ -1,5 +1,4 @@
 import { Colors } from '@/constants/Colors';
-import { t } from 'i18next';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ControllerRenderProps, Path } from 'react-hook-form';
 import CalenderIcon from '@/assets/Icons/CalenderIcon';
@@ -8,6 +7,7 @@ import { Button, ButtonText } from '../ui/button';
 import { Icon } from '../ui/icon';
 import { useAppStore } from '@/store/appState';
 import jalaliMoment from 'jalali-moment';
+import { t } from 'i18next';
 
 interface DatePickerProps<T extends Record<string, any>> {
   field: ControllerRenderProps<T, Path<T>>;

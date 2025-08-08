@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, I18nManager, TouchableOpacity, SafeAreaView } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, I18nManager, TouchableOpacity, ScrollView, View } from 'react-native';
 import { Button, ButtonText } from '@/components/ui/button';
 import { Colors } from '@/constants/Colors';
 import { useTodoStore } from '@/store/todoState';
@@ -48,9 +48,9 @@ const CreateTask: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <KeyboardAvoidingView style={styles.keyboardView} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}>
-        <Box style={styles.inner}>
+        <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} bounces={true}>
           <Box style={styles.header}>
             <HeaderTitle title={t('create_task.create_task')} path={'../(tabs)/'} />
           </Box>
@@ -106,14 +106,16 @@ const CreateTask: React.FC = () => {
             </AnimatePresence>
           </Box>
 
-          <Box style={styles.buttonContainer}>
-            <Button onPress={handleSubmit(onSubmit)} style={styles.submitButton}>
-              <ButtonText style={styles.submitButtonText}>{t('button.submit')}</ButtonText>
-            </Button>
-          </Box>
+          <View style={styles.bottomSpacer} />
+        </ScrollView>
+
+        <Box style={styles.fixedButtonContainer}>
+          <Button onPress={handleSubmit(onSubmit)} style={styles.buttonStyle}>
+            <ButtonText style={styles.buttonText}>{t('event.add_topic')}</ButtonText>
+          </Button>
         </Box>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -127,11 +129,14 @@ const styles = StyleSheet.create({
   keyboardView: {
     flex: 1,
   },
-  inner: {
+  scrollView: {
     flex: 1,
   },
+  scrollContent: {
+    paddingHorizontal: 18,
+    paddingBottom: 20,
+  },
   header: {
-    paddingHorizontal: 16,
     paddingVertical: 8,
   },
   section: {
@@ -175,24 +180,44 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.03,
     shadowRadius: 1,
   },
-  buttonContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    paddingBottom: Platform.OS === 'ios' ? 34 : 16,
+  bottomSpacer: {
+    height: 100, // فاصله برای دکمه ثابت
   },
-  submitButton: {
-    backgroundColor: Colors.main.button,
-    borderRadius: 12,
-    height: 52,
-    elevation: 4,
+  fixedButtonContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: Colors.main.background,
+    padding: 18,
+    paddingTop: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // سایه برای جدا کردن دکمه از محتوا
+    elevation: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: -2 },
+    shadowRadius: 8,
+    borderTopWidth: 1,
+    borderTopColor: Colors.main.cardBackground,
   },
-  submitButtonText: {
+  buttonStyle: {
+    backgroundColor: Colors.main.primary,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 4,
+    borderRadius: 15,
+    height: 50,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+  },
+  buttonText: {
     color: Colors.main.textPrimary,
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 17,
   },
 });

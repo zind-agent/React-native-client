@@ -98,7 +98,7 @@ const Todos = () => {
               fontSize: 20,
             }}
           >
-            {isToday ? t('todos.today') : t('todos.selected_date')}
+            {isToday ? t('todos.today') : t('todos.select_date')}
           </Heading>
           <Heading style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{getDisplayDate(selectedDate)}</Heading>
         </HStack>

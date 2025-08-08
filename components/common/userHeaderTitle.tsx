@@ -23,7 +23,7 @@ const UserHeaderTitle = memo(() => {
   return (
     <HStack className="mt-5 justify-between items-center">
       <VStack>
-        <Heading className="font-bold" size="lg" style={{ color: Colors.main.primaryDark }}>
+        <Heading className="font-bold" size="lg" style={{ color: Colors.main.primary }}>
           {t('home.hi')}, {capitalizeWords(firstname || t('home.welcome_to_cocheck'))} {capitalizeWords(lastname) ?? ''}
         </Heading>
         <Text style={{ color: Colors.main.textSecondary }}>{t('home.lets_make_this_day_productive')}</Text>

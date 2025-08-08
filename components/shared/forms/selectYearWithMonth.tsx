@@ -11,6 +11,7 @@ import CalenderIcon from '@/assets/Icons/CalenderIcon';
 import { Text } from 'react-native';
 import jalaliMoment from 'jalali-moment';
 import LeftIcon from '@/assets/Icons/LeftIcon';
+import { ArrowLeftIcon, ArrowRightIcon, Icon } from '@/components/ui/icon';
 
 interface MonthOption {
   value: string;
@@ -96,13 +97,13 @@ const SelectYearWithMonth = ({
           <DrawerHeader className="justify-center py-1">
             <HStack className="items-center gap-10 mb-4">
               <Button onPress={handleDecrease} className={`rounded-lg ${language === 'fa' ? 'rotate-180' : 'rotate-0'}`} style={{ backgroundColor: Colors.main.border, height: 40 }}>
-                <LeftIcon height={23} width={23} color={Colors.main.textPrimary} />
+                <Icon as={calender === 'jalali' ? ArrowRightIcon : ArrowLeftIcon} size="xl" color={Colors.main.textPrimary} />
               </Button>
 
               <Text style={{ fontSize: 24, color: Colors.main.textPrimary }}>{displayYear}</Text>
 
               <Button onPress={handleIncrease} className={`rounded-lg ${language === 'fa' ? 'rotate-0' : 'rotate-180'}`} style={{ backgroundColor: Colors.main.border, height: 40 }}>
-                <LeftIcon height={23} width={23} color={Colors.main.textPrimary} />
+                <Icon as={calender === 'jalali' ? ArrowRightIcon : ArrowLeftIcon} size="xl" color={Colors.main.textPrimary} />
               </Button>
             </HStack>
           </DrawerHeader>

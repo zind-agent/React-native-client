@@ -11,6 +11,7 @@ import { MotiView } from 'moti';
 import jalaliMoment from 'jalali-moment';
 import { weekdays } from '@/constants/WeekEnum';
 import { Text } from '@/components/Themed';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface Props {
   selectedDate: string | null;
@@ -102,7 +103,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
 
   const scrollToDay = (index: number, animated: boolean = true) => {
     if (scrollViewRef.current && index >= 0) {
-      const itemWidth = 60;
+      const itemWidth = 55;
       const scrollPosition = index * itemWidth;
 
       scrollViewRef.current.scrollTo({
@@ -165,6 +166,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
       }
     }
   }, [monthDays, isCurrentMonth, todayFormatted, setSelectedDate, isInitialized]);
+
   useEffect(() => {
     if (selectedDayIndex >= 0 && isInitialized) {
       setTimeout(() => {
@@ -172,106 +174,268 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
       }, 50);
     }
   }, [selectedDayIndex, isInitialized]);
+
   useEffect(() => {
     setIsInitialized(false);
   }, [year, month]);
 
   return (
-    <Box style={{ direction: calender === 'jalali' ? 'rtl' : 'ltr' }}>
-      <HStack className="items-center justify-between my-3">
-        <Pressable
-          onPress={() => handleDayChange(language === 'fa' ? 'next' : 'prev')}
-          disabled={isAnimating || !canGoPrev()}
-          style={{
-            opacity: isAnimating || !canGoPrev() ? 0.3 : 1,
-            zIndex: 2,
+    <Box
+      style={{
+        direction: calender === 'jalali' ? 'rtl' : 'ltr',
+        paddingVertical: 8,
+        paddingHorizontal: 6,
+        backgroundColor: Colors.main.background,
+        borderRadius: 16,
+        marginVertical: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        elevation: 4,
+      }}
+    >
+      <HStack className="items-center justify-between">
+        <MotiView
+          animate={{
+            scale: canGoPrev() ? 1 : 0.8,
+            opacity: canGoPrev() ? 1 : 0.4,
           }}
+          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
         >
-          <MotiView animate={{ scale: isAnimating ? 0.8 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 150 }}>
-            <Icon as={calender === 'jalali' ? ArrowRightIcon : ArrowLeftIcon} size="md" color={Colors.main.textPrimary} />
-          </MotiView>
-        </Pressable>
+          <Pressable
+            onPress={() => handleDayChange(language === 'fa' ? 'next' : 'prev')}
+            disabled={isAnimating || !canGoPrev()}
+            style={{
+              backgroundColor: canGoPrev() ? Colors.main.primary + '15' : Colors.main.textSecondary + '15',
+              borderRadius: 8,
+              padding: 8,
+              minWidth: 36,
+              minHeight: 36,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <MotiView
+              animate={{
+                scale: isAnimating ? 0.8 : 1,
+              }}
+              transition={{ type: 'spring', damping: 15, stiffness: 200 }}
+            >
+              <Icon as={calender === 'jalali' ? ArrowRightIcon : ArrowLeftIcon} size="sm" color={canGoPrev() ? Colors.main.primary : Colors.main.textSecondary} />
+            </MotiView>
+          </Pressable>
+        </MotiView>
 
-        <Box style={{ flex: 1, marginHorizontal: 10 }} {...panResponder.panHandlers}>
+        <Box style={{ flex: 1, marginHorizontal: 8 }} {...panResponder.panHandlers}>
           <ScrollView
             ref={scrollViewRef}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
-              paddingHorizontal: 10,
+              paddingHorizontal: 8,
               flexDirection: calender === 'jalali' ? 'row-reverse' : 'row',
+              alignItems: 'center',
             }}
             decelerationRate="fast"
-            snapToInterval={60}
+            snapToInterval={55}
             snapToAlignment="center"
             style={{ direction: 'ltr' }}
             removeClippedSubviews={false}
           >
-            <HStack className="gap-[1px]" space="xs" style={{ flexDirection: calender === 'jalali' ? 'row-reverse' : 'row' }}>
+            <HStack className="gap-[4px]" space="xs" style={{ flexDirection: calender === 'jalali' ? 'row-reverse' : 'row' }}>
               {monthDays.map((day, index) => (
-                <Pressable
+                <MotiView
                   key={`${day.date}-${index}`}
-                  onPress={() => {
-                    setSelectedDate(day.date);
-                    setTimeout(() => scrollToDay(index), 50);
+                  animate={{
+                    scale: day.isSelected ? 1.02 : 1,
                   }}
-                  style={{
-                    backgroundColor: day.isSelected ? Colors.main.textPrimary : day.isToday && !day.isSelected ? Colors.main.primaryLight + '40' : 'transparent',
-                    borderRadius: 12,
-                    paddingHorizontal: 8,
-                    paddingVertical: 4,
-                    width: 60,
-                    height: 65,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    borderWidth: day.isToday && !day.isSelected ? 1 : 0,
-                    borderColor: day.isToday && !day.isSelected ? Colors.main.primary : 'transparent',
-                    marginHorizontal: 1,
+                  transition={{
+                    type: 'spring',
+                    damping: 20,
+                    stiffness: 300,
+                    mass: 0.5,
                   }}
                 >
-                  <MotiView animate={{ scale: day.isSelected ? 1.1 : 0.8 }} transition={{ type: 'spring', damping: 15, stiffness: 200 }}>
-                    <VStack className="items-center">
-                      <Text
+                  <Pressable
+                    onPress={() => {
+                      setSelectedDate(day.date);
+                      setTimeout(() => scrollToDay(index), 50);
+                    }}
+                    style={{
+                      width: 55,
+                      height: 64,
+                      borderRadius: 12,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginHorizontal: 2,
+                      overflow: 'hidden',
+                      shadowColor: day.isSelected ? Colors.main.primary : 'transparent',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: day.isSelected ? 0.2 : 0,
+                      shadowRadius: 4,
+                      elevation: day.isSelected ? 6 : 1,
+                    }}
+                  >
+                    {day.isSelected ? (
+                      <LinearGradient
+                        colors={[Colors.main.primary, Colors.main.primaryLight]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
                         style={{
-                          color: day.isSelected ? Colors.main.background : Colors.main.textPrimary,
-                          fontSize: 12,
-                          textAlign: 'center',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          borderRadius: 12,
                         }}
-                      >
-                        {day.dayName}
-                      </Text>
-                      <Text
+                      />
+                    ) : day.isToday ? (
+                      <Box
                         style={{
-                          color: day.isSelected ? Colors.main.background : Colors.main.textPrimary,
-                          fontSize: 18,
-                          textAlign: 'center',
-                          fontWeight: day.isToday ? 'bold' : 'normal',
-                          marginTop: 2,
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          backgroundColor: Colors.main.primary + '12',
+                          borderRadius: 12,
+                          borderWidth: 1.5,
+                          borderColor: Colors.main.primary + '30',
                         }}
-                      >
-                        {day.dayNumber}
-                      </Text>
-                    </VStack>
-                  </MotiView>
-                </Pressable>
+                      />
+                    ) : (
+                      <Box
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          backgroundColor: Colors.main.background,
+                          borderRadius: 12,
+                          borderWidth: 0.5,
+                          borderColor: Colors.main.textSecondary + '15',
+                        }}
+                      />
+                    )}
+
+                    <MotiView
+                      animate={{
+                        scale: day.isSelected ? 1 : 0.92,
+                        opacity: day.isSelected ? 1 : 0.85,
+                      }}
+                      transition={{ type: 'spring', damping: 15, stiffness: 200 }}
+                    >
+                      <VStack className="items-center" style={{ zIndex: 1 }}>
+                        <Text
+                          style={{
+                            color: day.isSelected ? Colors.main.background : day.isToday ? Colors.main.primary : Colors.main.textSecondary,
+                            fontSize: 9,
+                            textAlign: 'center',
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {day.dayName}
+                        </Text>
+
+                        <Text
+                          style={{
+                            color: day.isSelected ? Colors.main.background : day.isToday ? Colors.main.primary : Colors.main.textPrimary,
+                            fontSize: 18,
+                            textAlign: 'center',
+                            marginTop: 2,
+                          }}
+                        >
+                          {day.dayNumber}
+                        </Text>
+
+                        {day.isToday && !day.isSelected && (
+                          <MotiView
+                            animate={{
+                              scale: [1, 1.1, 1],
+                              opacity: [0.6, 1, 0.6],
+                            }}
+                            transition={{
+                              type: 'timing',
+                              duration: 1500,
+                              loop: true,
+                            }}
+                          >
+                            <Box
+                              style={{
+                                width: 4,
+                                height: 4,
+                                borderRadius: 2,
+                                backgroundColor: Colors.main.primary,
+                                marginTop: 1,
+                              }}
+                            />
+                          </MotiView>
+                        )}
+                      </VStack>
+                    </MotiView>
+                  </Pressable>
+                </MotiView>
               ))}
             </HStack>
           </ScrollView>
         </Box>
 
-        <Pressable
-          onPress={() => handleDayChange(language === 'fa' ? 'prev' : 'next')}
-          disabled={isAnimating || !canGoNext()}
-          style={{
-            opacity: isAnimating || !canGoNext() ? 0.5 : 1,
-            zIndex: 2,
+        <MotiView
+          animate={{
+            scale: canGoNext() ? 1 : 0.8,
+            opacity: canGoNext() ? 1 : 0.4,
           }}
+          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
         >
-          <MotiView animate={{ scale: isAnimating ? 0.8 : 1 }} transition={{ type: 'spring', damping: 15, stiffness: 150 }}>
-            <Icon as={calender === 'jalali' ? ArrowLeftIcon : ArrowRightIcon} size="md" color={Colors.main.textPrimary} />
-          </MotiView>
-        </Pressable>
+          <Pressable
+            onPress={() => handleDayChange(language === 'fa' ? 'prev' : 'next')}
+            disabled={isAnimating || !canGoNext()}
+            style={{
+              backgroundColor: canGoNext() ? Colors.main.primary + '15' : Colors.main.textSecondary + '15',
+              borderRadius: 8,
+              padding: 8,
+              minWidth: 36,
+              minHeight: 36,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <MotiView
+              animate={{
+                scale: isAnimating ? 0.8 : 1,
+              }}
+              transition={{ type: 'spring', damping: 15, stiffness: 200 }}
+            >
+              <Icon as={calender === 'jalali' ? ArrowLeftIcon : ArrowRightIcon} size="sm" color={canGoNext() ? Colors.main.primary : Colors.main.textSecondary} />
+            </MotiView>
+          </Pressable>
+        </MotiView>
       </HStack>
+
+      <Box
+        style={{
+          height: 2,
+          backgroundColor: Colors.main.textSecondary + '15',
+          borderRadius: 1,
+          marginTop: 6,
+          overflow: 'hidden',
+        }}
+      >
+        <MotiView
+          animate={{
+            width: `${((selectedDayIndex + 1) / monthDays.length) * 100}%`,
+          }}
+          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+          style={{
+            height: '100%',
+            backgroundColor: Colors.main.primary + '80',
+            borderRadius: 1,
+          }}
+        />
+      </Box>
     </Box>
   );
 });

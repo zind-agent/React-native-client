@@ -16,7 +16,7 @@ const TodoIcon = ({ focused }: TodoIconProps) => {
   const strokeColor = getAnimatedColors(animation, 'transparent', Colors.main.primaryLight);
 
   return (
-    <Svg width="28" height="28" viewBox="0 0 23 24" fill="none">
+    <Svg width="30" height="30" viewBox="0 0 22 23" fill="none">
       <AnimatedPath
         fillRule="evenodd"
         clipRule="evenodd"

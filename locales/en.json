@@ -136,7 +136,8 @@
     "submit": "Submit",
     "create_event": "Create Event",
     "confirm": "Confirm",
-    "edit": "Edit"
+    "edit": "Edit",
+    "add_by_ai": "Add By AI"
   },
 
   "home": {
@@ -155,7 +156,8 @@
     "completed": "Completed",
     "cancelled": "Cancelled",
     "all_task": "All",
-    "no_tasks_today": "No tasks exists"
+    "no_tasks_today": "No tasks exists",
+    "no_data_message": "You don't have any task for today\nCreate a task and start your journey!"
   },
 
   "todos": {
@@ -172,7 +174,6 @@
     "is_cancel": "Is Cancel?",
     "start_time": "Start Time",
     "end_time": "End Time",
-    "add_by_ai": "Add By AI",
     "date": "Date",
     "edit_event": "Edit Task",
     "write_description_todo": "Write a short description about this task",
