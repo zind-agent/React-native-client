@@ -3,19 +3,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { AuthStateType, AuthResult } from '@/types/auth-type';
 import { sendMassageAction, sendOtpAction } from '@/api/authApi';
+import { TaskStatus } from '@/constants/TaskEnum';
 
 export const useAppStore = create<AuthStateType>()(
   persist(
     (set, get) => ({
       isLogin: false,
       isLoading: false,
-      language: "en",
+      language: 'en',
       user: null,
       token: null,
       hideTabBar: false,
       addInTimeTodoDrawer: false,
       isSendCode: false,
       calender: 'jalali',
+      activeTab: TaskStatus.ALL,
 
       setIsSendCode: (isSendCode) => set({ isSendCode }),
       setHideTabBar: (bool) => set({ hideTabBar: bool }),
@@ -33,6 +35,8 @@ export const useAppStore = create<AuthStateType>()(
           set({ language: lang });
         }
       },
+
+      setActiveTab: (tab) => set({ activeTab: tab }),
 
       setUserAndLanguage: (userid: string, username: string, lang: 'fa' | 'en') => {
         const state = get();

@@ -17,16 +17,18 @@ import { Controller } from 'react-hook-form';
 import DaySelector from '@/components/common/daySelecter';
 import TopicSelector from '@/components/shared/topicSelector';
 import { CancelIcon } from '@/assets/Icons/Cancel';
+import { useAppStore } from '@/store/appState';
 
 const CreateTask: React.FC = () => {
   const { selectedDate } = useTodoStore();
+  const { user } = useAppStore();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { topics, loadUserTopics } = useTopicStore();
+  const { userTopics, loadUserTopics } = useTopicStore();
 
   useEffect(() => {
-    loadUserTopics('0');
+    loadUserTopics(user?.id as string);
   }, [loadUserTopics]);
 
   const { form, onSubmit } = useTodoForm(selectedDate);
@@ -41,7 +43,7 @@ const CreateTask: React.FC = () => {
   const endTime = watch('endTime');
   const selectedCategoryId = watch('categoryId');
 
-  const selectedTopic = topics.find((topic) => topic.id === selectedCategoryId);
+  const selectedTopic = userTopics.find((topic) => topic.id === selectedCategoryId);
 
   const toggleAccordion = () => {
     setIsAccordionOpen(!isAccordionOpen);
@@ -60,20 +62,25 @@ const CreateTask: React.FC = () => {
           </Box>
 
           <Box style={styles.section}>
-            <TouchableOpacity style={[styles.sectionButton, { opacity: 0.7 }]} onPress={() => setIsModalVisible(true)} activeOpacity={0.8} disabled={topics.length === 0}>
+            <TouchableOpacity
+              style={[styles.sectionButton, { opacity: userTopics.length === 0 ? 0.7 : 1 }]}
+              onPress={() => setIsModalVisible(true)}
+              activeOpacity={0.8}
+              disabled={userTopics.length === 0}
+            >
               <Box style={styles.sectionButtonContent}>
                 <Text style={styles.sectionTitle}>{t('activity.title')}</Text>
-                <Text style={[styles.sectionSubtitle, { display: topics.length === 0 ? 'flex' : 'none' }]}>{t('create_task.no_topics')}</Text>
+                <Text style={[styles.sectionSubtitle, { display: userTopics.length === 0 ? 'flex' : 'none' }]}>{t('create_task.no_topics')}</Text>
                 <Text style={[styles.sectionSubtitle, { display: selectedTopic ? 'flex' : 'none' }]}>{selectedTopic ? selectedTopic.title : ''}</Text>
               </Box>
-              {topics.length === 0 && <CancelIcon color={'transparent'} />}
-              {topics.length > 0 && <Icon as={ChevronUpIcon} size="md" color={Colors.main.textSecondary} />}
+              {userTopics.length === 0 && <CancelIcon color={'transparent'} />}
+              {userTopics.length > 0 && <Icon as={ChevronUpIcon} size="md" color={Colors.main.textSecondary} />}
             </TouchableOpacity>
             <Controller
               name="categoryId"
               control={control}
               render={({ field }) => (
-                <TopicSelector visible={isModalVisible} onClose={() => setIsModalVisible(false)} topics={topics} selectedCategoryId={field.value} onSelectCategory={field.onChange} />
+                <TopicSelector visible={isModalVisible} onClose={() => setIsModalVisible(false)} topics={userTopics} selectedCategoryId={field.value} onSelectCategory={field.onChange} />
               )}
             />
           </Box>
@@ -105,13 +112,11 @@ const CreateTask: React.FC = () => {
               )}
             </AnimatePresence>
           </Box>
-
-          <View style={styles.bottomSpacer} />
         </ScrollView>
 
         <Box style={styles.fixedButtonContainer}>
           <Button onPress={handleSubmit(onSubmit)} style={styles.buttonStyle}>
-            <ButtonText style={styles.buttonText}>{t('event.add_topic')}</ButtonText>
+            <ButtonText style={styles.buttonText}>{t('button.add_task')}</ButtonText>
           </Button>
         </Box>
       </KeyboardAvoidingView>
@@ -179,9 +184,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.03,
     shadowRadius: 1,
   },
-  bottomSpacer: {
-    height: 100, // فاصله برای دکمه ثابت
-  },
   fixedButtonContainer: {
     position: 'absolute',
     bottom: 0,
@@ -192,7 +194,6 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    // سایه برای جدا کردن دکمه از محتوا
     elevation: 8,
     shadowColor: '#000',
     shadowOpacity: 0.1,

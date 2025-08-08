@@ -1,4 +1,5 @@
 import { HStack } from '@/components/ui/hstack';
+import { VStack } from '@/components/ui/vstack';
 import { Text, Pressable, StyleProp, ViewStyle, StyleSheet } from 'react-native';
 import { Box } from '../ui/box';
 import { Colors } from '@/constants/Colors';
@@ -6,6 +7,7 @@ import { Icon } from '../ui/icon';
 import { ClockIcon } from '@/assets/Icons/Clock';
 import { Task } from '@/storage/todoStorage';
 import { useAppStore } from '@/store/appState';
+import { TaskStatus } from '@/constants/TaskEnum';
 
 interface ScheduleCardProps {
   task: Task;
@@ -15,49 +17,95 @@ interface ScheduleCardProps {
 
 const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
   const { language } = useAppStore();
+
   const handlePress = () => {
     if (onPress && task.id != null) {
       onPress(task);
     }
   };
 
-  const styleBorderHandler = () => {
-    if (task.status === 'COMPLETED') {
-      return language === 'fa' ? styles.textContainerIsCompletedRight : styles.textContainerIsCompleted;
-    } else if (task.status === 'CANCELLED') {
-      return language === 'fa' ? styles.textContainerIsCancelRight : styles.textContainerIsCancel;
+  const getStatusConfig = () => {
+    switch (task.status) {
+      case TaskStatus.COMPLETED:
+        return {
+          borderColor: Colors.main.primary,
+          backgroundColor: Colors.main.primary + '10',
+          statusIcon: '✓',
+          statusTextColor: Colors.main.primary,
+        };
+      case TaskStatus.CANCELLED:
+        return {
+          borderColor: Colors.main.accent,
+          backgroundColor: Colors.main.accent + '10',
+          statusIcon: '✗',
+          statusTextColor: Colors.main.accent,
+        };
+      default:
+        return {
+          borderColor: Colors.main.textPrimary,
+          backgroundColor: Colors.main.cardBackground,
+          statusIcon: '○',
+          statusTextColor: Colors.main.textSecondary,
+        };
     }
-    return language === 'fa' ? styles.textRightContainer : styles.textLeftContainer;
+  };
+
+  const statusConfig = getStatusConfig();
+
+  const getBorderStyle = () => {
+    const isRTL = language === 'fa';
+    return {
+      [isRTL ? 'borderRightWidth' : 'borderLeftWidth']: 4,
+      [isRTL ? 'borderRightColor' : 'borderLeftColor']: statusConfig.borderColor,
+    };
   };
 
   const CardContent = () => (
-    <Box className="min-w-56 min-h-[70px] w-max h-max mx-1 my-1 p-4  justify-between" style={[style, styleBorderHandler()]}>
-      <Box className="px-2 mb-3" style={styleBorderHandler()}>
-        <Text className="text-md mb-1" style={styles.titleStyle}>
-          {task.title}
-        </Text>
-        {task.description && task.description !== '' && (
-          <Text className="text-sm mb-1" style={styles.descriptionStyle}>
-            {task.description}
+    <Box style={[styles.cardContainer, getBorderStyle(), { backgroundColor: statusConfig.backgroundColor }, style]} className="min-w-56 min-h-[70px] w-max h-max p-4">
+      <HStack style={styles.cardHeader}>
+        <VStack style={{ flex: 1 }}>
+          <Text style={styles.titleText} numberOfLines={2}>
+            {task.title}
           </Text>
-        )}
-      </Box>
-      <HStack className="flex-wrap items-center gap-4" style={{ gap: 4 }}>
-        <Icon as={ClockIcon} />
-        <Text className="text-sm mb-2" style={{ color: Colors.main.textSecondary }}>
-          {task.startTime} - {task.endTime}
-        </Text>
+          {task.description && task.description !== '' && (
+            <Text style={styles.descriptionText} numberOfLines={2}>
+              {task.description}
+            </Text>
+          )}
+        </VStack>
+
+        <Box style={[styles.statusBadge, { backgroundColor: statusConfig.statusTextColor + '20' }]}>
+          <Text style={[styles.statusIcon, { color: statusConfig.statusTextColor }]}>{statusConfig.statusIcon}</Text>
+        </Box>
       </HStack>
+
+      <HStack style={styles.cardFooter}>
+        <HStack style={styles.timeContainer}>
+          <Icon as={ClockIcon} size="sm" color={Colors.main.textSecondary} />
+          <Text style={styles.timeText}>
+            {task.startTime} - {task.endTime}
+          </Text>
+        </HStack>
+      </HStack>
+
+      {task.status === TaskStatus.PENDING && (
+        <Box style={styles.progressIndicator}>
+          <Box style={styles.progressBar} />
+        </Box>
+      )}
     </Box>
   );
 
   return (
     <Pressable
       onPress={handlePress}
-      style={({ pressed }) => ({
-        opacity: pressed ? 0.7 : 1,
-        transform: [{ scale: pressed ? 0.8 : 1 }],
-      })}
+      style={({ pressed }) => [
+        styles.pressableContainer,
+        {
+          opacity: pressed ? 0.8 : 1,
+          transform: [{ scale: pressed ? 0.98 : 1 }],
+        },
+      ]}
     >
       <CardContent />
     </Pressable>
@@ -67,34 +115,76 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
 export default ScheduleCard;
 
 const styles = StyleSheet.create({
-  textLeftContainer: {
-    borderColor: Colors.main.textPrimary,
-    borderLeftWidth: 3,
+  pressableContainer: {
+    marginVertical: 4,
   },
-  textRightContainer: {
-    borderColor: Colors.main.textPrimary,
-    borderRightWidth: 3,
+  cardContainer: {
+    minHeight: 85,
+    marginHorizontal: 2,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    shadowColor: Colors.main.textPrimary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  textContainerIsCompleted: {
-    borderColor: Colors.main.primary,
-    borderLeftWidth: 3,
+  cardHeader: {
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    marginBottom: 8,
   },
-  textContainerIsCompletedRight: {
-    borderColor: Colors.main.primary,
-    borderRightWidth: 3,
-  },
-  textContainerIsCancelRight: {
-    borderColor: Colors.main.accent,
-    borderRightWidth: 3,
-  },
-  textContainerIsCancel: {
-    borderColor: Colors.main.accent,
-    borderLeftWidth: 3,
-  },
-  titleStyle: {
+  titleText: {
+    fontSize: 16,
+    fontWeight: '600',
     color: Colors.main.textPrimary,
+    lineHeight: 22,
   },
-  descriptionStyle: {
+  descriptionText: {
+    fontSize: 14,
     color: Colors.main.textSecondary,
+    lineHeight: 20,
+    marginTop: 4,
+  },
+  statusBadge: {
+    width: 25,
+    height: 25,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+  },
+  statusIcon: {
+    fontSize: 14,
+  },
+  cardFooter: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  timeContainer: {
+    alignItems: 'center',
+    gap: 6,
+  },
+  timeText: {
+    fontSize: 13,
+    color: Colors.main.textSecondary,
+  },
+  progressIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: Colors.main.textPrimary + '20',
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: Colors.main.primary,
+    opacity: 0.6,
   },
 });

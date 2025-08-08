@@ -16,6 +16,7 @@ import UserHeaderTitle from '@/components/common/userHeaderTitle';
 import { Text } from '@/components/Themed';
 import emptyTask from '@/assets/images/emptyHome.png';
 import { TaskStatus } from '@/constants/TaskEnum';
+import { useAppStore } from '@/store/appState';
 
 interface HomeSection {
   id: string;
@@ -39,9 +40,9 @@ const TABS = [
 
 const Home: React.FC = () => {
   const { getCompletionPercentage, loadTasks, today, allTasks, getTodayAllTask } = useTodoStore();
+  const { activeTab, setActiveTab } = useAppStore();
   const [percentage, setPercentage] = useState(0);
 
-  const [activeTab, setActiveTab] = useState<TaskStatus>(TaskStatus.ALL);
   const hasTasks = useMemo(() => allTasks.length > 0, [allTasks]);
 
   useEffect(() => {
@@ -160,6 +161,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.main.background,
+    paddingHorizontal: 10,
   },
   listContent: {
     paddingHorizontal: 15,

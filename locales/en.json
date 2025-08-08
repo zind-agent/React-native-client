@@ -219,7 +219,8 @@
     "is_public": "All Users Can See This Topic?",
     "append_title_required": "Title is required",
     "search": "Search your topics ...",
-    "edit_topic": "Edit Topic"
+    "edit_topic": "Edit Topic",
+    "swip_to_complete": "To complete"
   },
 
   "status_enum": {

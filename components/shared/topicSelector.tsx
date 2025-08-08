@@ -40,36 +40,27 @@ const TopicSelector = ({ visible, onClose, topics, selectedCategoryId, onSelectC
       </Box>
       <View
         style={{
-          flex: 1,
           backgroundColor: Colors.main.background,
-          justifyContent: 'center',
+          borderRadius: 12,
+          maxHeight: '80%',
           padding: 16,
         }}
       >
-        <View
-          style={{
-            backgroundColor: Colors.main.background,
-            borderRadius: 12,
-            maxHeight: '80%',
-            padding: 16,
-          }}
-        >
-          <FlatList
-            data={topics}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TopicItem
-                item={item}
-                isSelected={selectedCategoryId === item.id}
-                onSelect={() => {
-                  onSelectCategory(item.id);
-                  onClose();
-                }}
-              />
-            )}
-            keyboardShouldPersistTaps="handled"
-          />
-        </View>
+        <FlatList
+          data={topics}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TopicItem
+              item={item}
+              isSelected={selectedCategoryId === item.id}
+              onSelect={() => {
+                onSelectCategory(item.id);
+                onClose();
+              }}
+            />
+          )}
+          keyboardShouldPersistTaps="handled"
+        />
       </View>
     </Box>
   </Modal>
@@ -92,7 +83,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.main.border,
   },
   topicItemSelected: {
-    backgroundColor: Colors.main.primaryLight,
     borderWidth: 2,
     borderColor: Colors.main.primary,
     elevation: 2,

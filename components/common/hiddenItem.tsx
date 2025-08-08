@@ -23,22 +23,28 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
     return null;
   }
 
+  const isFa = language === 'fa';
+
   return (
-    <HStack className="w-full h-full items-center justify-center gap-1" style={{ flexDirection: language === 'fa' ? 'row-reverse' : 'row' }}>
+    <HStack
+      className="w-full h-full items-center justify-between gap-1"
+      style={{
+        flexDirection: isFa ? 'row' : 'row-reverse',
+      }}
+    >
       <MotiView
         className="w-1/2 h-[90%]"
         style={{
           justifyContent: 'center',
-          alignItems: language === 'fa' ? 'flex-end' : 'flex-start',
           paddingHorizontal: 10,
         }}
         from={{
           opacity: 0,
-          translateX: language === 'fa' ? 50 : -50,
+          translateX: isFa ? 50 : -50,
         }}
         animate={{
           opacity: isRowSwiped ? 1 : 0,
-          translateX: isRowSwiped ? 0 : language === 'fa' ? 50 : -50,
+          translateX: isRowSwiped ? 0 : isFa ? 50 : -50,
         }}
         transition={{
           type: 'timing',
@@ -51,7 +57,7 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
           className="h-full w-full"
           style={{
             backgroundColor: item.status === TaskStatus.COMPLETED ? Colors.main.border : Colors.main.primary,
-            justifyContent: language === 'fa' ? 'flex-end' : 'flex-start',
+            justifyContent: isFa ? 'flex-start' : 'flex-end',
             borderRadius: 10,
           }}
         >
@@ -59,11 +65,11 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
             style={{
               color: Colors.main.textPrimary,
               fontSize: 12,
-              textAlign: language === 'fa' ? 'left' : 'right',
+              textAlign: isFa ? 'right' : 'left',
               paddingHorizontal: 10,
             }}
           >
-            ✔ {language === 'fa' ? 'تکمیل' : 'Done'}
+            ✔ {isFa ? 'تکمیل' : 'Done'}
           </Text>
         </Button>
       </MotiView>
@@ -72,16 +78,15 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
         className="w-1/2 h-[90%]"
         style={{
           justifyContent: 'center',
-          alignItems: language === 'fa' ? 'flex-start' : 'flex-end',
           paddingHorizontal: 10,
         }}
         from={{
           opacity: 0,
-          translateX: language === 'fa' ? -50 : 50,
+          translateX: isFa ? -50 : 50,
         }}
         animate={{
           opacity: isRowSwiped ? 1 : 0,
-          translateX: isRowSwiped ? 0 : language === 'fa' ? -50 : 50,
+          translateX: isRowSwiped ? 0 : isFa ? -50 : 50,
         }}
         transition={{
           type: 'timing',
@@ -94,7 +99,7 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
           className="h-full w-full"
           style={{
             backgroundColor: item.status === TaskStatus.CANCELLED ? Colors.main.border : Colors.main.accent,
-            justifyContent: language === 'fa' ? 'flex-start' : 'flex-end',
+            justifyContent: isFa ? 'flex-end' : 'flex-start',
             borderRadius: 10,
           }}
         >
@@ -102,11 +107,11 @@ const HiddenItem = React.memo(({ item, swipedRows, onCompleteTask, onCancelTask 
             style={{
               color: Colors.main.textPrimary,
               fontSize: 12,
-              textAlign: language === 'fa' ? 'right' : 'left',
+              textAlign: isFa ? 'left' : 'right',
               paddingHorizontal: 10,
             }}
           >
-            ✖ {language === 'fa' ? 'لغو' : 'Canceled'}
+            ✖ {isFa ? 'لغو' : 'Canceled'}
           </Text>
         </Button>
       </MotiView>

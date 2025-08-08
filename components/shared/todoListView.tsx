@@ -14,10 +14,10 @@ import { Loading } from '../common/Loading';
 import { Center } from '../ui/center';
 import { Text } from '../Themed';
 import { t } from 'i18next';
+import { useAppStore } from '@/store/appState';
 
 interface TodoListViewProps {
   mode: 'flat' | 'grouped';
-  date?: string;
   enableSwipeActions?: boolean;
 }
 
@@ -25,38 +25,38 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
   const { tasks, isLoading, updateTask, loadTasks } = useTodoStore();
   const groupedTodos = useGroupedTodos(mode === 'grouped' ? tasks : []);
   const [swipedRows, setSwipedRows] = useState<Set<string>>(new Set());
+  const { activeTab } = useAppStore();
 
-  const handleCompleteTask = useCallback(
-    async (task: Task) => {
+  const handleUpdateTaskStatus = useCallback(
+    async (task: Task, newStatus: TaskStatus) => {
       try {
-        await updateTask({ ...task, status: TaskStatus.COMPLETED }).then(() => loadTasks(task.date));
+        await updateTask({ ...task, status: newStatus });
+        switch (activeTab) {
+          case TaskStatus.COMPLETED:
+            loadTasks(task.date, TaskStatus.COMPLETED);
+            break;
+          case TaskStatus.PENDING:
+            loadTasks(task.date, TaskStatus.PENDING);
+            break;
+          default:
+            loadTasks(task.date);
+            break;
+        }
         setSwipedRows((prev) => {
           const newSet = new Set(prev);
           newSet.delete(task.id);
           return newSet;
         });
       } catch (error) {
-        console.error('Error completing task:', error);
+        console.error(`Error updating task status to ${newStatus}:`, error);
       }
     },
-    [updateTask],
+    [updateTask, activeTab, loadTasks],
   );
 
-  const handleCancelTask = useCallback(
-    async (task: Task) => {
-      try {
-        await updateTask({ ...task, status: TaskStatus.CANCELLED }).then(() => loadTasks(task.date));
-        setSwipedRows((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(task.id);
-          return newSet;
-        });
-      } catch (error) {
-        console.error('Error canceling task:', error);
-      }
-    },
-    [updateTask],
-  );
+  const handleCompleteTask = (task: Task) => handleUpdateTaskStatus(task, TaskStatus.COMPLETED);
+
+  const handleCancelTask = (task: Task) => handleUpdateTaskStatus(task, TaskStatus.CANCELLED);
 
   const renderItem = useCallback(
     ({ item }: { item: Task }) => (
@@ -65,7 +65,7 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
         onPress={() => router.push(`/tabs/(tabs)/${item.id}`)}
         style={{
           backgroundColor: Colors.main.cardBackground,
-          marginVertical: 2,
+          marginVertical: 4,
           borderRadius: 10,
           padding: 10,
         }}
@@ -119,14 +119,12 @@ const TodoListView = ({ mode, enableSwipeActions = true }: TodoListViewProps) =>
         closeOnRowBeginSwipe={true}
         closeOnRowPress={false}
         closeOnScroll={true}
-        recalculateHiddenLayout={false}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
-        windowSize={5}
         removeClippedSubviews={true}
         showsVerticalScrollIndicator={false}
-        swipeToOpenPercent={15}
-        swipeToClosePercent={15}
+        swipeToOpenPercent={10}
+        swipeToClosePercent={10}
       />
     );
   }

@@ -214,7 +214,8 @@
     "is_public": "همه کاربران می‌تونن این موضوع رو ببینن؟",
     "append_title_required": "عنوان لازمه",
     "search": "جوستجوی گروه فعالیت های مختلف ...",
-    "edit_topic": "ویرایش موضوع"
+    "edit_topic": "ویرایش موضوع",
+    "swip_to_complete": "انجام شود"
   },
   "status_enum": {
     "pending": "در انتظار",

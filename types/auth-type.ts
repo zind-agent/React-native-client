@@ -1,3 +1,5 @@
+import { TaskStatus } from '@/constants/TaskEnum';
+
 export type User = {
   id: string;
   username: string;
@@ -29,6 +31,7 @@ export type AuthStateType = {
   calender: 'jalali' | 'gregorian';
   hideTabBar: boolean;
   addInTimeTodoDrawer: boolean;
+  activeTab: TaskStatus;
 
   setIsSendCode: (val: boolean) => void;
   setHideTabBar: (val: boolean) => void;
@@ -40,4 +43,5 @@ export type AuthStateType = {
 
   sendMassage: (identifier: string) => Promise<AuthResult>;
   sendOtp: (identifier: string, code: string) => Promise<AuthResult>;
+  setActiveTab: (tab: TaskStatus) => void;
 };
