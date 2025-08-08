@@ -8,7 +8,7 @@ export interface Task {
   startTime: string;
   endTime: string;
   date: string;
-  status: TaskStatus;
+  status: TaskStatus | string;
   reminderDays?: string[];
   categoryId?: string;
   goalId?: string;
