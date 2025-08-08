@@ -14,11 +14,8 @@ import jalaliMoment from 'jalali-moment';
 import { useAppStore } from '@/store/appState';
 import { Button, ButtonText } from '@/components/ui/button';
 import HeaderPage from '@/components/common/headerPage';
-import { Image, StyleSheet } from 'react-native';
-import { Center } from '@/components/ui/center';
-import { Text } from '@/components/Themed';
-import emptyTaskImage from '@/assets/images/notTaskToday.png';
-import { router } from 'expo-router';
+import { StyleSheet } from 'react-native';
+import EmptyTaskList from '@/components/common/emptyTaskList';
 
 const Todos = () => {
   const { loadTasks, tasks } = useTodoStore();
@@ -61,18 +58,6 @@ const Todos = () => {
   );
 
   const displayDate = useMemo(() => getDisplayDate(selectedDate), [getDisplayDate, selectedDate]);
-
-  const EmptyTaskList = () => {
-    return (
-      <Center className="p-10" style={styles.emptyContainer}>
-        <Image source={emptyTaskImage} style={{ width: 200, height: 200 }} />
-        <Text className="text-xl">{t('todos.create_your_task_for_now_time')}</Text>
-        <Button onPress={() => router.push('/tabs/(tabs)/createTask')} style={{ backgroundColor: Colors.main.tag.work }} className="px-10 text-xl mt-5 rounded-xl">
-          <ButtonText style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{t('task_detail.add_task')}</ButtonText>
-        </Button>
-      </Center>
-    );
-  };
 
   const headerComponent = useMemo(
     () => (
@@ -139,11 +124,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-  },
-  emptyContainer: {
-    backgroundColor: Colors.main.cardBackground,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: Colors.main.border,
   },
 });
