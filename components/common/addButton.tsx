@@ -1,6 +1,6 @@
 import { memo, useMemo, useCallback, useState } from 'react';
 import { MotiView } from 'moti';
-import { Platform, Pressable, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { Platform, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Icon, AddIcon, GlobeIcon } from '@/components/ui/icon';
 import { usePathname, useRouter } from 'expo-router';
@@ -21,19 +21,6 @@ interface MenuItemProps {
   };
   style?: ViewStyle;
 }
-
-interface Styles {
-  container: ViewStyle;
-  hidden: ViewStyle;
-  overlay: ViewStyle;
-  overlayPressable: ViewStyle;
-  gradientButton: ViewStyle;
-  menuItem: ViewStyle;
-  menuItemPressable: ViewStyle;
-  menuItemText: TextStyle;
-  iconMargin: ViewStyle;
-}
-
 interface ShadowStyles {
   shadow: ViewStyle;
 }
@@ -73,14 +60,14 @@ const AddButton: React.FC = memo(() => {
   const gradientEnd = useMemo(() => ({ x: 1, y: 1 }), []);
 
   const firstMenuAnimation = {
-    from: { opacity: 0, translateY: -40, translateX: -90 },
+    from: { opacity: 0, translateX: -40, translateY: -20 },
     animate: { opacity: 1, translateY: -60, translateX: -50 },
     transition: { type: 'spring', damping: 20, stiffness: 200 } as const,
   };
 
   const secondMenuAnimation = {
-    from: { opacity: 0, translateX: -100, translateY: 0 },
-    animate: { opacity: 1, translateY: 8, translateX: -80 },
+    from: { opacity: 0, translateX: -70, translateY: 10 },
+    animate: { opacity: 1, translateY: 10, translateX: -100 },
     transition: { type: 'spring', damping: 30, stiffness: 200 } as const,
   };
 
@@ -137,7 +124,7 @@ AddButton.displayName = 'AddButton';
 
 export default AddButton;
 
-const styles = StyleSheet.create<Styles>({
+const styles = StyleSheet.create({
   container: {
     position: 'relative',
     width: 60,
@@ -175,24 +162,23 @@ const styles = StyleSheet.create<Styles>({
   },
   menuItem: {
     position: 'absolute',
-    minWidth: 150,
-    padding: 13,
-    backgroundColor: Colors.main.cardBackground,
-    borderRadius: 8,
     zIndex: 1002,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   menuItemPressable: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: Colors.main.cardBackground,
+    paddingVertical: 10,
+    minWidth: 130,
+    justifyContent: 'center',
+    borderRadius: 10,
   },
   menuItemText: {
     color: Colors.main.textPrimary,
-    fontSize: 14,
+    fontSize: 16,
   },
   iconMargin: {
-    marginRight: 8,
+    marginHorizontal: 5,
   },
 });

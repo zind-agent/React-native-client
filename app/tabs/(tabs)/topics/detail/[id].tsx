@@ -27,7 +27,7 @@ const TopicDetail: React.FC = () => {
   }, [id]);
 
   if (topic === null || isLoading) return <Loading />;
-  const category = Category[topic?.category as any];
+  const category = Category.find((c) => c.id === topic?.category);
 
   const removeTopicHandler = () => {
     removeTopic(topic.id);
@@ -52,8 +52,8 @@ const TopicDetail: React.FC = () => {
 
           <Box style={styles.mainCard} className="p-5 px-7">
             <Heading style={styles.headerTitle}>{t('task_detail.category')}</Heading>
-            <Text className="mt-4 text-[14px] p-2 w-max rounded-lg px-5" style={{ backgroundColor: category.color + 50 }}>
-              {language === 'fa' ? category.fa : category.name}
+            <Text className="mt-4 text-[14px] p-2 w-max rounded-lg px-5" style={{ backgroundColor: category?.color + '20' }}>
+              {language === 'fa' ? category?.fa : category?.name}
             </Text>
           </Box>
           <HStack style={styles.mainCard} className="p-3 px-7 items-center justify-between">
@@ -63,8 +63,8 @@ const TopicDetail: React.FC = () => {
         </VStack>
       </ScrollView>
       <Box className="px-5 mb-5">
-        <Button className="h-16 rounded-lg" onPress={() => router.push(`/tabs/(tabs)/topics/edit/${id}`)}>
-          <ButtonText className="text-lg">{t('button.edit')}</ButtonText>
+        <Button className="h-16 rounded-lg" style={{ backgroundColor: Colors.main.button }} onPress={() => router.push(`/tabs/(tabs)/topics/edit/${id}`)}>
+          <ButtonText className="text-xl">{t('button.edit')}</ButtonText>
         </Button>
       </Box>
     </GestureHandlerRootView>
@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
   },
   mainCard: {
     backgroundColor: Colors.main.cardBackground,
-    borderRadius: 20,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOpacity: 0.08,
-    shadowRadius: 8,
+    shadowRadius: 5,
     elevation: 4,
   },
   headerTitle: {

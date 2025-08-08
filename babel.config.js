@@ -23,7 +23,7 @@ module.exports = function (api) {
           },
         },
       ],
-      'react-native-reanimated/plugin', // ✅ اضافه شود و همیشه آخرین پلاگین باشد
+      'react-native-reanimated/plugin',
     ],
   };
 };

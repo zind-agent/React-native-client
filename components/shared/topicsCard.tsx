@@ -17,7 +17,7 @@ type TopicsCardProps = {
 
 const TopicsCard: React.FC<TopicsCardProps> = ({ data }) => {
   const { language } = useAppStore();
-  const category = Category[data?.category as any];
+  const category = Category.find((c) => c.id === data?.category);
   const gradientColors: [string, string] = [Colors.main.background, Colors.main.cardBackground];
 
   return (

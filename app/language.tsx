@@ -7,17 +7,19 @@ import { useState } from 'react';
 import { MotiView } from 'moti';
 import { I18nManager, Image, TouchableOpacity } from 'react-native';
 import * as Updates from 'expo-updates';
-import getStartImage from '../assets/images/getStart.png';
+import getStartImage from '@/assets/images/getStart.png';
 import { Input, InputField } from '@/components/ui/input';
 import { useAppStore } from '@/store/appState';
 import { VStack } from '@/components/ui/vstack';
 import { router } from 'expo-router';
+import { v4 as uuid } from 'uuid';
 
 const Language = () => {
   const [selectedLang, setSelectedLang] = useState<'en' | 'fa'>('en');
   const [username, setUsername] = useState('');
   const { i18n } = useTranslation();
   const { setUserAndLanguage, user } = useAppStore();
+  const id = uuid();
 
   const selectLanguage = async () => {
     const isRTL = selectedLang === 'fa';
@@ -26,7 +28,7 @@ const Language = () => {
 
     await i18n.changeLanguage(selectedLang);
 
-    if (!user?.id) setUserAndLanguage(username, selectedLang);
+    if (!user?.id) setUserAndLanguage(id, username, selectedLang);
 
     if (I18nManager.isRTL !== isRTL) {
       I18nManager.allowRTL(isRTL);

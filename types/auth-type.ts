@@ -1,5 +1,5 @@
 export type User = {
-  id: number;
+  id: string;
   username: string;
   email?: string;
   phone_number?: string | null;
@@ -25,7 +25,7 @@ export type AuthStateType = {
   isSendCode: boolean;
   user: User | null;
   token: string | null;
-  language: 'fa' | 'en' | null;
+  language: 'fa' | 'en';
   calender: 'jalali' | 'gregorian';
   hideTabBar: boolean;
   addInTimeTodoDrawer: boolean;
@@ -35,7 +35,7 @@ export type AuthStateType = {
   setCalender: (val: 'jalali' | 'gregorian') => void;
   setAddInTimeTodoDrawer: (val: boolean) => void;
   setLanguage: (lang: 'fa' | 'en') => void;
-  setUserAndLanguage: (username: string, lang: 'fa' | 'en') => void;
+  setUserAndLanguage: (userid: string, username: string, lang: 'fa' | 'en') => void;
   logout: () => void;
 
   sendMassage: (identifier: string) => Promise<AuthResult>;

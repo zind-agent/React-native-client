@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { HStack } from '@/components/ui/hstack';
 import { Pressable } from '@/components/ui/pressable';
 import { PanResponder, ScrollView } from 'react-native';
@@ -20,21 +20,65 @@ interface Props {
   month?: number | string | undefined;
 }
 
+const dateCache = new Map<string, any>();
+
 const getJalaliMonthDays = (year: number, month: number): number => {
-  if (month <= 6) return 31;
-  if (month <= 11) return 30;
-  const isLeapYear = ((year - 979) % 33) % 4 === 1;
-  return isLeapYear ? 30 : 29;
+  const cacheKey = `jalali-days-${year}-${month}`;
+  if (dateCache.has(cacheKey)) {
+    return dateCache.get(cacheKey);
+  }
+
+  let days;
+  if (month <= 6) {
+    days = 31;
+  } else if (month <= 11) {
+    days = 30;
+  } else {
+    const isLeapYear = ((year - 979) % 33) % 4 === 1;
+    days = isLeapYear ? 30 : 29;
+  }
+
+  dateCache.set(cacheKey, days);
+  return days;
 };
 
 const jalaliToGregorian = (jYear: number, jMonth: number, jDay: number): string => {
-  const jalaliDate = jalaliMoment(`${jYear}/${jMonth}/${jDay}`, 'jYYYY/jM/jD');
-  return jalaliDate.format('YYYY-MM-DD');
+  const cacheKey = `j2g-${jYear}-${jMonth}-${jDay}`;
+  if (dateCache.has(cacheKey)) {
+    return dateCache.get(cacheKey);
+  }
+
+  const jalaliDate = jalaliMoment.utc(`${jYear}/${jMonth}/${jDay}`, 'jYYYY/jM/jD');
+  const gregorianDate = jalaliDate.format('YYYY-MM-DD');
+
+  dateCache.set(cacheKey, gregorianDate);
+  return gregorianDate;
 };
 
 const getJalaliDayName = (gregorianDate: string): string => {
-  const dayIndex = jalaliMoment(gregorianDate).day();
-  return weekdays[dayIndex].fa;
+  const cacheKey = `jalali-day-name-${gregorianDate}`;
+  if (dateCache.has(cacheKey)) {
+    return dateCache.get(cacheKey);
+  }
+
+  const dayIndex = jalaliMoment.utc(gregorianDate, 'YYYY-MM-DD').day();
+  const dayName = weekdays[dayIndex].fa;
+
+  dateCache.set(cacheKey, dayName);
+  return dayName;
+};
+
+const getGregorianDayName = (gregorianDate: string): string => {
+  const cacheKey = `gregorian-day-name-${gregorianDate}`;
+  if (dateCache.has(cacheKey)) {
+    return dateCache.get(cacheKey);
+  }
+
+  const date = new Date(gregorianDate + 'T12:00:00'); // Add time to avoid timezone issues
+  const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+  dateCache.set(cacheKey, dayName);
+  return dayName;
 };
 
 const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: Props) => {
@@ -42,13 +86,19 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
   const scrollViewRef = useRef<ScrollView>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-  const today = jalaliMoment();
+
+  const today = jalaliMoment.utc();
   const todayFormatted = today.format('YYYY-MM-DD');
   const currentMonth = calender === 'jalali' ? today.jMonth() + 1 : today.month() + 1;
   const currentYear = calender === 'jalali' ? today.jYear() : today.year();
   const isCurrentMonth = parseInt(year as string) === currentYear && parseInt(month as string) === currentMonth;
 
   const generateMonthDays = useMemo(() => {
+    const cacheKey = `month-days-${calender}-${year}-${month}-${todayFormatted}-${selectedDate}`;
+    if (dateCache.has(cacheKey)) {
+      return dateCache.get(cacheKey);
+    }
+
     const days = [];
     const yearNum = parseInt(year as string);
     const monthNum = parseInt(month as string);
@@ -73,13 +123,12 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
         });
       }
     } else {
-      const endDate = new Date(yearNum, monthNum, 0);
-      const monthDays = endDate.getDate();
+      const monthDays = new Date(yearNum, monthNum, 0).getDate();
 
       for (let day = 1; day <= monthDays; day++) {
-        const date = new Date(yearNum, monthNum - 1, day);
+        const date = new Date(yearNum, monthNum - 1, day, 12, 0, 0);
         const gregorianDate = date.toISOString().split('T')[0];
-        const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+        const dayName = getGregorianDayName(gregorianDate);
         const dayNumber = day.toString();
 
         const isToday = gregorianDate === todayFormatted;
@@ -95,13 +144,15 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
       }
     }
 
+    setTimeout(() => dateCache.delete(cacheKey), 5 * 60 * 1000);
+    dateCache.set(cacheKey, days);
     return days;
   }, [year, month, calender, selectedDate, todayFormatted]);
 
   const monthDays = generateMonthDays;
-  const selectedDayIndex = selectedDate ? monthDays.findIndex((day) => day.date === selectedDate) : -1;
+  const selectedDayIndex = selectedDate ? monthDays.findIndex((day: any) => day.date === selectedDate) : -1;
 
-  const scrollToDay = (index: number, animated: boolean = true) => {
+  const scrollToDay = useCallback((index: number, animated: boolean = true) => {
     if (scrollViewRef.current && index >= 0) {
       const itemWidth = 55;
       const scrollPosition = index * itemWidth;
@@ -111,29 +162,32 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
         animated: animated,
       });
     }
-  };
+  }, []);
 
-  const handleDayChange = (direction: 'prev' | 'next') => {
-    if (isAnimating || selectedDayIndex === -1) return;
+  const handleDayChange = useCallback(
+    (direction: 'prev' | 'next') => {
+      if (isAnimating || selectedDayIndex === -1) return;
 
-    let newIndex;
-    if (direction === 'next') {
-      newIndex = selectedDayIndex + 1;
-    } else {
-      newIndex = selectedDayIndex - 1;
-    }
+      let newIndex;
+      if (direction === 'next') {
+        newIndex = selectedDayIndex + 1;
+      } else {
+        newIndex = selectedDayIndex - 1;
+      }
 
-    if (newIndex < 0 || newIndex >= monthDays.length) return;
+      if (newIndex < 0 || newIndex >= monthDays.length) return;
 
-    const newDay = monthDays[newIndex];
-    setIsAnimating(true);
-    setSelectedDate(newDay.date);
+      const newDay = monthDays[newIndex];
+      setIsAnimating(true);
+      setSelectedDate(newDay.date);
 
-    setTimeout(() => {
-      scrollToDay(newIndex);
-      setIsAnimating(false);
-    }, 50);
-  };
+      setTimeout(() => {
+        scrollToDay(newIndex);
+        setIsAnimating(false);
+      }, 50);
+    },
+    [isAnimating, selectedDayIndex, monthDays, setSelectedDate, scrollToDay],
+  );
 
   const canGoPrev = () => selectedDayIndex > 0;
   const canGoNext = () => selectedDayIndex < monthDays.length - 1 && selectedDayIndex !== -1;
@@ -150,22 +204,22 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
           }
         },
       }),
-    [isAnimating, selectedDayIndex, monthDays.length, calender],
+    [isAnimating, handleDayChange, calender],
   );
 
   useEffect(() => {
     if (isCurrentMonth && !isInitialized && monthDays.length > 0) {
-      const todayIndex = monthDays.findIndex((day) => day.date === todayFormatted);
+      const todayIndex = monthDays.findIndex((day: any) => day.date === todayFormatted);
 
       if (todayIndex >= 0) {
         setSelectedDate(todayFormatted);
         setTimeout(() => {
           scrollToDay(todayIndex, false);
+          setIsInitialized(true);
         }, 100);
-        setIsInitialized(true);
       }
     }
-  }, [monthDays, isCurrentMonth, todayFormatted, setSelectedDate, isInitialized]);
+  }, [monthDays, isCurrentMonth, todayFormatted, setSelectedDate, isInitialized, scrollToDay]);
 
   useEffect(() => {
     if (selectedDayIndex >= 0 && isInitialized) {
@@ -173,11 +227,25 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
         scrollToDay(selectedDayIndex);
       }, 50);
     }
-  }, [selectedDayIndex, isInitialized]);
+  }, [selectedDayIndex, isInitialized, scrollToDay]);
 
   useEffect(() => {
     setIsInitialized(false);
   }, [year, month]);
+
+  useEffect(() => {
+    return () => {
+      dateCache.clear();
+    };
+  }, [calender]);
+
+  const onDayPress = useCallback(
+    (day: any, index: number) => {
+      setSelectedDate(day.date);
+      setTimeout(() => scrollToDay(index), 50);
+    },
+    [setSelectedDate, scrollToDay],
+  );
 
   return (
     <Box
@@ -241,10 +309,10 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
             snapToInterval={55}
             snapToAlignment="center"
             style={{ direction: 'ltr' }}
-            removeClippedSubviews={false}
+            removeClippedSubviews={true}
           >
             <HStack className="gap-[4px]" space="xs" style={{ flexDirection: calender === 'jalali' ? 'row-reverse' : 'row' }}>
-              {monthDays.map((day, index) => (
+              {monthDays.map((day: any, index: any) => (
                 <MotiView
                   key={`${day.date}-${index}`}
                   animate={{
@@ -258,10 +326,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
                   }}
                 >
                   <Pressable
-                    onPress={() => {
-                      setSelectedDate(day.date);
-                      setTimeout(() => scrollToDay(index), 50);
-                    }}
+                    onPress={() => onDayPress(day, index)}
                     style={{
                       width: 55,
                       height: 64,
@@ -439,5 +504,7 @@ const WeeklyDatePicker = memo(({ selectedDate, setSelectedDate, year, month }: P
     </Box>
   );
 });
+
+WeeklyDatePicker.displayName = 'WeeklyDatePicker';
 
 export default WeeklyDatePicker;

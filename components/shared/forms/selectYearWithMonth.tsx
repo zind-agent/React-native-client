@@ -10,13 +10,19 @@ import { VStack } from '@/components/ui/vstack';
 import CalenderIcon from '@/assets/Icons/CalenderIcon';
 import { Text } from 'react-native';
 import jalaliMoment from 'jalali-moment';
-import LeftIcon from '@/assets/Icons/LeftIcon';
 import { ArrowLeftIcon, ArrowRightIcon, Icon } from '@/components/ui/icon';
 
 interface MonthOption {
   value: string;
   labelEn: string;
   labelFa: string;
+}
+
+interface SelectYearWithMonthProps {
+  selectedYear: string | null;
+  setSelectedYear: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedMonth: string | null;
+  setSelectedMonth: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const gregorianMonths: MonthOption[] = [
@@ -49,17 +55,7 @@ const jalaliMonths: MonthOption[] = [
   { value: '12', labelEn: 'Esfand', labelFa: 'اسفند' },
 ];
 
-const SelectYearWithMonth = ({
-  selectedYear,
-  setSelectedYear,
-  selectedMonth,
-  setSelectedMonth,
-}: {
-  selectedYear: string | null;
-  setSelectedYear: React.Dispatch<React.SetStateAction<string | null>>;
-  selectedMonth: string | null;
-  setSelectedMonth: React.Dispatch<React.SetStateAction<string | null>>;
-}) => {
+const SelectYearWithMonth: React.FC<SelectYearWithMonthProps> = ({ selectedYear, setSelectedYear, selectedMonth, setSelectedMonth }) => {
   const { language, calender } = useAppStore();
   const [showDrawer, setShowDrawer] = React.useState(false);
 
@@ -68,30 +64,64 @@ const SelectYearWithMonth = ({
 
   React.useEffect(() => {
     setSelectedYear(year.toString());
-  }, [year]);
+  }, [year, setSelectedYear]);
 
-  const handleDecrease = () => setYear((prev) => prev - 1);
-  const handleIncrease = () => setYear((prev) => prev + 1);
+  const handleDecrease = React.useCallback(() => {
+    setYear((prev) => prev - 1);
+  }, []);
 
-  const months = calender === 'jalali' ? jalaliMonths : gregorianMonths;
-  const displayYear = calender === 'jalali' ? jalaliMoment(`${year}`, 'jYYYY').format('jYYYY') : year.toString();
+  const handleIncrease = React.useCallback(() => {
+    setYear((prev) => prev + 1);
+  }, []);
 
-  const selectedMonthLabel = selectedMonth ? months.find((m) => m.value === selectedMonth) : null;
+  const handleMonthSelect = React.useCallback(
+    (monthValue: string) => {
+      setSelectedMonth(monthValue);
+    },
+    [setSelectedMonth],
+  );
+
+  const handleDrawerClose = React.useCallback(() => {
+    setShowDrawer(false);
+  }, []);
+
+  const months = React.useMemo(() => {
+    return calender === 'jalali' ? jalaliMonths : gregorianMonths;
+  }, [calender]);
+
+  const displayYear = React.useMemo(() => {
+    return calender === 'jalali' ? jalaliMoment(`${year}`, 'jYYYY').format('jYYYY') : year.toString();
+  }, [calender, year]);
+
+  const selectedMonthLabel = React.useMemo(() => {
+    return selectedMonth ? months.find((m) => m.value === selectedMonth) : null;
+  }, [selectedMonth, months]);
+
+  const buttonText = React.useMemo(() => {
+    if (selectedYear && selectedMonth && selectedMonthLabel) {
+      const monthText = language === 'fa' ? `${selectedMonthLabel.labelFa} - ${selectedMonthLabel.labelEn}` : `${selectedMonthLabel.labelEn} - ${selectedMonthLabel.labelFa}`;
+      return `${displayYear} | ${monthText}`;
+    }
+    return t('select_year_month');
+  }, [selectedYear, selectedMonth, selectedMonthLabel, displayYear, language]);
 
   return (
     <Box>
       <Button onPress={() => setShowDrawer(true)} className="rounded-xl bg-transparent">
         <HStack className="items-center" space="sm">
           <CalenderIcon />
-          <ButtonText className="text-md" style={{ color: selectedYear && selectedMonth ? Colors.main.textSecondary : Colors.main.primaryLight }}>
-            {selectedYear && selectedMonth
-              ? `${displayYear} | ${language === 'fa' ? `${selectedMonthLabel?.labelFa} - ${selectedMonthLabel?.labelEn}` : `${selectedMonthLabel?.labelEn} - ${selectedMonthLabel?.labelFa}`}`
-              : t('select_year_month')}
+          <ButtonText
+            className="text-md"
+            style={{
+              color: selectedYear && selectedMonth ? Colors.main.textSecondary : Colors.main.primaryLight,
+            }}
+          >
+            {buttonText}
           </ButtonText>
         </HStack>
       </Button>
 
-      <Drawer isOpen={showDrawer} onClose={() => setShowDrawer(false)} size="sm" anchor="bottom" className="bg-black/60">
+      <Drawer isOpen={showDrawer} onClose={handleDrawerClose} size="sm" anchor="bottom" className="bg-black/60">
         <DrawerBackdrop />
         <DrawerContent style={{ backgroundColor: Colors.main.background }} className="h-max">
           <DrawerHeader className="justify-center py-1">
@@ -107,6 +137,7 @@ const SelectYearWithMonth = ({
               </Button>
             </HStack>
           </DrawerHeader>
+
           <DrawerBody>
             <VStack className="items-center space-y-6">
               <Box
@@ -120,7 +151,7 @@ const SelectYearWithMonth = ({
                 {months.map((option) => (
                   <Button
                     key={option.value}
-                    onPress={() => setSelectedMonth(option.value)}
+                    onPress={() => handleMonthSelect(option.value)}
                     variant={selectedMonth === option.value ? 'solid' : 'outline'}
                     className="h-12 rounded-xl mb-2"
                     style={{
@@ -142,7 +173,7 @@ const SelectYearWithMonth = ({
                 ))}
               </Box>
 
-              <Button onPress={() => setShowDrawer(false)} className="mt-4 h-14 rounded-xl w-full" style={{ backgroundColor: Colors.main.primary }}>
+              <Button onPress={handleDrawerClose} className="mt-4 h-14 rounded-xl w-full" style={{ backgroundColor: Colors.main.primary }}>
                 <ButtonText className="text-white text-lg">{t('button.confirm')}</ButtonText>
               </Button>
             </VStack>

@@ -30,8 +30,7 @@ const TopicEdit = () => {
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 10}>
       <VStack className="flex-1 p-7 gap-4">
-        <HeaderTitle title={t('button.edit')} path={'../(tabs)/activity'} />
-
+        <HeaderTitle title={t('button.edit')} path={`/tabs/(tabs)/topics/detail/${topic?.id}` as any} />
         <Controller
           name="title"
           control={control}
@@ -104,6 +103,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: Colors.main.textPrimary,
-    fontSize: 20,
+    fontSize: 18,
   },
 });

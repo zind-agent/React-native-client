@@ -41,7 +41,7 @@ const CreateTopics = () => {
           name="category"
           control={control}
           render={({ field }) => (
-            <CategoryPicker selectedCategory={field.value} onCategorySelect={field.onChange} categories={Category} placeholder={t('category.select_category') || 'Select Category'} />
+            <CategoryPicker selectedCategory={field.value} onCategorySelect={field.onChange} categories={Category} placeholder={t('category.select_category')} />
           )}
         />
 
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.main.background,
   },
   buttonContainer: {
-    padding: 18,
+    padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.main.background,

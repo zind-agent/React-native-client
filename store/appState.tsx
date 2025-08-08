@@ -9,7 +9,7 @@ export const useAppStore = create<AuthStateType>()(
     (set, get) => ({
       isLogin: false,
       isLoading: false,
-      language: null,
+      language: "en",
       user: null,
       token: null,
       hideTabBar: false,
@@ -34,16 +34,16 @@ export const useAppStore = create<AuthStateType>()(
         }
       },
 
-      setUserAndLanguage: (username, lang) => {
+      setUserAndLanguage: (userid: string, username: string, lang: 'fa' | 'en') => {
         const state = get();
         if (state.user) {
           set({
-            user: { ...state.user, id: Date.now(), username, language: lang },
+            user: { ...state.user, id: userid, username, language: lang },
             language: lang,
           });
         } else {
           set({
-            user: { id: 0, username, language: lang },
+            user: { id: userid, username, language: lang },
             language: lang,
           });
         }

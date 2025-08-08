@@ -176,7 +176,8 @@
     "write_description_todo": "توضیح کوتاهی درباره این فعالیت بنویس",
     "select_date": "تاریخ را انتخاب کن",
     "go_to_today": "برو به امروز",
-    "title_form_todo": "عنوان"
+    "title_form_todo": "عنوان",
+    "create_your_task_for_now_time": "فعالیت خود اضافه کنید"
   },
   "create_task": {
     "create_task": "ایجاد فعالیت",

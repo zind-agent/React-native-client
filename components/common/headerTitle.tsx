@@ -17,6 +17,7 @@ const HeaderTitle = ({ title, path, isLight = false }: { title: string; path: Re
         className="rounded-xl h-[44px] w-[44px]"
         onPress={() => router.push(path)}
         style={{
+          backgroundColor: Colors.main.button,
           ...Platform.select({
             ios: {
               shadowColor: '#000',
@@ -41,7 +42,7 @@ const HeaderTitle = ({ title, path, isLight = false }: { title: string; path: Re
           <BackIcon color={Colors.main.textPrimary} />
         </Box>
       </Button>
-      <Heading style={{ color: isLight ? Colors.main.background : Colors.main.textPrimary }} className="font-ibmpBold" size="2xl">
+      <Heading style={{ color: isLight ? Colors.main.background : Colors.main.textPrimary }} size="2xl">
         {title}
       </Heading>
     </HStack>

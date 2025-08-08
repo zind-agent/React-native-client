@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import SelectYearWithMonth from '@/components/shared/forms/selectYearWithMonth';
 import WeeklyDatePicker from '@/components/shared/forms/weekDatePicker';
 import { Heading } from '@/components/ui/heading';
@@ -14,57 +14,69 @@ import jalaliMoment from 'jalali-moment';
 import { useAppStore } from '@/store/appState';
 import { Button, ButtonText } from '@/components/ui/button';
 import HeaderPage from '@/components/common/headerPage';
+import { Image, StyleSheet } from 'react-native';
+import { Center } from '@/components/ui/center';
+import { Text } from '@/components/Themed';
+import emptyTaskImage from '@/assets/images/notTaskToday.png';
+import { router } from 'expo-router';
 
 const Todos = () => {
-  const { loadTasks } = useTodoStore();
-  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDate, setSelectedDate } = useDateTime();
+  const { loadTasks, tasks } = useTodoStore();
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDate, setSelectedDate, isCurrentMonth, isToday, goToToday } = useDateTime();
   const { calender } = useAppStore();
 
   useEffect(() => {
-    loadTasks(selectedDate);
+    if (selectedDate) {
+      loadTasks(selectedDate);
+    }
   }, [loadTasks, selectedDate]);
 
-  const today = jalaliMoment();
-  const todayDate = today.format('YYYY-MM-DD');
+  const weekComparison = useMemo(() => {
+    if (!selectedDate) return { isCurrentWeek: false };
 
-  const todayYear = calender === 'jalali' ? today.jYear().toString() : today.year().toString();
-  const todayMonth = calender === 'jalali' ? (today.jMonth() + 1).toString() : (today.month() + 1).toString();
+    const selectedWeekStart = jalaliMoment.utc(selectedDate, 'YYYY-MM-DD').startOf('week');
+    const todayWeekStart = jalaliMoment.utc().startOf('week');
+    const isCurrentWeek = selectedWeekStart.isSame(todayWeekStart, 'day');
 
-  const selectedWeekStart = selectedDate ? jalaliMoment(selectedDate, 'YYYY-MM-DD').startOf('week') : null;
-  const todayWeekStart = jalaliMoment().startOf('week');
-  const isCurrentWeek = selectedWeekStart && selectedWeekStart.isSame(todayWeekStart, 'day');
+    return { isCurrentWeek };
+  }, [selectedDate]);
 
-  const isCurrentMonth = selectedYear === todayYear && selectedMonth === todayMonth;
-  const isToday = selectedDate === todayDate;
+  const shouldShowTodayButton = useMemo(() => {
+    return !weekComparison.isCurrentWeek || !isCurrentMonth || !isToday;
+  }, [weekComparison.isCurrentWeek, isCurrentMonth, isToday]);
 
-  const goToToday = () => {
-    setSelectedYear(todayYear);
-    setSelectedMonth(todayMonth);
-    setSelectedDate(todayDate);
+  const getDisplayDate = useCallback(
+    (gregorianDate: string | null) => {
+      if (!gregorianDate) return '-';
+
+      try {
+        const moment = jalaliMoment.utc(gregorianDate, 'YYYY-MM-DD');
+        return calender === 'jalali' ? moment.format('jYYYY/jMM/jDD') : moment.format('YYYY/MM/DD');
+      } catch (error) {
+        console.warn('Error formatting date:', error);
+        return '-';
+      }
+    },
+    [calender],
+  );
+
+  const displayDate = useMemo(() => getDisplayDate(selectedDate), [getDisplayDate, selectedDate]);
+
+  const EmptyTaskList = () => {
+    return (
+      <Center className="p-10" style={styles.emptyContainer}>
+        <Image source={emptyTaskImage} style={{ width: 200, height: 200 }} />
+        <Text className="text-xl">{t('todos.create_your_task_for_now_time')}</Text>
+        <Button onPress={() => router.push('/tabs/(tabs)/createTask')} style={{ backgroundColor: Colors.main.tag.work }} className="px-10 text-xl mt-5 rounded-xl">
+          <ButtonText style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{t('task_detail.add_task')}</ButtonText>
+        </Button>
+      </Center>
+    );
   };
 
-  const shouldShowTodayButton = !isCurrentWeek || !isCurrentMonth || !isToday;
-
-  const getDisplayDate = (gregorianDate: string) => {
-    if (!gregorianDate) return '-';
-    const moment = jalaliMoment(gregorianDate, 'YYYY-MM-DD');
-    return calender === 'jalali' ? moment.format('jYYYY/jMM/jDD') : moment.format('YYYY/MM/DD');
-  };
-
-  return (
-    <Box style={{ flex: 1, backgroundColor: Colors.main.background }}>
-      <Box
-        style={{
-          paddingHorizontal: 10,
-          paddingTop: 10,
-          zIndex: 1,
-          elevation: 1,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-        }}
-      >
+  const headerComponent = useMemo(
+    () => (
+      <Box style={styles.container}>
         <HeaderPage title={t('todos.todo_list')} />
 
         <VStack className="mt-5">
@@ -100,14 +112,38 @@ const Todos = () => {
           >
             {isToday ? t('todos.today') : t('todos.select_date')}
           </Heading>
-          <Heading style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{getDisplayDate(selectedDate)}</Heading>
+          <Heading style={{ color: Colors.main.textPrimary, fontSize: 16 }}>{displayDate}</Heading>
         </HStack>
       </Box>
-      <VStack>
-        <TodoListView mode="grouped" />
-      </VStack>
+    ),
+    [selectedYear, setSelectedYear, selectedMonth, setSelectedMonth, selectedDate, setSelectedDate, shouldShowTodayButton, goToToday, isToday, displayDate],
+  );
+
+  return (
+    <Box style={{ flex: 1, backgroundColor: Colors.main.background }}>
+      {headerComponent}
+      <VStack className="px-4">{tasks.length > 0 ? <TodoListView mode="grouped" /> : <EmptyTaskList />}</VStack>
     </Box>
   );
 };
 
 export default Todos;
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    zIndex: 1,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  emptyContainer: {
+    backgroundColor: Colors.main.cardBackground,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.main.border,
+  },
+});

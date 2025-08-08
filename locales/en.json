@@ -179,7 +179,8 @@
     "write_description_todo": "Write a short description about this task",
     "select_date": "Select Date",
     "go_to_today": "Go to Today",
-    "title_form_todo": "Title"
+    "title_form_todo": "Title",
+    "create_your_task_for_now_time": "Add your first task"
   },
   "create_task": {
     "create_task": "Create Task",
