@@ -20,7 +20,7 @@ export class TopicStorage {
   private initializationPromise: Promise<void> | null = null;
 
   private constructor() {
-    this.db = SQLite.openDatabaseSync('topics.topicdb');
+    this.db = SQLite.openDatabaseSync('db.topics');
   }
 
   public static getInstance(): TopicStorage {
@@ -37,33 +37,35 @@ export class TopicStorage {
     this.initializationPromise = (async () => {
       try {
         const result = await this.db.getAllAsync(`
-          SELECT name FROM sqlite_master WHERE type='table' AND name='topics';
-        `);
+        SELECT name FROM sqlite_master WHERE type='table' AND name='topics';
+      `);
 
         if (result.length === 0) {
           await this.db.runAsync(`
-            CREATE TABLE IF NOT EXISTS topics (
-              id TEXT PRIMARY KEY,
-              title TEXT NOT NULL,
-              user_id TEXT NOT NULL,
-              status TEXT DEFAULT NULL,
-              category TEXT DEFAULT NULL,
-              description TEXT DEFAULT '',
-              created_at TEXT NOT NULL,
-              updated_at TEXT NOT NULL,
-              likes INTEGER DEFAULT 0,
-              is_public INTEGER NOT NULL DEFAULT 0
-            );
-          `);
-          console.warn('[Database] Topics table created.');
+          CREATE TABLE IF NOT EXISTS topics (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            user_id TEXT NOT NULL,
+            status TEXT DEFAULT NULL,
+            category TEXT DEFAULT NULL,
+            description TEXT DEFAULT '',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            likes INTEGER DEFAULT 0,
+            is_public INTEGER NOT NULL DEFAULT 0
+          );
+        `);
+          console.warn('[TopicStorage] Topics table created for the first time.');
+        } else {
+          console.warn('[TopicStorage] Topics table already exists.');
         }
 
         this.isInitialized = true;
         this.initializationPromise = null;
       } catch (error) {
         this.initializationPromise = null;
-        console.error('Database initialization failed:', error);
-        throw new Error('Failed to initialize topics DB.');
+        console.error('[TopicStorage] Database initialization failed:', error instanceof Error ? error.message : error);
+        throw new Error(`Failed to initialize topics DB: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     })();
 
@@ -105,16 +107,29 @@ export class TopicStorage {
       likes: row.likes ?? 0,
     };
   }
+  private validateTopic(topic: Topic): void {
+    if (!topic.id?.trim()) throw new Error('Topic ID is required');
+    if (!topic.title?.trim()) throw new Error('Topic title is required');
+    if (!topic.userId?.toString().trim()) throw new Error('User ID is required');
+    if (!topic.createdAt?.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) throw new Error('Invalid createdAt format. Expected: YYYY-MM-DDTHH:MM:SS');
+    if (!topic.updatedAt?.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)) throw new Error('Invalid updatedAt format. Expected: YYYY-MM-DDTHH:MM:SS');
+  }
 
   public async createTopic(topic: Topic): Promise<void> {
     await this.ensureInitialized();
-    const row = this.topicToRow(topic);
-    await this.db.runAsync(
-      `INSERT INTO topics (
-    id, title, user_id, status, category, description, created_at, updated_at, likes, is_public
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [row.id, row.title, row.user_id, row.status, row.category, row.description, row.created_at, row.updated_at, row.likes, row.is_public],
-    );
+    this.validateTopic(topic);
+    try {
+      const row = this.topicToRow(topic);
+      await this.db.runAsync(
+        `INSERT INTO topics (
+        id, title, user_id, status, category, description, created_at, updated_at, likes, is_public
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [row.id, row.title, row.user_id, row.status, row.category, row.description, row.created_at, row.updated_at, row.likes, row.is_public],
+      );
+    } catch (error) {
+      console.error(`Failed to create topic with ID ${topic.id}:`, error);
+      throw new Error(`Failed to create topic: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   }
 
   public async getAllPublicTopics(): Promise<Topic[]> {
@@ -125,7 +140,7 @@ export class TopicStorage {
 
   public async getUserTopics(userId: string): Promise<Topic[]> {
     await this.ensureInitialized();
-    const rows = await this.db.getAllAsync(`SELECT * FROM topics WHERE user_id = 0`, [userId]);
+    const rows = await this.db.getAllAsync(`SELECT * FROM topics WHERE user_id = ?`, [userId]);
     return rows.map(this.rowToTopic);
   }
 

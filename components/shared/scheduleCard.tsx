@@ -87,12 +87,6 @@ const ScheduleCard = ({ task, onPress, style }: ScheduleCardProps) => {
           </Text>
         </HStack>
       </HStack>
-
-      {task.status === TaskStatus.PENDING && (
-        <Box style={styles.progressIndicator}>
-          <Box style={styles.progressBar} />
-        </Box>
-      )}
     </Box>
   );
 
@@ -169,22 +163,5 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 13,
     color: Colors.main.textSecondary,
-  },
-  progressIndicator: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 3,
-    backgroundColor: Colors.main.textPrimary + '20',
-    borderBottomLeftRadius: 12,
-    borderBottomRightRadius: 12,
-    overflow: 'hidden',
-  },
-  progressBar: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: Colors.main.primary,
-    opacity: 0.6,
   },
 });

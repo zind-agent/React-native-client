@@ -5,9 +5,11 @@ import { useTodoStore } from '@/store/todoState';
 import { addTodoSchema, AddTodoSchemaType } from '@/components/schema/addTodoSchema';
 import { TaskStatus } from '@/constants/TaskEnum';
 import { router } from 'expo-router';
+import { useAppStore } from '@/store/appState';
 
 export const useTodoForm = (selectedDate: string) => {
   const { createTask } = useTodoStore();
+  const { user } = useAppStore();
 
   const form = useForm<AddTodoSchemaType>({
     resolver: zodResolver(addTodoSchema),
@@ -66,6 +68,7 @@ export const useTodoForm = (selectedDate: string) => {
           createdAt: data.createdAt,
           updatedAt: '',
           reminderDays: data.reminderDays?.map(String),
+          userId: user?.id as string,
         };
 
         await createTask(todoData).then(() => {

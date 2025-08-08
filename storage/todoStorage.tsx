@@ -14,6 +14,7 @@ export interface Task {
   goalId?: string;
   createdAt: string;
   updatedAt: string;
+  userId: string;
 }
 
 export class TaskStorage {
@@ -23,7 +24,7 @@ export class TaskStorage {
   private initializationPromise: Promise<void> | null = null;
 
   private constructor() {
-    this.db = SQLite.openDatabaseSync('tasks.taskdb');
+    this.db = SQLite.openDatabaseSync('db.tasks');
   }
 
   public static getInstance(): TaskStorage {
@@ -58,6 +59,7 @@ export class TaskStorage {
             goal_id TEXT DEFAULT NULL,
             created_at TEXT NOT NULL,
             updated_at TEXT NOT NULL,
+            user_id TEXT NOT NULL,
 
             CHECK (date LIKE '____-__-__'),
             CHECK (start_time LIKE '__:__'),
@@ -111,6 +113,7 @@ export class TaskStorage {
       goal_id: task.goalId ?? null,
       created_at: task.createdAt,
       updated_at: task.updatedAt,
+      user_id: task.userId,
     };
   }
 
@@ -128,6 +131,7 @@ export class TaskStorage {
       goalId: row.goal_id ?? undefined,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
+      userId: row.user_id,
     };
   }
 
@@ -140,9 +144,9 @@ export class TaskStorage {
       await this.db.runAsync(
         `INSERT INTO tasks (
     id, title, description, start_time, end_time,
-    date, status, category_id, goal_id, created_at, updated_at, reminder_days
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [row.id, row.title, row.description, row.start_time, row.end_time, row.date, row.status, row.category_id, row.goal_id, row.created_at, row.updated_at, row.reminder_days],
+    date, status, category_id, goal_id, created_at, updated_at, reminder_days , user_id
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)`,
+        [row.id, row.title, row.description, row.start_time, row.end_time, row.date, row.status, row.category_id, row.goal_id, row.created_at, row.updated_at, row.reminder_days, row.user_id],
       );
     } catch (error) {
       console.error(`Failed to create task with ID ${task.id}:`, error);
@@ -211,6 +215,11 @@ export class TaskStorage {
       console.error(`Failed to get tasks for date ${id}:`, error);
       throw new Error(`Failed to get tasks: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
+  }
+
+  public async removeTask(id: string): Promise<void> {
+    await this.ensureInitialized();
+    await this.db.runAsync(`DELETE FROM tasks WHERE id = ?`, [id]);
   }
 }
 

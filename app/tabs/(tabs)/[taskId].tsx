@@ -5,7 +5,6 @@ import { Box } from '@/components/ui/box';
 import { HStack } from '@/components/ui/hstack';
 import { VStack } from '@/components/ui/vstack';
 import { Colors } from '@/constants/Colors';
-import { Task } from '@/storage/todoStorage';
 import { useTodoStore } from '@/store/todoState';
 import { router, useLocalSearchParams } from 'expo-router';
 import { t } from 'i18next';
@@ -21,14 +20,15 @@ import { Button } from '@/components/ui/button';
 import { useShowToast } from '@/components/common/customToast';
 import TrashIcon from '@/assets/Icons/TrushIcon';
 import EditIcon from '@/assets/Icons/EditIcon';
+import { useTopicStore } from '@/store/topcisState';
 
 const { width: screenWidth } = Dimensions.get('window');
 const SWIPE_THRESHOLD = screenWidth * 0.4;
 
 const TaskDetail = () => {
   const { taskId } = useLocalSearchParams();
-  const { getTaskById, updateTask, isLoading } = useTodoStore();
-  const [task, setTask] = useState<Task | null>(null);
+  const { task, getTaskById, updateTask, isLoading, removeTask } = useTodoStore();
+  const { topic, getTopicById } = useTopicStore();
   const showToast = useShowToast();
   const [translateX, setTranslateX] = useState(0);
 
@@ -47,8 +47,7 @@ const TaskDetail = () => {
 
   const fetchTask = useCallback(async () => {
     if (taskId) {
-      const res = await getTaskById(taskId.toString());
-      setTask(res);
+      await getTaskById(taskId.toString());
     }
   }, [taskId, getTaskById]);
 
@@ -56,14 +55,19 @@ const TaskDetail = () => {
     fetchTask();
   }, [fetchTask]);
 
-  const handleSwipeAction = async (action: TaskStatus.COMPLETED | TaskStatus.CANCELLED | TaskStatus.PENDING) => {
+  useEffect(() => {
+    if (task?.categoryId) {
+      getTopicById(task?.categoryId);
+    }
+  }, [task?.categoryId, getTopicById]);
+
+  const handleSwipeAction = async (action: TaskStatus.COMPLETED | TaskStatus.CANCELLED | TaskStatus.PENDING | TaskStatus.ALL) => {
     if (!task) return;
 
     await updateTask({ ...task, status: action }).then(() => {
       showToast(action === TaskStatus.COMPLETED ? t('task_completed_successfully') : action === TaskStatus.CANCELLED ? t('task_cancelled_successfully') : t('task_pending_successfully'), 'success');
       router.push('/tabs/(tabs)/todos');
     });
-    setTask({ ...task, status: action });
   };
 
   const handleEdit = () => {
@@ -92,6 +96,10 @@ const TaskDetail = () => {
       }
       setTranslateX(0);
     }
+  };
+  const removeHandler = () => {
+    removeTask(task?.id as string);
+    router.push('/tabs/(tabs)/');
   };
 
   if (isLoading || isEmpty(task)) {
@@ -142,6 +150,7 @@ const TaskDetail = () => {
       COMPLETED: Colors.main.success,
       CANCELLED: Colors.main.accent,
       PENDING: Colors.main.primary,
+      ALL: Colors.main.primary,
     }[taskStatus] || Colors.main.primary;
 
   const getSwipeOptions = () => {
@@ -166,14 +175,13 @@ const TaskDetail = () => {
   };
 
   const swipeOptions = getSwipeOptions();
-
   return (
     <GestureHandlerRootView style={styles.screenContainer}>
       <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <VStack space="xl">
           <HStack className="w-full justify-between items-center">
             <HeaderTitle title={get(task, 'title', t('task_detail.no_title'))} path={'../(tabs)/'} />
-            <Button className="flex mt-6 items-center justify-center w-12 h-12 rounded-lg bg-transparent" onPress={() => router.push('/tabs/(tabs)')}>
+            <Button className="flex mt-6 items-center justify-center w-12 h-12 rounded-lg bg-transparent" onPress={removeHandler}>
               <TrashIcon size={48} />
             </Button>
           </HStack>
@@ -190,7 +198,7 @@ const TaskDetail = () => {
               <VStack space="md">
                 <HStack className="justify-between items-center">
                   <Text style={styles.label}>{t('task_detail.category')}</Text>
-                  <Text style={styles.value}>{get(task, 'categoryId', '') !== '' ? get(task, 'categoryId', '') : t('task_detail.no_category')}</Text>
+                  <Text style={styles.value}>{topic != null ? topic.title : t('task_detail.no_category')}</Text>
                 </HStack>
 
                 <HStack className="justify-between items-center">

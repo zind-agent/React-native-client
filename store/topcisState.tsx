@@ -58,7 +58,7 @@ export const useTopicStore = create<TopicState>((set, get) => ({
     set({ isLoading: true });
     try {
       const userTopics = await topicStorage.getUserTopics(userId);
-      set({ userTopics: userTopics, isLoading: false });
+      set({ userTopics, isLoading: false });
     } catch (error) {
       console.error('Failed to load user topics:', error);
       set({ isLoading: false });

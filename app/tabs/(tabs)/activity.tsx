@@ -18,7 +18,6 @@ const Activity = () => {
   useEffect(() => {
     const userIdStr: string = user!.id.toString();
     loadUserTopics(userIdStr);
-    loadPublicTopics();
   }, [loadUserTopics, loadPublicTopics]);
 
   return (

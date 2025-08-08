@@ -3,6 +3,7 @@ import { Task, taskStorage } from '@/storage/todoStorage';
 import { create } from 'zustand';
 
 export interface TodoState {
+  task: Task | null;
   tasks: Task[];
   allTasks: Task[];
   selectedDate: string;
@@ -19,6 +20,8 @@ export interface TodoState {
   createTask: (task: Task) => Promise<void>;
   updateTask: (task: Task) => Promise<void>;
   getCompletionPercentage: () => Promise<number>;
+  getTaskById: (id: string) => Promise<void>;
+  removeTask: (id: string) => Promise<void>;
 
   getTodayAllTask: () => Promise<void>;
 }
@@ -26,6 +29,7 @@ export interface TodoState {
 const getCurrentDate = (): string => new Date().toISOString().split('T')[0];
 
 export const useTodoStore = create<TodoState>((set, get) => ({
+  task: null,
   tasks: [],
   allTasks: [],
   selectedDate: getCurrentDate(),
@@ -111,6 +115,29 @@ export const useTodoStore = create<TodoState>((set, get) => ({
       set({ allTasks: tasks, isLoading: false });
     } catch (error) {
       console.error('Failed to load today tasks:', error);
+      set({ isLoading: false });
+    }
+  },
+
+  getTaskById: async (id: string) => {
+    set({ isLoading: true });
+    try {
+      const task = await taskStorage.getTaskById(id);
+      set({ task, isLoading: false });
+    } catch (error) {
+      console.error('Failed to load task:', error);
+      set({ isLoading: false });
+    }
+  },
+  removeTask: async (id: string) => {
+    set({ isLoading: true });
+    try {
+      await taskStorage.removeTask(id);
+      const state = get();
+      await state.loadTasks(state.selectedDate);
+      set({ isLoading: false });
+    } catch (error) {
+      console.error('Failed to remove task:', error);
       set({ isLoading: false });
     }
   },

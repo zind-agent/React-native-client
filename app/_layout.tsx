@@ -12,6 +12,7 @@ import '../global.css';
 import { LanguageGate } from '@/constants/LanguageGate';
 import { ToastProvider } from '@gluestack-ui/toast';
 import { ImageLoading } from '@/components/common/Loading';
+import 'react-native-get-random-values';
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
